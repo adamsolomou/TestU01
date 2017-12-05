@@ -12,10 +12,11 @@ int main (int argc, char *argv[])
 {  
    // Turn off all printing to stdout from TestU01
    // You may want to try flipping this to 1 to see what it is actually doing.
-   swrite_Basic=0;
+   swrite_Basic=1;
    
    // Loop forever - the user will kill the process
-   while(1){
+   for(int i=1; i<6; i++){
+   //while(1){
       unif01_Gen *gen=workload_Create();
       std::string name=workload_Name(gen);
       
@@ -31,3 +32,9 @@ int main (int argc, char *argv[])
     
    return 0;
 }
+
+  // std::vector< unif01_Gen * > gen_vector(10);
+  // for(int i=1; i<11; i++){
+  //   //unif01_Gen *gen_tmp=workload_Create(); 
+  //   gen_vector[i] = workload_Create(); 
+  // }
