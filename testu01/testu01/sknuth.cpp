@@ -45,6 +45,8 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <iostream>
+
 
 
 #define LENGTH 200
@@ -264,7 +266,7 @@ void sknuth_Gap (unif01_Gen *gen, sres_Chi2 *res,
    /* Compute the probabilities for each gap length */
    res->NbExp[0] = Mult;
    res->Loc[0] = 0;
-   for (len = 1; len < t; len++) {
+   for (len = 1; len < t; len++) { 
       Mult *= 1.0 - p;
       res->NbExp[len] = Mult;
       res->Loc[len] = len;
@@ -570,7 +572,7 @@ void sknuth_CouponCollector (unif01_Gen * gen, sres_Chi2 * res,
  /* 
    if (swrite_Basic) {
        printf ("   Expected value of s = ");
-	   num_WriteD (Moydes, 10, 2, 2);
+      num_WriteD (Moydes, 10, 2, 2);
       printf ("\n\n");
    }
  */
@@ -782,9 +784,9 @@ void sknuth_Run (unif01_Gen * gen, sres_Chi2 * res,
       /* Compute modified Chi2 for a sequence */
       Khi = 0.0;
       for (i = 1; i <= 6; i++) {
-	 for (j = 1; j <= 6; j++) {
-	    Khi += A[i-1][j-1]*(Count[i] - NbExp[i])*(Count[j] - NbExp[j]);
-	 }
+    for (j = 1; j <= 6; j++) {
+       Khi += A[i-1][j-1]*(Count[i] - NbExp[i])*(Count[j] - NbExp[j]);
+    }
       }
       statcoll_AddObs (res->sVal1, Khi / (nReal - 6.0));
    }

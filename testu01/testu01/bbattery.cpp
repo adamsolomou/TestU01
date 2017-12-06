@@ -58,11 +58,12 @@
 #include <time.h>
 #include <limits.h>
 #include <iostream>
-
+#include <vector>
 #include <map>
 
 #include "workload.hpp"
 #include "tbb/task_group.h"
+#include "tbb/parallel_for.h"
 
 #define LEN 120
 #define NAMELEN 30
@@ -102,6 +103,7 @@ struct TestGlobals
   int bbattery_NTests;
   int TestNumber[1 + NDIM];
 };
+
 
 /*
   DT10 : Injects from globals stuct back into globals.
@@ -491,7 +493,193 @@ static void InitBat (TestGlobals &globals)
 
 /*=========================================================================*/
 
+
 static void SmallCrush (unif01_Gen * gen, char *filename, int Rep[], TestGlobals &globals)
+/*
+ * A small battery of statistical tests for Random Number Generators 
+ * used in simulation.
+ * Rep[i] gives the number of times that test i will be done. The default
+ * values are Rep[i] = 1 for all i.
+ */
+{
+
+  // Inject globals
+  auto &bbattery_pVal = globals.bbattery_pVal;
+  auto &bbattery_TestNames = globals.bbattery_TestNames;
+  auto &bbattery_NTests = globals.bbattery_NTests;
+  auto &TestNumber = globals.TestNumber;
+
+  
+   const int r = 0;
+   int i;
+   int j = -1;
+   int j2 = 0;
+   char genName[LEN + 1] = "";
+   chrono_Chrono *Timer;
+   sres_Poisson *res1;
+   sres_Chi2 *res2;
+   sknuth_Res2 *res3;
+   swalk_Res *res4;
+   sknuth_Res1 *res5;
+   sstring_Res *res6;
+   lebool fileFlag;
+
+   Timer = chrono_Create ();
+   InitBat (globals);
+   if (swrite_Basic) {
+      printf ("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n"
+         "                 Starting SmallCrush\n"
+         "                 Version: %s\n"
+         "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\n\n",
+         PACKAGE_STRING);
+   }
+
+   if (NULL == gen) {
+      gen = ufile_CreateReadText (filename, 10 * MILLION);
+      fileFlag = TRUE;
+   } else
+      fileFlag = FALSE;
+
+   ++j2;
+   if (fileFlag)
+      ufile_InitReadText ();
+   res1 = sres_CreatePoisson ();
+   for (i = 0; i < Rep[j2]; ++i) {
+#ifdef USE_LONGLONG
+      smarsa_BirthdaySpacings (gen, res1, 1, 5 * MILLION, r, 1073741824,
+         2, 1);
+#else
+      smarsa_BirthdaySpacings (gen, res1, 10, MILLION / 2, r, 67108864, 2, 1);
+#endif
+      bbattery_pVal[++j] = res1->pVal2; //j=0
+      TestNumber[j] = j2; //j=0
+      strcpy (bbattery_TestNames[j], "BirthdaySpacings");
+   }
+   sres_DeletePoisson (res1);
+
+   if (fileFlag)
+      ufile_InitReadText ();
+   ++j2;
+   res3 = sknuth_CreateRes2 ();
+   for (i = 0; i < Rep[j2]; ++i) {
+      sknuth_Collision (gen, res3, 1, 5 * MILLION, 0, 65536, 2);
+      bbattery_pVal[++j] = res3->Pois->pVal2; //j=1
+      TestNumber[j] = j2;
+      strcpy (bbattery_TestNames[j], "Collision");
+   }
+   sknuth_DeleteRes2 (res3);
+
+   if (fileFlag)
+      ufile_InitReadText ();
+   ++j2; //j2 = 3
+   res2 = sres_CreateChi2 ();
+   for (i = 0; i < Rep[j2]; ++i) {
+      sknuth_Gap (gen, res2, 1, MILLION / 5, 22, 0.0, .00390625);
+      bbattery_pVal[++j] = res2->pVal2[gofw_Mean]; //j=2
+      TestNumber[j] = j2;
+      strcpy (bbattery_TestNames[j], "Gap");
+   }
+
+   ++j2;
+   if (fileFlag)
+      ufile_InitReadText ();
+   for (i = 0; i < Rep[j2]; ++i) {
+      sknuth_SimpPoker (gen, res2, 1, 2 * MILLION / 5, 24, 64, 64);
+      bbattery_pVal[++j] = res2->pVal2[gofw_Mean]; //j=3
+      TestNumber[j] = j2;
+      strcpy (bbattery_TestNames[j], "SimpPoker");
+   }
+
+   ++j2;
+   if (fileFlag)
+      ufile_InitReadText ();
+   for (i = 0; i < Rep[j2]; ++i) {
+      sknuth_CouponCollector (gen, res2, 1, MILLION / 2, 26, 16);
+      bbattery_pVal[++j] = res2->pVal2[gofw_Mean]; //j=4
+      TestNumber[j] = j2;
+      strcpy (bbattery_TestNames[j], "CouponCollector");
+   }
+
+   if (fileFlag)
+      ufile_InitReadText ();
+   ++j2;
+   res5 = sknuth_CreateRes1 ();
+   for (i = 0; i < Rep[j2]; ++i) {
+      sknuth_MaxOft (gen, res5, 1, 2 * MILLION, 0, MILLION / 10, 6);
+      bbattery_pVal[++j] = res5->Chi->pVal2[gofw_Mean]; //j=5
+      TestNumber[j] = j2;
+      strcpy (bbattery_TestNames[j], "MaxOft");
+      bbattery_pVal[++j] = res5->Bas->pVal2[gofw_Mean]; //j=6
+      TestNumber[j] = j2;
+      strcpy (bbattery_TestNames[j], "MaxOft AD");
+   }
+   sknuth_DeleteRes1 (res5);
+
+   ++j2;
+   if (fileFlag)
+      ufile_InitReadText ();
+   for (i = 0; i < Rep[j2]; ++i) {
+      svaria_WeightDistrib (gen, res2, 1, MILLION / 5, 27, 256, 0.0, 0.125);
+      bbattery_pVal[++j] = res2->pVal2[gofw_Mean]; //j=7
+      TestNumber[j] = j2;
+      strcpy (bbattery_TestNames[j], "WeightDistrib");
+   }
+
+   ++j2;
+   if (fileFlag)
+      ufile_InitReadText ();
+   for (i = 0; i < Rep[j2]; ++i) {
+      smarsa_MatrixRank (gen, res2, 1, 20 * THOUSAND, 20, 10, 60, 60);
+      bbattery_pVal[++j] = res2->pVal2[gofw_Mean]; //j=8
+      TestNumber[j] = j2;
+      strcpy (bbattery_TestNames[j], "MatrixRank");
+   }
+   sres_DeleteChi2 (res2);
+
+   if (fileFlag)
+      ufile_InitReadText ();
+   ++j2;
+   res6 = sstring_CreateRes ();
+   for (i = 0; i < Rep[j2]; ++i) {
+      sstring_HammingIndep (gen, res6, 1, MILLION/2, 20, 10, 300, 0);
+      bbattery_pVal[++j] = res6->Bas->pVal2[gofw_Mean]; //j=9
+      TestNumber[j] = j2;
+      strcpy (bbattery_TestNames[j], "HammingIndep");
+   }
+   sstring_DeleteRes (res6);
+
+   if (fileFlag)
+      ufile_InitReadText ();
+   ++j2;
+   util_Assert (j2 <= SMALLCRUSH_NUM, "SmallCrush:   j2 > SMALLCRUSH_NUM");
+   res4 = swalk_CreateRes ();
+   for (i = 0; i < Rep[j2]; ++i) {
+      swalk_RandomWalk1 (gen, res4, 1, MILLION, r, 30, 150, 150);
+      GetPVal_Walk (1, res4, &j, "", j2, globals); //j=9
+   }
+   swalk_DeleteRes (res4);
+
+   bbattery_NTests = ++j;
+   if (fileFlag) {
+      if(swrite_Basic){
+         WriteReport (filename, "SmallCrush", bbattery_NTests, bbattery_pVal,
+            Timer, TRUE, TRUE, 0.0, globals);
+      }
+      ufile_DeleteReadBin (gen);
+   } else {
+      GetName (gen, genName);
+      if(swrite_Basic){
+         WriteReport (genName, "SmallCrush", bbattery_NTests, bbattery_pVal,
+            Timer, FALSE, TRUE, 0.0, globals);
+      }
+   }
+   chrono_Delete (Timer);
+}
+
+
+/*=========================================================================*/
+
+static void ParallelSmallCrush (unif01_Gen * gen, char *filename, int Rep[], TestGlobals &globals)
 /*
  * A small battery of statistical tests for Random Number Generators 
  * used in simulation.
@@ -510,17 +698,7 @@ static void SmallCrush (unif01_Gen * gen, char *filename, int Rep[], TestGlobals
   const int r = 0;
   char genName[LEN + 1] = "";
   chrono_Chrono *Timer;
-  // sres_Poisson *res1;
-  // sres_Chi2 *res2;
-  // sknuth_Res2 *res3;
-  // swalk_Res *res4;
-  // sknuth_Res1 *res5;
-  // sstring_Res *res6;
-  // sres_Chi2 *res7;
-  // sres_Chi2 *res8;
-  // sres_Chi2 *res9;
-  // sres_Chi2 *res10;
-  lebool fileFlag;
+  //lebool fileFlag;
 
   Timer = chrono_Create ();
   InitBat (globals);
@@ -532,176 +710,136 @@ static void SmallCrush (unif01_Gen * gen, char *filename, int Rep[], TestGlobals
          PACKAGE_STRING);
   }
 
-  if(NULL == gen) {
-    gen = ufile_CreateReadText (filename, 10 * MILLION);
-    fileFlag = TRUE;
-  }else{
-    fileFlag = FALSE;
-  }
-
-  /* Create 10 different instances of unif01_Gen */
-  // unif01_Gen *locGen1=workload_Create(); 
-  // unif01_Gen *locGen2=workload_Create(); 
-  // unif01_Gen *locGen3=workload_Create(); 
-  // unif01_Gen *locGen4=workload_Create(); 
-  // unif01_Gen *locGen5=workload_Create(); 
-  // unif01_Gen *locGen6=workload_Create(); 
-  // unif01_Gen *locGen7=workload_Create(); 
-  // unif01_Gen *locGen8=workload_Create(); 
-  // unif01_Gen *locGen9=workload_Create(); 
-  // unif01_Gen *locGen10=workload_Create(); 
-
+  // if(NULL == gen) {
+  //   gen = ufile_CreateReadText (filename, 10 * MILLION);
+  //   fileFlag = TRUE;
+  // }else{
+  //   fileFlag = FALSE;
+  // }
 
   /* Turn each test in a lambda function */ 
 
   auto Test1 = [&](unif01_Gen * locGen1){
     //Run Test 1
     int test_idx = 1; 
-    // if (fileFlag)
-    //   ufile_InitReadText ();
+
     sres_Poisson *res1;
     res1 = sres_CreatePoisson ();
-    //for (int i = 0; i < Rep[test_idx]; ++i) {
-      #ifdef USE_LONGLONG
-        smarsa_BirthdaySpacings (locGen1, res1, 1, 5 * MILLION, r, 1073741824, 2, 1);
-      #else
-        smarsa_BirthdaySpacings (locGen1, res1, 10, MILLION / 2, r, 67108864, 2, 1);
-      #endif
-      bbattery_pVal[test_idx-1] = res1->pVal2; //here j = 0
-      TestNumber[test_idx-1] = test_idx; //j=0, j2=1 
-      strcpy (bbattery_TestNames[test_idx-1], "BirthdaySpacings");
-    //}
+    #ifdef USE_LONGLONG
+      smarsa_BirthdaySpacings (locGen1, res1, 1, 5 * MILLION, r, 1073741824, 2, 1);
+    #else
+      smarsa_BirthdaySpacings (locGen1, res1, 10, MILLION / 2, r, 67108864, 2, 1);
+    #endif
+    bbattery_pVal[test_idx-1] = res1->pVal2; //here j = 0
+    TestNumber[test_idx-1] = test_idx; //j=0, j2=1 
+    strcpy (bbattery_TestNames[test_idx-1], "BirthdaySpacings");
     sres_DeletePoisson (res1);
   };
 
   auto Test2 = [&](unif01_Gen * locGen2){
     //Run Test 2
     int test_idx = 2; 
-    // if (fileFlag)
-    //   ufile_InitReadText ();
+
     sknuth_Res2 *res2;
     res2 = sknuth_CreateRes2 ();
-    //for (int i = 0; i < Rep[test_idx]; ++i) {
-      sknuth_Collision (locGen2, res2, 1, 5 * MILLION, 0, 65536, 2);
-      bbattery_pVal[test_idx-1] = res2->Pois->pVal2; //j=1
-      TestNumber[test_idx-1] = test_idx; 
-      strcpy (bbattery_TestNames[test_idx-1], "Collision");
-    //}
+    sknuth_Collision (locGen2, res2, 1, 5 * MILLION, 0, 65536, 2);
+    bbattery_pVal[test_idx-1] = res2->Pois->pVal2; //j=1
+    TestNumber[test_idx-1] = test_idx; 
+    strcpy (bbattery_TestNames[test_idx-1], "Collision");
     sknuth_DeleteRes2 (res2);    
   };
 
   auto Test3 = [&](unif01_Gen * locGen3){
     //Run Test 3
     int test_idx = 3; 
-    // if (fileFlag)
-    //   ufile_InitReadText ();
+
     sres_Chi2 *res3;
     res3 = sres_CreateChi2 ();
-    //for (int i = 0; i < Rep[test_idx]; ++i) {
-      sknuth_Gap (locGen3, res3, 1, MILLION / 5, 22, 0.0, .00390625);
-      bbattery_pVal[test_idx-1] = res3->pVal2[gofw_Mean];
-      TestNumber[test_idx-1] = test_idx;
-      strcpy (bbattery_TestNames[test_idx-1], "Gap");
-    //}
+    sknuth_Gap (locGen3, res3, 1, MILLION / 5, 22, 0.0, .00390625);
+    bbattery_pVal[test_idx-1] = res3->pVal2[gofw_Mean];
+    TestNumber[test_idx-1] = test_idx;
+    strcpy (bbattery_TestNames[test_idx-1], "Gap");
     sres_DeleteChi2 (res3);  
   };
 
   auto Test4 = [&](unif01_Gen * locGen4){
     //Run Test 4
     int test_idx = 4; 
-    // if (fileFlag)
-    //   ufile_InitReadText ();
+
     sres_Chi2 *res4;
     res4 = sres_CreateChi2 ();
-    //for (int i = 0; i < Rep[test_idx]; ++i) {
-      sknuth_SimpPoker (locGen4, res4, 1, 2 * MILLION / 5, 24, 64, 64);
-      bbattery_pVal[test_idx-1] = res4->pVal2[gofw_Mean];
-      TestNumber[test_idx-1] = test_idx;
-      strcpy (bbattery_TestNames[test_idx-1], "SimpPoker");
-    //}
+    sknuth_SimpPoker (locGen4, res4, 1, 2 * MILLION / 5, 24, 64, 64);
+    bbattery_pVal[test_idx-1] = res4->pVal2[gofw_Mean];
+    TestNumber[test_idx-1] = test_idx;
+    strcpy (bbattery_TestNames[test_idx-1], "SimpPoker");
     sres_DeleteChi2 (res4);    
   };
 
   auto Test5 = [&](unif01_Gen * locGen5){
     //Run Test 5
     int test_idx = 5; 
-    // if (fileFlag)
-    //   ufile_InitReadText ();
+
     sres_Chi2 *res5;
     res5 = sres_CreateChi2 ();
-    //for (int i = 0; i < Rep[test_idx]; ++i) {
-      sknuth_CouponCollector (locGen5, res5, 1, MILLION / 2, 26, 16);
-      bbattery_pVal[test_idx-1] = res5->pVal2[gofw_Mean];
-      TestNumber[test_idx-1] = test_idx;
-      strcpy (bbattery_TestNames[test_idx-1], "CouponCollector");
-    //}
+    sknuth_CouponCollector (locGen5, res5, 1, MILLION / 2, 26, 16);
+    bbattery_pVal[test_idx-1] = res5->pVal2[gofw_Mean];
+    TestNumber[test_idx-1] = test_idx;
+    strcpy (bbattery_TestNames[test_idx-1], "CouponCollector");
     sres_DeleteChi2 (res5);
   };
 
   auto Test6 = [&](unif01_Gen * locGen6){
     //Run Test 6
     int test_idx = 6; 
-    // if (fileFlag)
-    //   ufile_InitReadText ();
+
     sknuth_Res1 *res6;
     res6 = sknuth_CreateRes1 ();
-    //for (int i = 0; i < Rep[test_idx]; ++i) {
-      sknuth_MaxOft (locGen6, res6, 1, 2 * MILLION, 0, MILLION / 10, 6);
-      bbattery_pVal[test_idx-1] = res6->Chi->pVal2[gofw_Mean];
-      TestNumber[test_idx-1] = test_idx;
-      strcpy (bbattery_TestNames[test_idx-1], "MaxOft");
-      bbattery_pVal[test_idx] = res6->Bas->pVal2[gofw_Mean];
-      TestNumber[test_idx] = test_idx;
-      strcpy (bbattery_TestNames[test_idx], "MaxOft AD");
-    //}
+    sknuth_MaxOft (locGen6, res6, 1, 2 * MILLION, 0, MILLION / 10, 6);
+    bbattery_pVal[test_idx-1] = res6->Chi->pVal2[gofw_Mean];
+    TestNumber[test_idx-1] = test_idx;
+    strcpy (bbattery_TestNames[test_idx-1], "MaxOft");
+    bbattery_pVal[test_idx] = res6->Bas->pVal2[gofw_Mean];
+    TestNumber[test_idx] = test_idx;
+    strcpy (bbattery_TestNames[test_idx], "MaxOft AD");
     sknuth_DeleteRes1 (res6);
   };
 
   auto Test7 = [&](unif01_Gen * locGen7){
     //Run Test 7
     int test_idx = 7; 
-    // if (fileFlag)
-    //   ufile_InitReadText ();
+
     sres_Chi2 *res7;
     res7 = sres_CreateChi2 ();
-    //for (int i = 0; i < Rep[test_idx]; ++i) {
-      svaria_WeightDistrib (locGen7, res7, 1, MILLION / 5, 27, 256, 0.0, 0.125);
-      bbattery_pVal[test_idx] = res7->pVal2[gofw_Mean];
-      TestNumber[test_idx] = test_idx;
-      strcpy (bbattery_TestNames[test_idx], "WeightDistrib");
-    //}
+    svaria_WeightDistrib (locGen7, res7, 1, MILLION / 5, 27, 256, 0.0, 0.125);
+    bbattery_pVal[test_idx] = res7->pVal2[gofw_Mean];
+    TestNumber[test_idx] = test_idx;
+    strcpy (bbattery_TestNames[test_idx], "WeightDistrib");
     sres_DeleteChi2 (res7);
   };
 
   auto Test8 = [&](unif01_Gen * locGen8){
     //Run Test 8
     int test_idx = 8; 
-    // if (fileFlag)
-    //   ufile_InitReadText ();
+
     sres_Chi2 *res8;
     res8 = sres_CreateChi2 ();
-    //for (int i = 0; i < Rep[test_idx]; ++i) {
-      smarsa_MatrixRank (locGen8, res8, 1, 20 * THOUSAND, 20, 10, 60, 60);
-      bbattery_pVal[test_idx] = res8->pVal2[gofw_Mean];
-      TestNumber[test_idx] = test_idx;
-      strcpy (bbattery_TestNames[test_idx], "MatrixRank");
-    //}
+    smarsa_MatrixRank (locGen8, res8, 1, 20 * THOUSAND, 20, 10, 60, 60);
+    bbattery_pVal[test_idx] = res8->pVal2[gofw_Mean];
+    TestNumber[test_idx] = test_idx;
+    strcpy (bbattery_TestNames[test_idx], "MatrixRank");
     sres_DeleteChi2 (res8);
   };
 
   auto Test9 = [&](unif01_Gen * locGen9){
     //Run Test 9
     int test_idx = 9; 
-    // if (fileFlag)
-    //   ufile_InitReadText ();
+
     sstring_Res *res9;
     res9 = sstring_CreateRes ();
-    //for (int i = 0; i < Rep[test_idx]; ++i) {
-      sstring_HammingIndep (locGen9, res9, 1, MILLION/2, 20, 10, 300, 0);
-      bbattery_pVal[test_idx] = res9->Bas->pVal2[gofw_Mean];
-      TestNumber[test_idx] = test_idx;
-      strcpy (bbattery_TestNames[test_idx], "HammingIndep");
-    //}
+    sstring_HammingIndep (locGen9, res9, 1, MILLION/2, 20, 10, 300, 0);
+    bbattery_pVal[test_idx] = res9->Bas->pVal2[gofw_Mean];
+    TestNumber[test_idx] = test_idx;
+    strcpy (bbattery_TestNames[test_idx], "HammingIndep");
     sstring_DeleteRes (res9);
   };
 
@@ -709,15 +847,12 @@ static void SmallCrush (unif01_Gen * gen, char *filename, int Rep[], TestGlobals
     //Run Test 10
     int test_idx = 10; 
     int j_tmp = test_idx; 
-    // if (fileFlag)
-    //   ufile_InitReadText ();
+
     util_Assert (test_idx <= SMALLCRUSH_NUM, "SmallCrush:   test_idx > SMALLCRUSH_NUM");
     swalk_Res *res10;
     res10 = swalk_CreateRes ();
-    //for (int i = 0; i < Rep[test_idx]; ++i) {
-      swalk_RandomWalk1 (locGen10, res10, 1, MILLION, r, 30, 150, 150);
-      GetPVal_Walk (1, res10, &j_tmp, "", test_idx, globals);
-    //}
+    swalk_RandomWalk1 (locGen10, res10, 1, MILLION, r, 30, 150, 150);
+    GetPVal_Walk (1, res10, &j_tmp, "", test_idx, globals);
     swalk_DeleteRes (res10);
   };
 
@@ -826,175 +961,323 @@ static void SmallCrush (unif01_Gen * gen, char *filename, int Rep[], TestGlobals
   // Test10(workload_Clone(gen));  
   // TestChi2(workload_Clone(gen));
 
-
-  // tbb::parallel_for(int(1), int(11), [&](int test_idx){
-  // //for(int test_idx=1; test_idx < 11; test_idx++){
-  //   switch(test_idx) { 
-  //     case(1): 
-  //     //Run Test 1
-  //     if (fileFlag)
-  //       ufile_InitReadText ();
-  //     res1 = sres_CreatePoisson ();
-  //     for (int i = 0; i < Rep[test_idx]; ++i) {
-  //       #ifdef USE_LONGLONG
-  //         smarsa_BirthdaySpacings (locGen1, res1, 1, 5 * MILLION, r, 1073741824, 2, 1);
-  //       #else
-  //         smarsa_BirthdaySpacings (locGen1, res1, 10, MILLION / 2, r, 67108864, 2, 1);
-  //       #endif
-  //       bbattery_pVal[test_idx-1] = res1->pVal2; //here j = 0
-  //       TestNumber[test_idx-1] = test_idx; //j=0, j2=1 
-  //       strcpy (bbattery_TestNames[test_idx-1], "BirthdaySpacings");
-  //     }
-  //     sres_DeletePoisson (res1);
-  //     break; //End of test 1
-
-  //     case(2):    
-  //     //Run Test 2
-  //     if (fileFlag)
-  //       ufile_InitReadText ();
-  //     res3 = sknuth_CreateRes2 ();
-  //     for (int i = 0; i < Rep[test_idx]; ++i) {
-  //       sknuth_Collision (locGen2, res3, 1, 5 * MILLION, 0, 65536, 2);
-  //       bbattery_pVal[test_idx-1] = res3->Pois->pVal2; //j=1
-  //       TestNumber[test_idx-1] = test_idx; 
-  //       strcpy (bbattery_TestNames[test_idx-1], "Collision");
-  //     }
-  //     sknuth_DeleteRes2 (res3);
-  //     break; //End of test 2
-
-  //     case(3):
-  //     //Run Test 3
-  //     if (fileFlag)
-  //       ufile_InitReadText ();
-  //     res7 = sres_CreateChi2 ();
-  //     for (int i = 0; i < Rep[test_idx]; ++i) {
-  //       sknuth_Gap (locGen3, res7, 1, MILLION / 5, 22, 0.0, .00390625);
-  //       bbattery_pVal[test_idx-1] = res7->pVal2[gofw_Mean];
-  //       TestNumber[test_idx-1] = test_idx;
-  //       strcpy (bbattery_TestNames[test_idx-1], "Gap");
-  //     }
-  //     sres_DeleteChi2 (res7);
-  //     break; //End of test 3
-
-  //     case(4): 
-  //     //Run Test 4
-  //     if (fileFlag)
-  //       ufile_InitReadText ();
-  //     res8 = sres_CreateChi2 ();
-  //     for (int i = 0; i < Rep[test_idx]; ++i) {
-  //       sknuth_SimpPoker (locGen4, res8, 1, 2 * MILLION / 5, 24, 64, 64);
-  //       bbattery_pVal[test_idx-1] = res8->pVal2[gofw_Mean];
-  //       TestNumber[test_idx-1] = test_idx;
-  //       strcpy (bbattery_TestNames[test_idx-1], "SimpPoker");
-  //     }
-  //     sres_DeleteChi2 (res8);
-  //     break; //End of test 4
-
-  //     case(5): 
-  //     //Run Test 5
-  //     if (fileFlag)
-  //       ufile_InitReadText ();
-  //     res9 = sres_CreateChi2 ();
-  //     for (int i = 0; i < Rep[test_idx]; ++i) {
-  //       sknuth_CouponCollector (locGen5, res9, 1, MILLION / 2, 26, 16);
-  //       bbattery_pVal[test_idx-1] = res9->pVal2[gofw_Mean];
-  //       TestNumber[test_idx-1] = test_idx;
-  //       strcpy (bbattery_TestNames[test_idx-1], "CouponCollector");
-  //     }
-  //     sres_DeleteChi2 (res9);
-  //     break; //End of test 5 
-
-  //     case(6): 
-  //     //Run Test 6
-  //     if (fileFlag)
-  //       ufile_InitReadText ();
-  //     res5 = sknuth_CreateRes1 ();
-  //     for (int i = 0; i < Rep[test_idx]; ++i) {
-  //       sknuth_MaxOft (locGen6, res5, 1, 2 * MILLION, 0, MILLION / 10, 6);
-  //       bbattery_pVal[test_idx-1] = res5->Chi->pVal2[gofw_Mean];
-  //       TestNumber[test_idx-1] = test_idx;
-  //       strcpy (bbattery_TestNames[test_idx-1], "MaxOft");
-  //       bbattery_pVal[test_idx] = res5->Bas->pVal2[gofw_Mean];
-  //       TestNumber[test_idx] = test_idx;
-  //       strcpy (bbattery_TestNames[test_idx], "MaxOft AD");
-  //     }
-  //     sknuth_DeleteRes1 (res5);
-  //     break; //End of test 6 
-
-  //     case(7): 
-  //     //Run Test 7
-  //     if (fileFlag)
-  //       ufile_InitReadText ();
-  //     res2 = sres_CreateChi2 ();
-  //     for (int i = 0; i < Rep[test_idx]; ++i) {
-  //       svaria_WeightDistrib (locGen7, res2, 1, MILLION / 5, 27, 256, 0.0, 0.125);
-  //       bbattery_pVal[test_idx] = res2->pVal2[gofw_Mean];
-  //       TestNumber[test_idx] = test_idx;
-  //       strcpy (bbattery_TestNames[test_idx], "WeightDistrib");
-  //     }
-  //     sres_DeleteChi2 (res2);
-  //     break; //End of test 7
-
-  //     case(8): 
-  //     //Run Test 8
-  //     if (fileFlag)
-  //       ufile_InitReadText ();
-  //     res10 = sres_CreateChi2 ();
-  //     for (int i = 0; i < Rep[test_idx]; ++i) {
-  //       smarsa_MatrixRank (locGen8, res10, 1, 20 * THOUSAND, 20, 10, 60, 60);
-  //       bbattery_pVal[test_idx] = res10->pVal2[gofw_Mean];
-  //       TestNumber[test_idx] = test_idx;
-  //       strcpy (bbattery_TestNames[test_idx], "MatrixRank");
-  //     }
-  //     sres_DeleteChi2 (res10);
-  //     break; //End of test 8
-
-  //     case(9): 
-  //     //Run Test 9
-  //     if (fileFlag)
-  //       ufile_InitReadText ();
-  //     res6 = sstring_CreateRes ();
-  //     for (int i = 0; i < Rep[test_idx]; ++i) {
-  //       sstring_HammingIndep (locGen9, res6, 1, MILLION/2, 20, 10, 300, 0);
-  //       bbattery_pVal[test_idx] = res6->Bas->pVal2[gofw_Mean];
-  //       TestNumber[test_idx] = test_idx;
-  //       strcpy (bbattery_TestNames[test_idx], "HammingIndep");
-  //     }
-  //     sstring_DeleteRes (res6);
-  //     break; //End of test 9 
-
-  //     case(10): 
-  //     //Run Test 10
-  //     int j_tmp = test_idx; 
-  //     if (fileFlag)
-  //       ufile_InitReadText ();
-  //     util_Assert (test_idx <= SMALLCRUSH_NUM, "SmallCrush:   test_idx > SMALLCRUSH_NUM");
-  //     res4 = swalk_CreateRes ();
-  //     for (int i = 0; i < Rep[test_idx]; ++i) {
-  //       swalk_RandomWalk1 (locGen10, res4, 1, MILLION, r, 30, 150, 150);
-  //       GetPVal_Walk (1, res4, &j_tmp, "", test_idx, globals);
-  //     }
-  //     swalk_DeleteRes (res4);
-  //     break; 
-  //   }
-  // }); 
-
   bbattery_NTests = 16; 
 
-  if (fileFlag) {
-    if(swrite_Basic){
-       WriteReport (filename, "SmallCrush", bbattery_NTests, bbattery_pVal,
-          Timer, TRUE, TRUE, 0.0, globals);
-    }
-    ufile_DeleteReadBin (gen);
-  } else {
-    GetName (gen, genName);
-    if(swrite_Basic){
-       WriteReport (genName, "SmallCrush", bbattery_NTests, bbattery_pVal,
-          Timer, FALSE, TRUE, 0.0, globals);
+  if(swrite_Basic){
+     GetName (gen, genName); 
+     WriteReport (genName, "SmallCrush", bbattery_NTests, bbattery_pVal,
+        Timer, FALSE, TRUE, 0.0, globals);
+  }
+
+  // if (fileFlag) {
+  //   if(swrite_Basic){
+  //      WriteReport (filename, "SmallCrush", bbattery_NTests, bbattery_pVal,
+  //         Timer, TRUE, TRUE, 0.0, globals);
+  //   }
+  //   ufile_DeleteReadBin (gen);
+  // } else {
+  //   GetName (gen, genName); //can pottentially move this incide the iff statement -> save function call when swrite is 0
+  //   if(swrite_Basic){
+  //      WriteReport (genName, "SmallCrush", bbattery_NTests, bbattery_pVal,
+  //         Timer, FALSE, TRUE, 0.0, globals);
+  //   }
+  // }
+
+  chrono_Delete (Timer);
+}
+
+/*=========================================================================*/
+
+
+static void MultiParallelSmallCrush (
+    std::vector< unif01_Gen * > genArray, 
+    char *filename, 
+    int Rep[], 
+    std::vector<TestGlobals> &globalsArray
+    )
+/*
+ * A small battery of statistical tests for Random Number Generators 
+ * used in simulation.
+ * Rep[i] gives the number of times that test i will be done. The default
+ * values are Rep[i] = 1 for all i.
+ */
+{
+
+  //Intialize variables 
+  const int r = 0;
+  const int noRNGs = genArray.size(); 
+  char genName[LEN + 1] = "";
+  chrono_Chrono *Timer;
+
+  Timer = chrono_Create ();
+  /* Initialise each TestGlobal variable */
+  for(int i = 0; i < noRNGs; i++){
+    InitBat(globalsArray[i]);
+  }
+  if (swrite_Basic) {
+      printf ("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n"
+         "                 Starting SmallCrush\n"
+         "                 Version: %s\n"
+         "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\n\n",
+         PACKAGE_STRING);
+  }
+
+  /* Turn each test in a lambda function */ 
+
+  auto Test1 = [&](std::vector< unif01_Gen * > genArray)
+  {
+    /* Repeat Test 1 genArray.size() times: One for each RNG instance */ 
+    int testInd = 1; 
+
+    tbb::parallel_for(int(0), noRNGs, [&](int j){
+    //for(int j = 0; j < noRNGs; j++){
+      sres_Poisson *res1;
+      res1 = sres_CreatePoisson ();
+      #ifdef USE_LONGLONG
+        smarsa_BirthdaySpacings (genArray[j], res1, 1, 5 * MILLION, r, 1073741824, 2, 1);
+      #else
+        smarsa_BirthdaySpacings (genArray[j], res1, 10, MILLION / 2, r, 67108864, 2, 1);
+      #endif
+      globalsArray[j].bbattery_pVal[testInd-1] = res1->pVal2; 
+      globalsArray[j].TestNumber[testInd-1] = testInd; 
+      strcpy (globalsArray[j].bbattery_TestNames[testInd-1], "BirthdaySpacings");
+      sres_DeletePoisson (res1);
+    }); 
+  };
+
+  auto Test2 = [&](std::vector< unif01_Gen * > genArray)
+  {
+    /* Repeat Test 2 genArray.size() times: One for each RNG instance */ 
+    int testInd = 2;
+
+    tbb::parallel_for(int(0), noRNGs, [&](int j){
+    //for(int j = 0; j < noRNGs; j++){
+      sknuth_Res2 *res2;
+      res2 = sknuth_CreateRes2 ();
+      sknuth_Collision (genArray[j], res2, 1, 5 * MILLION, 0, 65536, 2);
+      globalsArray[j].bbattery_pVal[testInd-1] = res2->Pois->pVal2; 
+      globalsArray[j].TestNumber[testInd-1] = testInd; 
+      strcpy (globalsArray[j].bbattery_TestNames[testInd-1], "Collision");
+      sknuth_DeleteRes2 (res2); 
+    });    
+  };
+
+  auto Test3 = [&](std::vector< unif01_Gen * > genArray)
+  {
+    /* Repeat Test 3 genArray.size() times: One for each RNG instance */ 
+    int testInd = 3;
+
+    tbb::parallel_for(int(0), noRNGs, [&](int j){
+    //for(int j = 0; j < noRNGs; j++){
+      sres_Chi2 *res3;
+      res3 = sres_CreateChi2 ();
+      sknuth_Gap (genArray[j], res3, 1, MILLION / 5, 22, 0.0, .00390625);
+      globalsArray[j].bbattery_pVal[testInd-1] = res3->pVal2[gofw_Mean];
+      globalsArray[j].TestNumber[testInd-1] = testInd;
+      strcpy (globalsArray[j].bbattery_TestNames[testInd-1], "Gap");
+      sres_DeleteChi2 (res3);  
+    }); 
+  };
+
+  auto Test4 = [&](std::vector< unif01_Gen * > genArray)
+  {
+    /* Repeat Test 4 genArray.size() times: One for each RNG instance */ 
+    int testInd = 4;
+
+    tbb::parallel_for(int(0), noRNGs, [&](int j){
+    //for(int j = 0; j < noRNGs; j++){
+      sres_Chi2 *res4;
+      res4 = sres_CreateChi2 ();
+      sknuth_SimpPoker (genArray[j], res4, 1, 2 * MILLION / 5, 24, 64, 64);
+      globalsArray[j].bbattery_pVal[testInd-1] = res4->pVal2[gofw_Mean];
+      globalsArray[j].TestNumber[testInd-1] = testInd;
+      strcpy (globalsArray[j].bbattery_TestNames[testInd-1], "SimpPoker");
+      sres_DeleteChi2 (res4);  
+    });   
+  };
+
+  auto Test5 = [&](std::vector< unif01_Gen * > genArray)
+  {
+    /* Repeat Test 5 genArray.size() times: One for each RNG instance */ 
+    int testInd = 5;
+
+    tbb::parallel_for(int(0), noRNGs, [&](int j){
+    //for(int j = 0; j < noRNGs; j++){
+      sres_Chi2 *res5;
+      res5 = sres_CreateChi2 ();
+      sknuth_CouponCollector (genArray[j], res5, 1, MILLION / 2, 26, 16);
+      globalsArray[j].bbattery_pVal[testInd-1] = res5->pVal2[gofw_Mean];
+      globalsArray[j].TestNumber[testInd-1] = testInd;
+      strcpy (globalsArray[j].bbattery_TestNames[testInd-1], "CouponCollector");
+      sres_DeleteChi2 (res5);
+    }); 
+  };
+
+  auto Test6 = [&](std::vector< unif01_Gen * > genArray)
+  {
+    /* Repeat Test 6 genArray.size() times: One for each RNG instance */ 
+    int testInd = 6;
+
+    tbb::parallel_for(int(0), noRNGs, [&](int j){
+    //for(int j = 0; j < noRNGs; j++){
+      sknuth_Res1 *res6;
+      res6 = sknuth_CreateRes1 ();
+      sknuth_MaxOft (genArray[j], res6, 1, 2 * MILLION, 0, MILLION / 10, 6);
+      globalsArray[j].bbattery_pVal[testInd-1] = res6->Chi->pVal2[gofw_Mean];
+      globalsArray[j].TestNumber[testInd-1] = testInd;
+      strcpy (globalsArray[j].bbattery_TestNames[testInd-1], "MaxOft");
+      globalsArray[j].bbattery_pVal[testInd] = res6->Bas->pVal2[gofw_Mean];
+      globalsArray[j].TestNumber[testInd] = testInd;
+      strcpy (globalsArray[j].bbattery_TestNames[testInd], "MaxOft AD");
+      sknuth_DeleteRes1 (res6);
+    }); 
+  };
+
+  auto Test7 = [&](std::vector< unif01_Gen * > genArray)
+  {
+    /* Repeat Test 7 genArray.size() times: One for each RNG instance */ 
+    int testInd = 7;
+
+    tbb::parallel_for(int(0), noRNGs, [&](int j){
+    //for(int j = 0; j < noRNGs; j++){
+      sres_Chi2 *res7;
+      res7 = sres_CreateChi2 ();
+      svaria_WeightDistrib (genArray[j], res7, 1, MILLION / 5, 27, 256, 0.0, 0.125);
+      globalsArray[j].bbattery_pVal[testInd] = res7->pVal2[gofw_Mean];
+      globalsArray[j].TestNumber[testInd] = testInd;
+      strcpy (globalsArray[j].bbattery_TestNames[testInd], "WeightDistrib");
+      sres_DeleteChi2 (res7);
+    }); 
+  };
+
+  auto Test8 = [&](std::vector< unif01_Gen * > genArray)
+  {
+    /* Repeat Test 8 genArray.size() times: One for each RNG instance */ 
+    int testInd = 8;
+
+    tbb::parallel_for(int(0), noRNGs, [&](int j){
+    //for(int j = 0; j < noRNGs; j++){
+      sres_Chi2 *res8;
+      res8 = sres_CreateChi2 ();
+      smarsa_MatrixRank (genArray[j], res8, 1, 20 * THOUSAND, 20, 10, 60, 60);
+      globalsArray[j].bbattery_pVal[testInd] = res8->pVal2[gofw_Mean];
+      globalsArray[j].TestNumber[testInd] = testInd;
+      strcpy (globalsArray[j].bbattery_TestNames[testInd], "MatrixRank");
+      sres_DeleteChi2 (res8);
+    }); 
+  };
+
+  auto Test9 = [&](std::vector< unif01_Gen * > genArray)
+  {
+    /* Repeat Test 9 genArray.size() times: One for each RNG instance */ 
+    int testInd = 9;
+
+    tbb::parallel_for(int(0), noRNGs, [&](int j){
+    //for(int j = 0; j < noRNGs; j++){
+      sstring_Res *res9;
+      res9 = sstring_CreateRes ();
+      sstring_HammingIndep (genArray[j], res9, 1, MILLION/2, 20, 10, 300, 0);
+      globalsArray[j].bbattery_pVal[testInd] = res9->Bas->pVal2[gofw_Mean];
+      globalsArray[j].TestNumber[testInd] = testInd;
+      strcpy (globalsArray[j].bbattery_TestNames[testInd], "HammingIndep");
+      sstring_DeleteRes (res9);
+    }); 
+  };
+
+  auto Test10 = [&](std::vector< unif01_Gen * > genArray)
+  {
+    /* Repeat Test 10 genArray.size() times: One for each RNG instance */ 
+    int testInd = 10;
+    int j_tmp = testInd; 
+
+    tbb::parallel_for(int(0), noRNGs, [&](int j){
+    //for(int j = 0; j < noRNGs; j++){
+      util_Assert (testInd <= SMALLCRUSH_NUM, "SmallCrush:   testInd > SMALLCRUSH_NUM");
+      swalk_Res *res10;
+      res10 = swalk_CreateRes ();
+      swalk_RandomWalk1 (genArray[j], res10, 1, MILLION, r, 30, 150, 150);
+      GetPVal_Walk (1, res10, &j_tmp, "", testInd, globalsArray[j]);
+      swalk_DeleteRes (res10);
+    }); 
+  };
+
+
+  //TO DO PARALLEL TASKS HERE WILL NEED TO FIND A WAY TO PROVIDE A UNIQUE VECTOR TO EACH TASK
+  /* Parallel Execution */ 
+  // tbb::task_group group;
+  // group.run( [&](){ Test1(workload_Clone(gen)); } ); 
+  // group.run( [&](){ Test2(workload_Clone(gen)); } ); 
+  // group.run( [&](){ Test3(workload_Clone(gen)); } ); 
+  // group.run( [&](){ Test4(workload_Clone(gen)); } ); 
+  // group.run( [&](){ Test5(workload_Clone(gen)); } ); 
+  // group.run( [&](){ Test6(workload_Clone(gen)); } ); 
+  // group.run( [&](){ Test7(workload_Clone(gen)); } ); 
+  // group.run( [&](){ Test8(workload_Clone(gen)); } );
+  // group.run( [&](){ Test9(workload_Clone(gen)); } );
+  // group.run( [&](){ Test10(workload_Clone(gen));} );  
+  // group.wait(); 
+
+  /* Serial Execution */ 
+  Test1(genArray); 
+  Test2(genArray); 
+  Test3(genArray);
+  Test4(genArray); 
+  Test5(genArray); 
+  Test6(genArray); 
+  Test7(genArray); 
+  Test8(genArray); 
+  Test9(genArray); 
+  Test10(genArray);  
+
+
+  if(swrite_Basic){
+    /* Write a report for each RNG */
+    for(int j = 0; j < noRNGs; j++){
+      auto &bbattery_NTests = globalsArray[j].bbattery_NTests;
+      bbattery_NTests = 16; 
+      GetName (genArray[j], genName); 
+      WriteReport (genName, "SmallCrush", bbattery_NTests, 
+        globalsArray[j].bbattery_pVal, Timer, FALSE, TRUE, 0.0, globalsArray[j]);
     }
   }
+
   chrono_Delete (Timer);
+}
+
+
+/*=========================================================================*/
+
+std::vector<bbattery_MultiResults> bbattery_MultiParallelSmallCrush (
+    std::vector< unif01_Gen * > genArray 
+    )
+{
+  //TestGlobals globals;
+  std::vector<TestGlobals> globalsArray(genArray.size());
+  std::vector<bbattery_MultiResults> outputArray(genArray.size());
+  int i;
+  int Rep[1 + NDIM] = {0};
+  for (i = 1; i <= SMALLCRUSH_NUM; ++i)
+      Rep[i] = 1;
+  MultiParallelSmallCrush (genArray, NULL, Rep, globalsArray);
+  
+  for(int j = 0; j < genArray.size(); j++){
+    outputArray[j].workload_Results = makeResults(globalsArray[j]);
+  }
+  return outputArray;
+}
+
+
+/*=========================================================================*/
+
+std::vector<bbattery_Result> bbattery_ParallelSmallCrush (unif01_Gen * gen)
+{
+  TestGlobals globals;
+   int i;
+   int Rep[1 + NDIM] = {0};
+   for (i = 1; i <= SMALLCRUSH_NUM; ++i)
+      Rep[i] = 1;
+   ParallelSmallCrush (gen, NULL, Rep, globals);
+   return makeResults(globals);
 }
 
 

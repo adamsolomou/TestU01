@@ -10,7 +10,7 @@ int main (int argc, char *argv[])
 {
    // Turn off all printing to stdout from TestU01
    // You may want to try flipping this to 1 to see what it is actually doing.
-   swrite_Basic=0;
+   swrite_Basic=1;
     
    unif01_Gen *gen=workload_Create();
    std::string name=workload_Name(gen);

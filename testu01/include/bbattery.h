@@ -23,7 +23,22 @@ struct bbattery_Result
   double pVal;
 };
 
+/* Define a vector of battery_Results as a new struct */ 
+struct bbattery_MultiResults
+{
+  std::vector<bbattery_Result> workload_Results;
+};
+
 std::vector<bbattery_Result> bbattery_SmallCrush (unif01_Gen *gen);
+
+
+
+std::vector<bbattery_MultiResults> bbattery_MultiParallelSmallCrush (std::vector< unif01_Gen * > genArray);
+
+
+
+std::vector<bbattery_Result> bbattery_ParallelSmallCrush (unif01_Gen *gen);
+
 
 
 std::vector<bbattery_Result> bbattery_RepeatSmallCrush (unif01_Gen *gen, int rep[]);
