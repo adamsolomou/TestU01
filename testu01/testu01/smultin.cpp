@@ -50,9 +50,10 @@
 #include <string.h>
 #include <stdio.h>
 #include <float.h>
+#include <vector>
 
-
-
+#include "tbb/parallel_for.h"
+#include "workload.hpp"
 
 
 
@@ -1904,6 +1905,7 @@ static void UpdateCountHash (
  * Speed is essential here.
  */
 {
+
    long *Count;
    smultin_CellType *Cell;
    smultin_CellType *Nb;
@@ -2115,6 +2117,7 @@ static void Multinom (unif01_Gen * gen, smultin_Param * par,
  * Collisions test meaningfull only in Sparse case.
  */
 {
+   printf("multinom call\n");
    long Seq;                      /* Replication number */
    double NbExp;                  /* Expected number per cell */
    double EColl;                  /* Approx. expected number of collisions */
@@ -2175,6 +2178,7 @@ static void Multinom (unif01_Gen * gen, smultin_Param * par,
    res->Nb = (smultin_CellType*) util_Calloc ((size_t) res->NbSize + 2, sizeof(smultin_CellType));
 
    /* Generate the points or balls */
+
    for (Seq = 1; Seq <= N; Seq++) {
       for (i = 0; i <= Hache; i++)
          res->Count[i] = 0;
@@ -2276,6 +2280,7 @@ void smultin_Multinomial (unif01_Gen * gen, smultin_Param * par,
  * Collisions test meaningfull only in Sparse case.
  */
 {
+   printf("smultin_multinomial call\n");
    smultin_CellType k;            /* Number of cells */
    int i;
    chrono_Chrono *Timer;
@@ -2705,6 +2710,7 @@ static void OverHashGenere (
  * case, and fill the counters. We use hashing.
  */
 {
+
    long j, tem;
    long d = dLR;
    smultin_CellType Indice;
@@ -3051,6 +3057,7 @@ static void OverHashGenereBits (
  * case, and fill the counters. We use hashing.
  */
 {
+
    int j;
    long i;
    unsigned long Premier[MAX_DIM];
@@ -3223,19 +3230,28 @@ static void OverHashGenereBits (
       /* Generation of the first t*s random bits */
       Z0 = 0;
       for (j = 0; j < t; j++) {
+         printf("Value of Z0: %llu\n",Z0);
+
          Z0 <<= s;
          Premier[j] = unif01_StripB (gen, r, s);
          Z0 |= Premier[j];
       }
+      printf("Value of Z: %llu\n",Z);
+      
+      // printf("%u\n",t2);
+      auto test1 = [&](uint64_t Bloc){
 
-      /* Generation of the other random bits: main loop */
-      for (i = 0; i < (n - t * s - 1) / s; i++) {
-         Bloc = unif01_StripB (gen, r, s);
+         // Bloc = unif01_StripB (localGen, r, s);
 
          /* Since L + s overflows a ulonglong, process a s-bit block in */
          /* t2 subblocks of q1 bits and one last subblock of q2 bits.  */
+
+         // printf("Bloc, %llu",Bloc);
+         // ulonglong Z;
+
          for (k = 1; k <= t2; k++) {
-            Z = Z0 = (Z0 << q1) | (Bloc >> (q2 + (t2 - k) * q1));
+            Z0 = (Z0 << q1) | (Bloc >> (q2 + (t2 - k) * q1));
+            Z = Z0;
             for (j = 0; j < q1; j++) {
                Indice = Z & MASK1;
                UpdateCountHash (res, Indice, Hache11, UnSurHache11,
@@ -3254,7 +3270,125 @@ static void OverHashGenereBits (
             UpdateCountHash (res, Indice, Hache1, UnSurHache1, CoMax, FALSE);
             Z >>= 1;
          }
+
+      };
+
+      printf("the working loop\n");
+      printf("Value of dimension, L/d %u\n",L);
+      printf("Value of s/t %u\n",s);
+
+      // std::vector<unif01_Gen *> localgenArray((n - t * s - 1) / s);
+
+      // // for (i = 0; i < (n - t * s - 1) / s; i++) {
+      // //    localgenArray[i] = workload_Clone(gen);
+      // // }
+
+
+
+
+
+      printf("iteration count %ld \n", (n - t * s - 1) / s);
+      printf("t2 count %d \n", t2);
+      printf("q1 count %d \n", q1);
+      printf("q2 count %d \n", q2);
+
+      struct idxVal{
+         smultin_CellType idx1;
+         smultin_CellType idx2;
+      };
+
+      struct idxVal1{
+         smultin_CellType idx3;
+         smultin_CellType idx4;
+      };
+
+      // std::vector<idxVal> idxArray(t2*q1);
+
+      // for (k = 1; k <= t2; k++) {
+      //       Z = Z0 = (Z0 << q1) | (Bloc >> (q2 + (t2 - k) * q1));
+      //       for (j = 0; j < q1; j++) {
+      //          idxVal n;
+      //          n.idx1 = Z & MASK1;
+      //          n.idx2 = Z & MASK;
+      //          idxArray.push_back(n);
+      //          Z >>= 1;
+      //       }
+      // }
+
+
+      std::vector<std::vector<idxVal>> output_vector((n - t * s - 1) / s);
+      std::vector<std::vector<idxVal1>> output_vector1((n - t * s - 1) / s);
+
+      std::vector<uint64_t> localBloc((n - t * s - 1) / s);
+      
+      for (i = 0; i < (n - t * s - 1) / s; i++) {
+         workload_Next();
+         Bloc = unif01_StripB ((workload_Create()), r, s);
+         
+         localBloc[i] = Bloc;
+
+         for (k = 1; k <= t2; k++) {
+            Z = Z0 = (Z0 << q1) | (Bloc >> (q2 + (t2 - k) * q1));
+            for (j = 0; j < q1; j++) {
+               idxVal n;
+               n.idx1 = Z & MASK1;
+               n.idx2 = Z & MASK;
+               output_vector[i].push_back(n);
+               Z >>= 1;
+            }
       }
+
+         Z = Z0 = (Z0 << q2) | Bloc;
+          for (j = 0; j < q2; j++) {
+            idxVal1 n;
+            n.idx3 = Z & MASK1;
+            n.idx4 = Z & MASK;
+            output_vector1[i].push_back(n);
+            Z >>= 1;
+         }
+
+
+      }
+
+
+      /* Generation of the other random bits: main loop */
+      // tbb::parallel_for(size_t (0), (size_t) ((n - t * s - 1) / s), [&](size_t i){
+
+      for (i = 0; i < (n - t * s - 1) / s; i++) {
+        test1((localBloc[i]));
+
+         // printf("running loop\n");
+        // test1((workload_Clone(gen)));
+         // workload_Next();
+        // Bloc = unif01_StripB ((workload_Create()), r, s);
+        // Bloc = unif01_StripB ((gen), r, s);
+
+         // Bloc = unif01_StripB (gen, r, s);
+
+         /* Since L + s overflows a ulonglong, process a s-bit block in */
+         /* t2 subblocks of q1 bits and one last subblock of q2 bits.  */
+         for (k = 0; k < t2; k++) {
+            // Z = Z0 = (Z0 << q1) | (Bloc >> (q2 + (t2 - k) * q1));
+            for (j = 0; j < q1; j++) {
+               // Indice = Z & MASK1;
+               UpdateCountHash (res, output_vector[i][(k)*(q1)+j].idx1, Hache11, UnSurHache11,
+                  CoMax1, TRUE);
+               // Indice = Z & MASK;
+               UpdateCountHash (res, output_vector[i][(k)*(q1)+j].idx2, Hache1, UnSurHache1, CoMax,
+                  FALSE);
+               // Z >>= 1;
+            }
+         }
+         // Z = Z0 = (Z0 << q2) | Bloc;
+         for (j = 0; j < q2; j++) {
+            // Indice = Z & MASK1;
+            UpdateCountHash (res, output_vector1[i][j].idx3, Hache11, UnSurHache11, CoMax1, TRUE);
+            // Indice = Z & MASK;
+            UpdateCountHash (res, output_vector1[i][j].idx4, Hache1, UnSurHache1, CoMax, FALSE);
+            // Z >>= 1;
+         }
+      } // end main loop
+// });
 
       /* Generation of the last b random bits */
       b = n % s;
@@ -3264,6 +3398,7 @@ static void OverHashGenereBits (
       Bloc >>= s - b;
 
       {
+         printf("last b random bits\n");
          const int q3 = b % q1;
          const int t3 = b / q1;
          for (k = 1; k <= t3; k++) {
@@ -3289,6 +3424,8 @@ static void OverHashGenereBits (
       }
 
       /* Must do last few bits using circular overlap with Premier */
+      printf("circular overlap with Premier\n");
+
       for (i = 0; i < t; i++) {
          Bloc = Premier[i];
          for (k = 1; k <= t2; k++) {
@@ -3325,6 +3462,7 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
    smultin_CellType k, smultin_CellType k1, const char *TestName,
    chrono_Chrono *Timer, lebool BitFlag)
 {
+   printf("multinomover call\n");
    long Seq;
    smultin_CellType dLR = d;
    double nLR = n;
@@ -3404,21 +3542,31 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
    res->Nb1 = (smultin_CellType*)util_Calloc ((size_t) res->Nb1Size + 2,
       sizeof (smultin_CellType));
 
+      printf("start for loop\n");
    /* Generate the points or balls */
-   for (Seq = 1; Seq <= N; Seq++) {
+   // tbb::parallel_for(size_t (1), (size_t) (N+1), [&](size_t Seq){
+  
+
+   for (Seq = 1; Seq <= N; Seq++) {       //********************************************************************************************************************************************************
+         printf("generate points\n");
+
       if (BitFlag) {
          /* Here, d stands for L, and t for s */
          if (res->Hashing) {
-            OverHashGenereBits (gen, res, n, r, d, t, Hache1, Hache11, k, k1,
+            printf("OverHashGenereBits\n");
+            OverHashGenereBits ((gen), res, n, r, d, t, Hache1, Hache11, k, k1,
                &CoMax, &CoMax1);
          } else {
-            OverDenseGenereBits (gen, res, n, r, d, t, Hache1, Hache11);
+            printf("OverDenseGenereBits\n");
+            OverDenseGenereBits (gen, res, n, r, d, t, Hache1, Hache11);   // the bottleneck
          }
       } else {
          if (res->Hashing) {
+            printf("OverHashGenere\n");
             OverHashGenere (gen, res, n, r, dLR, t, Hache1, Hache11, k, k1,
                &CoMax, &CoMax1);
          } else {
+            printf("OverDenseGenere\n");
             OverDenseGenere (gen, res, n, r, d, t, Hache1, Hache11);
          }
       }
@@ -3431,12 +3579,15 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
             tables_WriteTabULL (res->Nb1, 0, CoMax1, 5, 12,
                "Observed numbers in res->Nb1");
 #else
+            printf("tables_WriteTabD\n");
+
             tables_WriteTabD (res->Nb, 0, CoMax, 5, 12, 0, 0,
                "Observed numbers in res->Nb");
             tables_WriteTabD (res->Nb1, 0, CoMax1, 5, 12, 0, 0,
                "Observed numbers in res->Nb1");
 #endif
          } else if (!Sparse) {
+            printf("tables_WriteTabL\n");
             tables_WriteTabL (res->Count, 0, res->CountSize - 1, 5,
                10, "Observed numbers in res->Count");
             tables_WriteTabL (res->Count1, 0, res->Count1Size - 1, 5,
@@ -3444,10 +3595,12 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
          }
       }
 
+      printf("compute statistics\n");
       /* The balls have been generated; now compute the statistics */
       for (s = 0; s < par->NbDelta; s++) {
          /* Compute the stat. X */
          if (res->Hashing) {
+            printf("CalcPoDiEqHache\n");
             CalcPoDiEqHache (par, res, s, NbExp, res->Nb, CoMax, TRUE, &X);
 
          } else if (res->flagTab) {
@@ -3504,8 +3657,8 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
          SumX2[s] += X0 * X0Pre[s];
          X0Pre[s] = X0;
       }
-   }
-
+   }  // end generate points or balls for loop ****************************************************************************
+// });
    /* For now, we understand only the cases delta = 1 and Collision */
    for (s = 0; s < par->NbDelta; s++) {
       statcoll_Collector *Q = res->Collector[s];
@@ -3556,6 +3709,7 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
 void smultin_MultinomialOver (unif01_Gen * gen, smultin_Param * par,
    smultin_Res * res, long N, long n, int r, long d, int t, lebool Sparse)
 {
+   printf("smultin_multinomialover call\n");
    int i;
    smultin_CellType k1;       /* Number of urns in t - 1 dimensions */
    smultin_CellType k;        /* Number of urns in t dimensions */
@@ -3645,6 +3799,7 @@ void smultin_MultinomialBits (unif01_Gen *gen, smultin_Param *par,
 void smultin_MultinomialBitsOver (unif01_Gen * gen, smultin_Param * par,
    smultin_Res * res, long N, long n, int r, int s, int L, lebool Sparse)
 {
+   printf("smultin_multinomialbitsover\n");
    smultin_CellType k1;       /* Number of urns in L - 1 dimensions */
    smultin_CellType k;        /* Number of urns in L dimensions */
    double NbExp;              /* Expected number per cell in L dimensions */

@@ -33,14 +33,15 @@ int main (int argc, char *argv[])
    
    // Turn off all printing to stdout from TestU01
    // You may want to try flipping this to 1 to see what it is actually doing.
-   swrite_Basic=0;
+   swrite_Basic=1;
     
    unif01_Gen *gen=workload_Create();
    std::string name=workload_Name(gen);
-   
+   printf("%p",gen->state);
+
    // TODO : Choose the n that you think is achievable in timeBudget seconds
-   double n = t*100000; // This is just a throwaway example of how to choose
-   
+   double n = t*1000000; // This is just a throwaway example of how to choose
+
    // Make sure this happens _before_ starting the battery, so that the
    // client knows what you are trying.
    fprintf(stdout, "%s, -1, TimeBudget, 0, %g\n", name.c_str(), t);
@@ -49,7 +50,8 @@ int main (int argc, char *argv[])
    
    // The slow part
    auto results=bbattery_Rabbit(gen, n);
-   
+   printf("%p",gen->state);
+
    for(auto & r : results){
      fprintf(stdout, "%s, %d, %s, %d, %.16g\n", name.c_str(), r.TestIndex, r.TestName.c_str(), r.SubIndex, r.pVal);
    }

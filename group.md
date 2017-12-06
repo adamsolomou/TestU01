@@ -1,7 +1,7 @@
 HPCE CW6 Group Assessment
 =========================
 
-Group name : xxx
+Group name : cysg
 
 Group members (Imperial login) : aaa, bbb, ccc
 
@@ -36,7 +36,7 @@ Implementation : (Imperial login)
 
 ### What was the big idea?:
 
-(at most 50 words)
+The multinomial test dominates the time taken. To be specific, it is the OverHashGenereBits function, called N times.
 
 ### Why was it expected to improve things?:
 
