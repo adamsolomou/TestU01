@@ -11,6 +11,8 @@
 
 #include "tbb/parallel_for.h"
 
+#define PAR_RNGs 5
+
 
 int main (int argc, char *argv[])
 {  
@@ -37,23 +39,34 @@ int main (int argc, char *argv[])
    /*********************  Version 2  *********************/
 
    /* Store the RNG instances in a vector */ 
+
+   unif01_Gen * genArray[PAR_RNGs];
+   std::string nameArray[PAR_RNGs];
+
    // std::vector< unif01_Gen * > genArray;
    // std::vector< std::string > nameArray;
 
-   for(int i=0; i<5; i++){
-     genArray.push_back(workload_Create());
-     nameArray.push_back( workload_Name(genArray[i]) );
-     workload_Next();
-   }
 
-   tbb::parallel_for(int(0), (int)genArray.size(), [&](int j){
-      auto results=bbattery_SmallCrush(genArray[j]);
-
-      for(auto & r : results){
-        fprintf(stdout, "%s, %d, %s, %d, %.16g\n", nameArray[j].c_str(), r.TestIndex, r.TestName.c_str(), r.SubIndex, r.pVal);
+   //while(1){
+      /* Create and store PAR_RNGs in an array */ 
+      for(int i=0; i<PAR_RNGs; i++){
+         genArray[i] = workload_Create();
+         nameArray[i] = workload_Name(genArray[i]);
+         workload_Next();;
+        // genArray.push_back(workload_Create());
+        // nameArray.push_back( workload_Name(genArray[i]) );
+        // workload_Next();
       }
-      fflush(stdout);
-   }); 
+
+      tbb::parallel_for(0u, (unsigned)PAR_RNGs, [&](unsigned j){
+         auto results=bbattery_SmallCrush(genArray[j]);
+
+         for(auto & r : results){
+           fprintf(stdout, "%s, %d, %s, %d, %.16g\n", nameArray[j].c_str(), r.TestIndex, r.TestName.c_str(), r.SubIndex, r.pVal);
+         }
+         fflush(stdout);
+      }); 
+   //}
 
    /*********************  Version 3  *********************/
 
