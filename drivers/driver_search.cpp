@@ -43,10 +43,6 @@ int main (int argc, char *argv[])
    unif01_Gen * genArray[PAR_RNGs];
    std::string nameArray[PAR_RNGs];
 
-   // std::vector< unif01_Gen * > genArray;
-   // std::vector< std::string > nameArray;
-
-
    //while(1){
       /* Create and store PAR_RNGs in an array */ 
       for(int i=0; i<PAR_RNGs; i++){
@@ -70,6 +66,8 @@ int main (int argc, char *argv[])
 
    /*********************  Version 3  *********************/
 
+   // std::vector< unif01_Gen * > genArray;
+   // std::vector< std::string > nameArray;
 
    /* Call SmallCrush and receive results */ 
    // std::vector<bbattery_MultiResults> resultsArray;
