@@ -920,18 +920,18 @@ static void ParallelSmallCrush (unif01_Gen * gen, char *filename, int Rep[], Tes
   };
 
   /* Parallel Execution */ 
-  // tbb::task_group group;
-  // group.run( [&](){ Test1(workload_Clone(gen)); } ); 
-  // group.run( [&](){ Test2(workload_Clone(gen)); } ); 
-  // group.run( [&](){ Test3(workload_Clone(gen)); } ); 
-  // group.run( [&](){ Test4(workload_Clone(gen)); } ); 
-  // group.run( [&](){ Test5(workload_Clone(gen)); } ); 
-  // group.run( [&](){ Test6(workload_Clone(gen)); } ); 
-  // group.run( [&](){ Test7(workload_Clone(gen)); } ); 
-  // group.run( [&](){ Test8(workload_Clone(gen)); } );
-  // group.run( [&](){ Test9(workload_Clone(gen)); } );
-  // group.run( [&](){ Test10(workload_Clone(gen));} );  
-  // group.wait(); 
+  tbb::task_group group;
+  group.run( [&](){ Test1(workload_Clone(gen)); } ); 
+  group.run( [&](){ Test2(workload_Clone(gen)); } ); 
+  group.run( [&](){ Test3(workload_Clone(gen)); } ); 
+  group.run( [&](){ Test4(workload_Clone(gen)); } ); 
+  group.run( [&](){ Test5(workload_Clone(gen)); } ); 
+  group.run( [&](){ Test6(workload_Clone(gen)); } ); 
+  group.run( [&](){ Test7(workload_Clone(gen)); } ); 
+  group.run( [&](){ Test8(workload_Clone(gen)); } );
+  group.run( [&](){ Test9(workload_Clone(gen)); } );
+  group.run( [&](){ Test10(workload_Clone(gen));} );  
+  group.wait(); 
 
   // tbb::task_group group; 
   // group.run( [&](){ Test1(workload_Clone(gen));    } ); 
@@ -943,16 +943,16 @@ static void ParallelSmallCrush (unif01_Gen * gen, char *filename, int Rep[], Tes
   // group.wait();  
 
   /* Serial Execution */ 
-  Test1(workload_Clone(gen)); 
-  Test2(workload_Clone(gen)); 
-  Test3(workload_Clone(gen));
-  Test4(workload_Clone(gen)); 
-  Test5(workload_Clone(gen)); 
-  Test6(workload_Clone(gen)); 
-  Test7(workload_Clone(gen)); 
-  Test8(workload_Clone(gen)); 
-  Test9(workload_Clone(gen)); 
-  Test10(workload_Clone(gen));  
+  // Test1(workload_Clone(gen)); 
+  // Test2(workload_Clone(gen)); 
+  // Test3(workload_Clone(gen));
+  // Test4(workload_Clone(gen)); 
+  // Test5(workload_Clone(gen)); 
+  // Test6(workload_Clone(gen)); 
+  // Test7(workload_Clone(gen)); 
+  // Test8(workload_Clone(gen)); 
+  // Test9(workload_Clone(gen)); 
+  // Test10(workload_Clone(gen));  
 
   // Test1(workload_Clone(gen)); 
   // Test2(workload_Clone(gen)); 
