@@ -23,6 +23,9 @@ struct bbattery_Result
   double pVal;
 };
 
+std::vector<bbattery_Result> bbattery_ParallelSmallCrush (unif01_Gen *gen);
+
+
 std::vector<bbattery_Result> bbattery_SmallCrush (unif01_Gen *gen);
 
 
