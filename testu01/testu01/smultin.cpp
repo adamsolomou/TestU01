@@ -3230,52 +3230,52 @@ static void OverHashGenereBits (
       /* Generation of the first t*s random bits */
       Z0 = 0;
       for (j = 0; j < t; j++) {
-         printf("Value of Z0: %llu\n",Z0);
+         // printf("Value of Z0: %llu\n",Z0);
 
          Z0 <<= s;
          Premier[j] = unif01_StripB (gen, r, s);
          Z0 |= Premier[j];
       }
-      printf("Value of Z: %llu\n",Z);
+      // printf("Value of Z: %llu\n",Z);
       
       // printf("%u\n",t2);
-      auto test1 = [&](uint64_t Bloc){
+      // auto test1 = [&](uint64_t Bloc){
 
-         // Bloc = unif01_StripB (localGen, r, s);
+      //    // Bloc = unif01_StripB (localGen, r, s);
 
-         /* Since L + s overflows a ulonglong, process a s-bit block in */
-         /* t2 subblocks of q1 bits and one last subblock of q2 bits.  */
+      //    /* Since L + s overflows a ulonglong, process a s-bit block in */
+      //    /* t2 subblocks of q1 bits and one last subblock of q2 bits.  */
 
-         // printf("Bloc, %llu",Bloc);
-         // ulonglong Z;
+      //    // printf("Bloc, %llu",Bloc);
+      //    // ulonglong Z;
 
-         for (k = 1; k <= t2; k++) {
-            Z0 = (Z0 << q1) | (Bloc >> (q2 + (t2 - k) * q1));
-            Z = Z0;
-            for (j = 0; j < q1; j++) {
-               Indice = Z & MASK1;
-               UpdateCountHash (res, Indice, Hache11, UnSurHache11,
-                  CoMax1, TRUE);
-               Indice = Z & MASK;
-               UpdateCountHash (res, Indice, Hache1, UnSurHache1, CoMax,
-                  FALSE);
-               Z >>= 1;
-            }
-         }
-         Z = Z0 = (Z0 << q2) | Bloc;
-         for (j = 0; j < q2; j++) {
-            Indice = Z & MASK1;
-            UpdateCountHash (res, Indice, Hache11, UnSurHache11, CoMax1, TRUE);
-            Indice = Z & MASK;
-            UpdateCountHash (res, Indice, Hache1, UnSurHache1, CoMax, FALSE);
-            Z >>= 1;
-         }
+      //    for (k = 1; k <= t2; k++) {
+      //       Z0 = (Z0 << q1) | (Bloc >> (q2 + (t2 - k) * q1));
+      //       Z = Z0;
+      //       for (j = 0; j < q1; j++) {
+      //          Indice = Z & MASK1;
+      //          UpdateCountHash (res, Indice, Hache11, UnSurHache11,
+      //             CoMax1, TRUE);
+      //          Indice = Z & MASK;
+      //          UpdateCountHash (res, Indice, Hache1, UnSurHache1, CoMax,
+      //             FALSE);
+      //          Z >>= 1;
+      //       }
+      //    }
+      //    Z = Z0 = (Z0 << q2) | Bloc;
+      //    for (j = 0; j < q2; j++) {
+      //       Indice = Z & MASK1;
+      //       UpdateCountHash (res, Indice, Hache11, UnSurHache11, CoMax1, TRUE);
+      //       Indice = Z & MASK;
+      //       UpdateCountHash (res, Indice, Hache1, UnSurHache1, CoMax, FALSE);
+      //       Z >>= 1;
+      //    }
 
-      };
+      // };
 
       printf("the working loop\n");
-      printf("Value of dimension, L/d %u\n",L);
-      printf("Value of s/t %u\n",s);
+      // printf("Value of dimension, L/d %u\n",L);
+      // printf("Value of s/t %u\n",s);
 
       // std::vector<unif01_Gen *> localgenArray((n - t * s - 1) / s);
 
@@ -3284,13 +3284,10 @@ static void OverHashGenereBits (
       // // }
 
 
-
-
-
-      printf("iteration count %ld \n", (n - t * s - 1) / s);
-      printf("t2 count %d \n", t2);
-      printf("q1 count %d \n", q1);
-      printf("q2 count %d \n", q2);
+      // printf("iteration count %ld \n", (n - t * s - 1) / s);
+      // printf("t2 count %d \n", t2);
+      // printf("q1 count %d \n", q1);
+      // printf("q2 count %d \n", q2);
 
       struct idxVal{
          smultin_CellType idx1;
@@ -3302,18 +3299,6 @@ static void OverHashGenereBits (
          smultin_CellType idx4;
       };
 
-      // std::vector<idxVal> idxArray(t2*q1);
-
-      // for (k = 1; k <= t2; k++) {
-      //       Z = Z0 = (Z0 << q1) | (Bloc >> (q2 + (t2 - k) * q1));
-      //       for (j = 0; j < q1; j++) {
-      //          idxVal n;
-      //          n.idx1 = Z & MASK1;
-      //          n.idx2 = Z & MASK;
-      //          idxArray.push_back(n);
-      //          Z >>= 1;
-      //       }
-      // }
 
 
       std::vector<std::vector<idxVal>> output_vector((n - t * s - 1) / s);
@@ -3350,20 +3335,15 @@ static void OverHashGenereBits (
 
       }
 
+      printf("res pointer %p\n",res);
+      printf("res Nb %llu\n",res->Nb);
+      printf("res NbSize %llu\n",res->NbSize);
 
       /* Generation of the other random bits: main loop */
+
       // tbb::parallel_for(size_t (0), (size_t) ((n - t * s - 1) / s), [&](size_t i){
-
       for (i = 0; i < (n - t * s - 1) / s; i++) {
-        test1((localBloc[i]));
-
-         // printf("running loop\n");
-        // test1((workload_Clone(gen)));
-         // workload_Next();
-        // Bloc = unif01_StripB ((workload_Create()), r, s);
-        // Bloc = unif01_StripB ((gen), r, s);
-
-         // Bloc = unif01_StripB (gen, r, s);
+      printf("res NbSize %llu\n",res->NbSize);
 
          /* Since L + s overflows a ulonglong, process a s-bit block in */
          /* t2 subblocks of q1 bits and one last subblock of q2 bits.  */
@@ -3389,6 +3369,10 @@ static void OverHashGenereBits (
          }
       } // end main loop
 // });
+
+      printf("res pointer %p\n",res);
+      printf("res Nb %llu\n",res->Nb);
+      printf("res NbSize %llu\n",res->NbSize);
 
       /* Generation of the last b random bits */
       b = n % s;
