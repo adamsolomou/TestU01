@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "tbb/parallel_for.h"
+#include "tbb/task_group.h"
 
 #define PAR_RNGs 5
 
@@ -54,14 +55,79 @@ int main (int argc, char *argv[])
         // workload_Next();
       }
 
-      tbb::parallel_for(0u, (unsigned)PAR_RNGs, [&](unsigned j){
-         auto results=bbattery_SmallCrush(genArray[j]);
+      tbb::task_group group; 
+
+      group.run( [&]()
+      {        
+         auto results=bbattery_SmallCrush(genArray[1]);
 
          for(auto & r : results){
-           fprintf(stdout, "%s, %d, %s, %d, %.16g\n", nameArray[j].c_str(), r.TestIndex, r.TestName.c_str(), r.SubIndex, r.pVal);
+           fprintf(stdout, "%s, %d, %s, %d, %.16g\n", nameArray[1].c_str(), r.TestIndex, r.TestName.c_str(), r.SubIndex, r.pVal);
          }
          fflush(stdout);
-      }); 
+ 
+      }
+      );
+      group.run( [&]()
+      {
+      
+         auto results=bbattery_SmallCrush(genArray[0]);
+
+         for(auto & r : results){
+           fprintf(stdout, "%s, %d, %s, %d, %.16g\n", nameArray[0].c_str(), r.TestIndex, r.TestName.c_str(), r.SubIndex, r.pVal);
+         }
+         fflush(stdout);
+        
+      }
+      );
+      group.run( [&]()
+      {
+         
+         auto results=bbattery_SmallCrush(genArray[2]);
+
+         for(auto & r : results){
+           fprintf(stdout, "%s, %d, %s, %d, %.16g\n", nameArray[2].c_str(), r.TestIndex, r.TestName.c_str(), r.SubIndex, r.pVal);
+         }
+         fflush(stdout);
+     
+      }
+      );
+      group.run( [&]()
+      {
+        
+         auto results=bbattery_SmallCrush(genArray[3]);
+
+         for(auto & r : results){
+           fprintf(stdout, "%s, %d, %s, %d, %.16g\n", nameArray[3].c_str(), r.TestIndex, r.TestName.c_str(), r.SubIndex, r.pVal);
+         }
+         fflush(stdout);
+     
+      }
+      );
+      group.run( [&]()
+      {
+      
+         auto results=bbattery_SmallCrush(genArray[4]);
+
+         for(auto & r : results){
+           fprintf(stdout, "%s, %d, %s, %d, %.16g\n", nameArray[4].c_str(), r.TestIndex, r.TestName.c_str(), r.SubIndex, r.pVal);
+         }
+         fflush(stdout);
+      
+      }
+      );
+
+      group.wait(); 
+
+
+      // tbb::parallel_for(0u, (unsigned)PAR_RNGs, [&](unsigned j){
+      //    auto results=bbattery_SmallCrush(genArray[j]);
+
+      //    for(auto & r : results){
+      //      fprintf(stdout, "%s, %d, %s, %d, %.16g\n", nameArray[j].c_str(), r.TestIndex, r.TestName.c_str(), r.SubIndex, r.pVal);
+      //    }
+      //    fflush(stdout);
+      // }); 
    //}
 
    /*********************  Version 3  *********************/
