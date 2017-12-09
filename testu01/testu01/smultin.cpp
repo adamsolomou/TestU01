@@ -54,7 +54,7 @@
 
 #include "tbb/parallel_for.h"
 #include "workload.hpp"
-
+#include <typeinfo>
 
 
 /*============================= constants ===============================*/
@@ -1944,7 +1944,6 @@ static void UpdateCountHash (
          break;
       Pos = (Pos + Decal) % Hache;
    }
-
    Nb[Count[Pos]] -= 1;
    ++(Count[Pos]);
    if (Count[Pos] > *CoMax)
@@ -2103,6 +2102,8 @@ static void GenerAllPoints2Bits (unif01_Gen * gen, smultin_Res * res,
 
 /*=======================================================================*/
 
+
+
 static void Multinom (unif01_Gen * gen, smultin_Param * par,
    smultin_Res * res, long N, long n, int r, long d, int t, lebool Sparse,
    smultin_CellType k, const char *TestName, chrono_Chrono * Timer, lebool BitFlag)
@@ -2160,6 +2161,7 @@ static void Multinom (unif01_Gen * gen, smultin_Param * par,
    }
    /* Initialize the hashing constants and tables */
    CalcTabFj (par, res, Sparse, (double) k, NbExp);
+
    for (j = 0; j < par->NbDelta; j++) {
       SumX[j] = 0.0;
       SumX2[j] = 0.0;
@@ -2169,6 +2171,7 @@ static void Multinom (unif01_Gen * gen, smultin_Param * par,
       Hache = tables_HashPrime (n, smultin_env.HashLoad);
    else
       Hache = k;
+   
    HacheLR = Hache;
    UnSurHache = 1.0 / HacheLR;
    res->CountSize = Hache;
@@ -3274,6 +3277,7 @@ static void OverHashGenereBits (
       // };
 
       printf("the working loop\n");
+      printf("number of iterations %lu\n",(n - t * s - 1) / s);
       // printf("Value of dimension, L/d %u\n",L);
       // printf("Value of s/t %u\n",s);
 
@@ -3306,10 +3310,15 @@ static void OverHashGenereBits (
 
       std::vector<uint64_t> localBloc((n - t * s - 1) / s);
       
+      std::vector<smultin_Res*> resArray((n - t * s - 1) / s);
+      std::vector<smultin_Res*> resArray1((n - t * s - 1) / s);
+      std::vector<smultin_Res*> resArray2((n - t * s - 1) / s);
+      std::vector<smultin_Res*> resArray3((n - t * s - 1) / s);
+
       for (i = 0; i < (n - t * s - 1) / s; i++) {
+
          workload_Next();
          Bloc = unif01_StripB ((workload_Create()), r, s);
-         
          localBloc[i] = Bloc;
 
          for (k = 1; k <= t2; k++) {
@@ -3335,15 +3344,105 @@ static void OverHashGenereBits (
 
       }
 
+     //  const long NLIM = 10000000;
+     //  smultin_Param *par = NULL;
+     //  double ValDelta[] = { -1 };
+     //  lebool Sparse = TRUE;
+     //  lebool localRes = FALSE;
+
+     //  long N;
+     //  N = 2;
+     //  smultin_Res *res_copy;
+     //  par = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+     //  res_copy = smultin_CreateRes (par);
+
+     // if (res_copy == NULL) {
+     //     localRes = TRUE;
+     //     res_copy = smultin_CreateRes (par);
+     //  } else
+     //     /* Clean memory from a previous call */
+     //     CleanPD (res_copy);
+
+     //  res_copy->NbCellsTotal = k;
+     //  res_copy->Over = TRUE;
+     //  InitRes (par, res_copy, N);
+     //  InitPowDiv (par, res_copy, N, Sparse, n, k - k1);
+
+     //  res_copy->CountSize = Hache1;
+     //  res_copy->Count1Size = Hache11;
+     //  res_copy->Count = (long*) util_Calloc ((size_t) Hache1 + 2, sizeof(long));
+     //  res_copy->Count1 = (long*) util_Calloc ((size_t) Hache11 + 2, sizeof(long));
+     //  res_copy->NbSize = res_copy->Nb1Size = 8000;
+     //  res_copy->Nb = (smultin_CellType*) util_Calloc ((size_t) res_copy->NbSize + 2, sizeof(smultin_CellType));
+     //  res_copy->Nb1 = (smultin_CellType*)util_Calloc ((size_t) res_copy->Nb1Size + 2,
+     //     sizeof (smultin_CellType));
+
       printf("res pointer %p\n",res);
       printf("res Nb %llu\n",res->Nb);
       printf("res NbSize %llu\n",res->NbSize);
+      printf("res NbSize type %s\n", typeid(res->NbSize).name());
+      printf("res Count %llu\n",res->Count);
+      smultin_Res *res_copy;
+      res_copy = (smultin_Res*) util_Malloc (sizeof (smultin_Res));
+      memset (res_copy, 0, sizeof (smultin_Res));
+      *res_copy = *res;
 
+      printf("res_copy pointer %p\n",res_copy);
+      printf("res_copy Nb %llu\n",res_copy->Nb);
+      printf("res_copy NbSize %llu\n",res_copy->NbSize);
+
+      for (i = 0; i < (n - t * s - 1) / s; i++) {
+         smultin_Res *res_copy = (smultin_Res*) util_Malloc (sizeof (smultin_Res));
+         memset (res_copy, 0, sizeof (smultin_Res));
+         smultin_Res *res_copy1 = (smultin_Res*) util_Malloc (sizeof (smultin_Res));
+         memset (res_copy1, 0, sizeof (smultin_Res));
+         smultin_Res *res_copy2 = (smultin_Res*) util_Malloc (sizeof (smultin_Res));
+         memset (res_copy2, 0, sizeof (smultin_Res));
+         smultin_Res *res_copy3 = (smultin_Res*) util_Malloc (sizeof (smultin_Res));
+         memset (res_copy3, 0, sizeof (smultin_Res));
+         
+
+         smultin_CellType *Nb_copy = (smultin_CellType*) util_Malloc (sizeof (smultin_CellType));
+         memset (Nb_copy, 0, sizeof (smultin_CellType));
+
+         smultin_CellType *Nb_copy1 = (smultin_CellType*) util_Malloc (sizeof (smultin_CellType));
+         memset (Nb_copy1, 0, sizeof (smultin_CellType));
+         // memcpy(&res_copy->Nb,&Nb_copy,sizeof(smultin_CellType));
+
+         // printf("Nb_copy pointer %p\n",Nb_copy);
+         // printf("res Nb pointer %p\n",res->Nb);
+
+         *res_copy = *res;
+         *res_copy1 = *res;
+         *res_copy2 = *res;
+         *res_copy3 = *res;
+
+         *Nb_copy = *res->Nb;
+         *Nb_copy1 = *res->Nb;
+
+         res_copy->Nb = Nb_copy;
+         res_copy1->Nb = Nb_copy1;
+         // printf("res_copy Nb pointer %p\n",res_copy->Nb);
+
+         resArray[i] =  res_copy;
+         resArray1[i] =  res_copy1;
+         resArray2[i] =  res_copy2;
+         resArray3[i] =  res_copy3;
+
+      }
+      smultin_Res *res_copy1;
+      res_copy1= (smultin_Res*) util_Malloc (sizeof (smultin_Res));
+      memset (res_copy1, 0, sizeof (smultin_Res));
+      *res_copy1 = *res;
+      printf("res_copy pointer %p\n",res_copy1);
+      printf("res_copy Nb %llu\n",res_copy1->Nb);
+      printf("res_copy NbSize %llu\n",res_copy1->NbSize);
+      // smultin_Res *res_copy;
+      // *res_copy = *res;
       /* Generation of the other random bits: main loop */
 
       // tbb::parallel_for(size_t (0), (size_t) ((n - t * s - 1) / s), [&](size_t i){
       for (i = 0; i < (n - t * s - 1) / s; i++) {
-      printf("res NbSize %llu\n",res->NbSize);
 
          /* Since L + s overflows a ulonglong, process a s-bit block in */
          /* t2 subblocks of q1 bits and one last subblock of q2 bits.  */
@@ -3367,9 +3466,9 @@ static void OverHashGenereBits (
             UpdateCountHash (res, output_vector1[i][j].idx4, Hache1, UnSurHache1, CoMax, FALSE);
             // Z >>= 1;
          }
-      } // end main loop
+       } // end main loop
 // });
-
+      printf("end main loop\n");
       printf("res pointer %p\n",res);
       printf("res Nb %llu\n",res->Nb);
       printf("res NbSize %llu\n",res->NbSize);
@@ -3441,6 +3540,7 @@ static void OverHashGenereBits (
 
 /*=======================================================================*/
 
+
 static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
    smultin_Res * res, long N, long n, int r, long d, int t, lebool Sparse,
    smultin_CellType k, smultin_CellType k1, const char *TestName,
@@ -3480,8 +3580,23 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
 
    res->NbCellsTotal = k;
    res->Over = TRUE;
+   printf("value of N %u\n",N);
    InitRes (par, res, N);
+
+
+   smultin_Res *res_copy = smultin_CreateRes (par);
+   smultin_Res *res_test = smultin_CreateRes(par);
+
+   // copyRes (gen, par, res_test, N, n, r, d, t, Sparse, k, k1,
+   //               TestName, Timer, FALSE);
+
+   // smultin_Res *res_copy = (smultin_Res*) util_Malloc (sizeof (smultin_Res));
+   // memset (res_copy, 0, sizeof (smultin_Res));
+   InitRes (par, res_copy, N);
+
+   InitPowDiv (par, res_copy, N, Sparse, n, k - k1);
    InitPowDiv (par, res, N, Sparse, n, k - k1);
+
    if (swrite_Basic) {
       if (BitFlag)
          /* Here t stand for s, d for L */
@@ -3494,8 +3609,11 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
       if (fabs (par->ValDelta[s] + 1.0) < EPS_LAM) {
          /* CollisionOver test */
          InitCollOver (res, n, k, d, t, &Esperance, &StandDev);
+         InitCollOver (res_copy, n, k, d, t, &Esperance, &StandDev);
+
          if (swrite_Basic)
             WriteDataCollOver (res, n, k, Esperance, StandDev);
+            WriteDataCollOver (res_copy, n, k, Esperance, StandDev);
       }
    }
    for (s = 0; s < par->NbDelta; s++) {
@@ -3504,6 +3622,8 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
       X0Pre[s] = 0.0;
    }
    CalcTabFj (par, res, Sparse, (double) k, NbExp);
+   CalcTabFj (par, res_copy, Sparse, (double) k, NbExp);
+
    if (res->Hashing) {
       Hache1 = tables_HashPrime (n, smultin_env.HashLoad);
       if ((unsigned) Hache1 > k1)
@@ -3526,7 +3646,37 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
    res->Nb1 = (smultin_CellType*)util_Calloc ((size_t) res->Nb1Size + 2,
       sizeof (smultin_CellType));
 
+
+   if (res_copy->Hashing) {
+      Hache1 = tables_HashPrime (n, smultin_env.HashLoad);
+      if ((unsigned) Hache1 > k1)
+         Hache11 = k1;
+      else
+         Hache11 = Hache1;
+      res_copy->Cell = (smultin_CellType*) util_Calloc ((size_t) Hache1 + 2, sizeof(smultin_CellType));
+      res_copy->Cell1 = (smultin_CellType*)util_Calloc ((size_t) Hache11 + 2,
+         sizeof (smultin_CellType));
+   } else {
+      Hache1 = k;
+      Hache11 = k1;
+   }
+   res_copy->CountSize = Hache1;
+   res_copy->Count1Size = Hache11;
+   res_copy->Count = (long*) util_Calloc ((size_t) Hache1 + 2, sizeof(long));
+   res_copy->Count1 = (long*) util_Calloc ((size_t) Hache11 + 2, sizeof(long));
+   res_copy->NbSize = res_copy->Nb1Size = 8000;
+   res_copy->Nb = (smultin_CellType*) util_Calloc ((size_t) res_copy->NbSize + 2, sizeof(smultin_CellType));
+   res_copy->Nb1 = (smultin_CellType*)util_Calloc ((size_t) res_copy->Nb1Size + 2,
+      sizeof (smultin_CellType));
+
+   printf("init res pointer %p\n",res);
+   printf("init res Nb %llu\n",res->Nb);
+   printf("init res_test pointer %p\n",res_test);
+   printf("init res_test Nb %llu\n",res_test->Nb);
+
       printf("start for loop\n");
+
+
    /* Generate the points or balls */
    // tbb::parallel_for(size_t (1), (size_t) (N+1), [&](size_t Seq){
   
@@ -3536,13 +3686,13 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
 
       if (BitFlag) {
          /* Here, d stands for L, and t for s */
-         if (res->Hashing) {
+         if (res_copy->Hashing) {
             printf("OverHashGenereBits\n");
             OverHashGenereBits ((gen), res, n, r, d, t, Hache1, Hache11, k, k1,
                &CoMax, &CoMax1);
          } else {
             printf("OverDenseGenereBits\n");
-            OverDenseGenereBits (gen, res, n, r, d, t, Hache1, Hache11);   // the bottleneck
+            OverDenseGenereBits (gen, res_copy, n, r, d, t, Hache1, Hache11);   // the bottleneck
          }
       } else {
          if (res->Hashing) {
@@ -3585,7 +3735,7 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
          /* Compute the stat. X */
          if (res->Hashing) {
             printf("CalcPoDiEqHache\n");
-            CalcPoDiEqHache (par, res, s, NbExp, res->Nb, CoMax, TRUE, &X);
+            CalcPoDiEqHache (par, res_copy, s, NbExp, res->Nb, CoMax, TRUE, &X);       // compute statitics here
 
          } else if (res->flagTab) {
             CalcPowDivEqual (par, res, s, NbExp,
@@ -3613,10 +3763,10 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
                   ("smultin_MultinomialOver: Computing X0 with CollNotInit");
                break;
             }
-            res->NbCollisions += X;
-            res->Nb[0] = k + X - nLR;
-            statcoll_AddObs (res->Collector[s], X0);
-            CalcNbCells (par, res, 0, Hache1 - 1, CoMax);
+            res_copy->NbCollisions += X;
+            res_copy->Nb[0] = k + X - nLR;
+            statcoll_AddObs (res_copy->Collector[s], X0);
+            CalcNbCells (par, res_copy, 0, Hache1 - 1, CoMax);             // use res here
 
          } else {
             /* In the case delta = 1, X-X1 is approx. a chi-square with
@@ -3645,7 +3795,7 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
 // });
    /* For now, we understand only the cases delta = 1 and Collision */
    for (s = 0; s < par->NbDelta; s++) {
-      statcoll_Collector *Q = res->Collector[s];
+      statcoll_Collector *Q = res_copy->Collector[s];
       double racN = sqrt ((double) N);
 
       if (par->ValDelta[s] > -1.0 + EPS_LAM) {
@@ -3654,18 +3804,18 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
             util_Warning (fabs (par->ValDelta[s] - 1.0) > EPS_LAM,
   "The theoretical distribution for the overlapping case\nis known only for Delta = 1");
             gofw_ActiveTests1 (Q->V, Q->NObs, wdist_Normal,
-               (double *) NULL, res->sVal2[s], res->pVal2[s]);
+               (double *) NULL, res_copy->sVal2[s], res_copy->pVal2[s]);
          } else {
             V[0] = k - k1;
             gofw_ActiveTests1 (Q->V, Q->NObs, wdist_ChiSquare, V,
-               res->sVal2[s], res->pVal2[s]);
+               res_copy->sVal2[s], res_copy->pVal2[s]);
          }
          /* Compute the mean, the correlation, and their p-values */
          if (Q->NObs > 1) {
-            res->sVal2[s][gofw_Mean] = SumX[s] / racN;
-            res->pVal2[s][gofw_Mean] = fbar_Normal1 (res->sVal2[s][gofw_Mean]);
-            res->sVal2[s][gofw_Cor] = racN * SumX2[s] / (N - 1);
-            res->pVal2[s][gofw_Cor] = fbar_Normal1 (res->sVal2[s][gofw_Cor]);
+            res_copy->sVal2[s][gofw_Mean] = SumX[s] / racN;
+            res_copy->pVal2[s][gofw_Mean] = fbar_Normal1 (res_copy->sVal2[s][gofw_Mean]);
+            res_copy->sVal2[s][gofw_Cor] = racN * SumX2[s] / (N - 1);
+            res_copy->pVal2[s][gofw_Cor] = fbar_Normal1 (res_copy->sVal2[s][gofw_Cor]);
          }
          if (swrite_Basic) {
             WriteResultsPowDiv (par, res, s, N, EColl, k - k1, Sparse,
@@ -3674,9 +3824,9 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
 
       } else if (fabs (par->ValDelta[s] + 1.0) < EPS_LAM) {
          /* Collisions test */
-         CalcResCollOver (res, s, N, Esperance, SumX[s], SumX2[s]);
+         CalcResCollOver (res_copy, s, N, Esperance, SumX[s], SumX2[s]);
          if (swrite_Basic) {
-            WriteResCollOver (par, res, s, N, EColl, Esperance);
+            WriteResCollOver (par, res_copy, s, N, EColl, Esperance);
          }
       }
    }
@@ -3684,7 +3834,7 @@ static void MultinomOver (unif01_Gen * gen, smultin_Param * par,
       swrite_Final (gen, Timer);
 
    if (localRes)
-      smultin_DeleteRes (res);
+      smultin_DeleteRes (res_copy);
 }
 
 

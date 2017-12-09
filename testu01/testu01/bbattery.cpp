@@ -3238,8 +3238,11 @@ static void DoMultinom (lebool fileFlag, /* */
    n -= n % 32;
    L = num_Log2 (n / 200.0 * n);
    L = util_Max (4, L);
+   // printf("size of iterations %lu \n",(n-L*32-1)/32);
+
    for (i = 0; i < Rep[j2]; ++i) {
       smultin_MultinomialBitsOver (gen, par, res, N, n, 0, 32, L, TRUE);
+
       strcpy (bbattery_TestNames[++j], "MultinomialBitsOver");
       bbattery_pVal[j] = res->pColl;
       TestNumber[j] = j2;
