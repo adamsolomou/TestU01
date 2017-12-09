@@ -42,11 +42,12 @@ in mind (or two for a pair):
   benchmark can be executed per second, which is measured as the number
   of complete test results printed to stdout, divided by the amount of
   time the program is allowed to run before the user terminates it (this
-  will be of the order of 10s of seconds).
+  will be [between 10 and 100 seconds](https://github.com/HPCE/hpce-2017-cw6/issues/35)).
 
 - [Stress testing](drivers/driver_stress.cpp) : Trying to test as large a sample
   as possible within a time budget, using the benchmark Rabbit. Given a
-  time-budget `t` seconds (passed as a command-line parameter), your program should
+  time-budget `t` seconds [of between 2 and 180 seconds](https://github.com/HPCE/hpce-2017-cw6/issues/27)
+  (passed as a command-line parameter), your program should
   respond within 0.5 sec with a bid size `n` printed to `stdout`, and then
   proceed to apply the test. If the total measured execution time of the
   program is `g` seconds, then the metric is `log2(n) * ( (g/t<1) ? 1.0 : exp(-g/t) ) `.
@@ -160,7 +161,7 @@ The target environment is either a `g3.4xlarge` (note that this is
 newer than in previous courseworks), or a `c4.8xlarge`. You
 should indicate in `group.md` which one you want to use.
 Two additional libraries will be available [see #17](https://github.com/HPCE/hpce-2017-cw6/issues/17):
-- boost
+- boost (including libboost-system1.55-dev and libboost-filesystem1.55-dev)
 - CUDA
 
 The marks for the coursework are split up into three parts:
