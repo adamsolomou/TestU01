@@ -3222,8 +3222,8 @@ static void DoMultinom (lebool fileFlag, /* */
    // int tasks;
    // tasks = 4;
 
-   std::vector<smultin_Res*> resArray(tasks);
-   std::vector<smultin_Param*> parArray(tasks);
+   // std::vector<smultin_Res*> resArray(tasks);
+   // std::vector<smultin_Param*> parArray(tasks);
    
    smultin_Res *res;
    smultin_Param *par = NULL;
@@ -3271,7 +3271,56 @@ static void DoMultinom (lebool fileFlag, /* */
   smultin_Res *res10;
    smultin_Param *par10 = NULL;
 
-  
+     smultin_Res *res11;
+   smultin_Param *par11 = NULL;
+
+     smultin_Res *res12;
+   smultin_Param *par12 = NULL;
+
+     smultin_Res *res13;
+   smultin_Param *par13 = NULL;
+
+     smultin_Res *res14;
+   smultin_Param *par14 = NULL;
+
+     smultin_Res *res15;
+   smultin_Param *par15 = NULL;
+
+     smultin_Res *res16;
+   smultin_Param *par16 = NULL;
+
+     smultin_Res *res17;
+   smultin_Param *par17 = NULL;
+
+     smultin_Res *res18;
+   smultin_Param *par18 = NULL;
+
+    smultin_Res *res19;
+   smultin_Param *par19 = NULL;
+
+     smultin_Res *res20;
+   smultin_Param *par20 = NULL;
+
+        smultin_Res *res21;
+   smultin_Param *par21 = NULL;
+
+        smultin_Res *res22;
+   smultin_Param *par22 = NULL;
+
+        smultin_Res *res23;
+   smultin_Param *par23 = NULL;
+
+        smultin_Res *res24;
+   smultin_Param *par24 = NULL;
+
+        smultin_Res *res25;
+   smultin_Param *par25= NULL;
+
+        smultin_Res *res26;
+   smultin_Param *par26 = NULL;
+
+        smultin_Res *res27;
+   smultin_Param *par27 = NULL;
    par1 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
    res1 = smultin_CreateRes (par1);
 
@@ -3304,6 +3353,60 @@ static void DoMultinom (lebool fileFlag, /* */
    par10 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
    res10 = smultin_CreateRes (par10);
 
+   par11 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res11 = smultin_CreateRes (par11);
+
+   par12 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res12 = smultin_CreateRes (par12);
+
+  par13 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res13 = smultin_CreateRes (par13);
+
+   par14 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res14 = smultin_CreateRes (par14);
+
+   par15 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res15 = smultin_CreateRes (par15);
+
+   par16 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res16 = smultin_CreateRes (par16);
+
+   par17 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res17 = smultin_CreateRes (par17);
+
+   par18 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res18 = smultin_CreateRes (par18);
+
+
+    par19 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res19= smultin_CreateRes (par19);
+
+   par20 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res20 = smultin_CreateRes (par20);
+
+   par21 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res21 = smultin_CreateRes (par21);
+
+   par22 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res22 = smultin_CreateRes (par22);
+
+   par23 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res23 = smultin_CreateRes (par23);
+
+   par24 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res24 = smultin_CreateRes (par24);
+
+   par25 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res25 = smultin_CreateRes (par25);
+
+   par25 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res25 = smultin_CreateRes (par25);
+   
+   par26 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res26 = smultin_CreateRes (par26);
+   
+   par27 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res27 = smultin_CreateRes (par27);
    if (fileFlag)
       ufile_InitReadBin ();
 
@@ -3380,6 +3483,23 @@ smultin_MultinomialBitsOver (gen, par, res, N, n, 0, 32, L, TRUE);
      group.run( [&](){ test1(workload_Clone(gen),par8, res8, N, n, 0, 32, L, TRUE); } ); 
      group.run( [&](){ test1(workload_Clone(gen),par9, res9, N, n, 0, 32, L, TRUE); } ); 
      group.run( [&](){ test1(workload_Clone(gen),par10, res10, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par11, res11, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par12, res12, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par13, res13, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par14, res14, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par15, res15, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par16, res16, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par17, res17, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par18, res18, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par19, res19, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par20, res20, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par21, res21, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par22, res22, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par23, res23, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par24, res24, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par25, res25, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par26, res26, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par27, res27, N, n, 0, 32, L, TRUE); } ); 
 
       group.wait();
       strcpy (bbattery_TestNames[++j], "MultinomialBitsOver");
