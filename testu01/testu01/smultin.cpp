@@ -3672,3 +3672,36 @@ void smultin_MultinomialBitsOver (unif01_Gen * gen, smultin_Param * par,
 
    chrono_Delete (Timer);
 }
+
+
+// auto test1 = [&] (unif01_Gen * gen, smultin_Param * par,
+//    smultin_Res * res, long N, long n, int r, int s, int L, lebool Sparse)
+// {
+//    smultin_CellType k1;       /* Number of urns in L - 1 dimensions */
+//    smultin_CellType k;        /* Number of urns in L dimensions */
+//    double NbExp;              /* Expected number per cell in L dimensions */
+//    chrono_Chrono *Timer;
+//    const char *TestName = "smultin_MultinomialBitsOver test";
+
+//    Timer = chrono_Create ();
+//    if (NULL == par)
+//       par = (smultin_Param*)&smultin_ParamDefault;
+//    util_Assert (L <= 64, "smultin_MultinomialBitsOver:   L > 64");
+//    k1 = num_TwoExp[L - 1];
+//    k = num_TwoExp[L];
+//    NbExp = (double) n / k;
+//    util_Assert (n > 4, "smultin_MultinomialBitsOver:   n <= 4");
+//    util_Assert (L > 1, "smultin_MultinomialBitsOver:   L < 2");
+//    util_Assert (s > 0, "smultin_MultinomialBitsOver:   s < 1");
+//    util_Assert (k <= smultin_env.Maxk,
+//       "smultin_MultinomialBitsOver:   L too large");
+// #ifndef USE_LONGLONG
+//    util_Assert (NbExp > 1.0 / num_TwoExp[31],
+//       "smultin_MultinomialBitsOver:   NbExp <= 1/2^31");
+// #endif
+//    MultinomOver (gen, par, res, N, n, r, L, s, Sparse, k, k1,
+//                  TestName, Timer, TRUE);
+
+//    chrono_Delete (Timer);
+// }
+
