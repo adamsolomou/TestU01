@@ -3321,6 +3321,30 @@ static void DoMultinom (lebool fileFlag, /* */
 
         smultin_Res *res27;
    smultin_Param *par27 = NULL;
+
+           smultin_Res *res28;
+   smultin_Param *par28 = NULL;
+
+           smultin_Res *res29;
+   smultin_Param *par29 = NULL;
+
+           smultin_Res *res30;
+   smultin_Param *par30 = NULL;
+
+           smultin_Res *res31;
+   smultin_Param *par31 = NULL;
+
+           smultin_Res *res32;
+   smultin_Param *par32 = NULL;
+
+              smultin_Res *res33;
+   smultin_Param *par33 = NULL;
+
+              smultin_Res *res34;
+   smultin_Param *par34 = NULL;
+
+              smultin_Res *res35;
+   smultin_Param *par35 = NULL;
    par1 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
    res1 = smultin_CreateRes (par1);
 
@@ -3407,6 +3431,32 @@ static void DoMultinom (lebool fileFlag, /* */
    
    par27 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
    res27 = smultin_CreateRes (par27);
+
+   par28 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res28 = smultin_CreateRes (par28);
+
+   par29 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res29 = smultin_CreateRes (par29);
+
+   par30 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res30 = smultin_CreateRes (par30);
+
+   par31 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res31 = smultin_CreateRes (par31);
+
+   par32 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res32 = smultin_CreateRes (par32);
+
+   par33 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res33 = smultin_CreateRes (par33);
+
+   par34 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res34 = smultin_CreateRes (par34);
+
+   par35 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   res35 = smultin_CreateRes (par35);
+
+
    if (fileFlag)
       ufile_InitReadBin ();
 
@@ -3424,7 +3474,7 @@ smultin_MultinomialBitsOver (gen, par, res, N, n, 0, 32, L, TRUE);
   //  /* Limit sample size n to NLIM because of memory limitations. */
    /* Determine number of replications N from this. */
 
-   nb = nb/11;
+   nb = nb/36;
 
    N = 1 + nb / NLIM;
    n = nb / N;
@@ -3500,6 +3550,14 @@ smultin_MultinomialBitsOver (gen, par, res, N, n, 0, 32, L, TRUE);
      group.run( [&](){ test1(workload_Clone(gen),par25, res25, N, n, 0, 32, L, TRUE); } ); 
      group.run( [&](){ test1(workload_Clone(gen),par26, res26, N, n, 0, 32, L, TRUE); } ); 
      group.run( [&](){ test1(workload_Clone(gen),par27, res27, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par28, res28, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par29, res29, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par30, res30, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par31, res31, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par32, res32, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par33, res33, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par34, res34, N, n, 0, 32, L, TRUE); } ); 
+     group.run( [&](){ test1(workload_Clone(gen),par35, res35, N, n, 0, 32, L, TRUE); } ); 
 
       group.wait();
       strcpy (bbattery_TestNames[++j], "MultinomialBitsOver");
