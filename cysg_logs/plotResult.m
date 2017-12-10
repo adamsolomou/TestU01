@@ -4,7 +4,7 @@ clear all;
 % Version 1 : n = t*100000
 % value1_n/100000 = value1_t
 
-file_ID = fopen('stress_time_par16.log','r');
+file_ID = fopen('stress_time_par16_v1.log','r');
 % formatSpec = '%*4c %d %*c %f %*c'; 
 formatSpec = '%*s %*d %*s %*s %*d %*s %f'; 
 value = textscan(file_ID, formatSpec); 
@@ -13,7 +13,7 @@ value = value{1};
 
 % Version 2 : n = t*1000000
 % value2_n/1000000 = value2_t
-file_ID = fopen('stress_time_par16_v1.log','r');
+file_ID = fopen('stress_time_par32.log','r');
 % formatSpec = '%*4c %d %*c %f %*c'; 
 formatSpec = '%*s %*d %*s %*s %*d %*s %f'; 
 value2 = textscan(file_ID, formatSpec); 
