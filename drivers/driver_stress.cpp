@@ -37,10 +37,14 @@ int main (int argc, char *argv[])
     
    unif01_Gen *gen=workload_Create();
    std::string name=workload_Name(gen);
-   
+  double n; 
    // TODO : Choose the n that you think is achievable in timeBudget seconds
-   double n = t*1000000*6; // This is just a throwaway example of how to choose
-   
+if(t>100){
+n = t*1000000*7;
+}
+else{
+    n = t*1000000*6; // This is just a throwaway example of how to choose
+}   
    // Make sure this happens _before_ starting the battery, so that the
    // client knows what you are trying.
    fprintf(stdout, "%s, -1, TimeBudget, 0, %g\n", name.c_str(), t);
