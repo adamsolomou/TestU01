@@ -3237,7 +3237,7 @@ static void DoMultinom (lebool fileFlag, /* */
 #ifdef USE_LONGLONG
    /* Limit sample size n to NLIM because of memory limitations. */
    /* Determine number of replications N from this. */
-   nb = nb/2;
+  // nb = nb/2;
    N = 1 + nb / NLIM;
    n = nb / N;
    /* Time limit on test: N = 30 */
@@ -3253,11 +3253,11 @@ static void DoMultinom (lebool fileFlag, /* */
   printf("value of L %lu\n",L);
 
    for (i = 0; i < Rep[j2]; ++i) {
-      // smultin_MultinomialBitsOver (gen, par, res, N, n, 0, 32, L, TRUE);
-      tbb::task_group group;
+       smultin_MultinomialBitsOver (gen, par, res, N, n, 0, 32, L, TRUE);
+    /*  tbb::task_group group;
       group.run( [&](){ parTask(workload_Clone(gen),par, res, N, n, 0, 32, L, TRUE); } );     
       group.run( [&](){ parTask(workload_Clone(gen),par1, res1, N, n, 0, 32, L, TRUE); } );     
-      group.wait();     
+      group.wait();  */   
       strcpy (bbattery_TestNames[++j], "MultinomialBitsOver");
       bbattery_pVal[j] = res->pColl;
       TestNumber[j] = j2;
