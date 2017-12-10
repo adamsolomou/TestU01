@@ -3222,22 +3222,39 @@ static void DoMultinom (lebool fileFlag, /* */
    double x;
    int i;
    int j = *pj;
-   smultin_Res *res, *res1;
-   smultin_Param *par, *par1 = NULL;
-   double ValDelta[] = { -1 };
 
-   util_Assert (nb > 0.0, "MultinomialBits:   nb <= 0");
-   par = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
-   res = smultin_CreateRes (par);
-   par1 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
-   res1 = smultin_CreateRes (par1);   
+   // smultin_Res *res, *res1;
+   // smultin_Param *par, *par1 = NULL;
+   int tasks = 2;
+   std::vector<smultin_Param *> parArray(tasks);
+   std::vector<smultin_Res *> resArray(tasks);
+   double ValDelta[] = { -1 };
+   
+   for(int i=0; i < tasks; i++){
+    smultin_Res *res;
+    smultin_Param *par = NULL;
+    util_Assert (nb > 0.0, "MultinomialBits:   nb <= 0");
+    par = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+    res = smultin_CreateRes (par);
+    parArray[i] = par;
+    resArray[i] = res;
+
+   }
+
+   // par = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   // res = smultin_CreateRes (par);
+   // par1 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   // res1 = smultin_CreateRes (par1);   
    if (fileFlag)
       ufile_InitReadBin ();
 
 #ifdef USE_LONGLONG
    /* Limit sample size n to NLIM because of memory limitations. */
    /* Determine number of replications N from this. */
-  // nb = nb/2;
+  
+   nb = nb/tasks;
+
+
    N = 1 + nb / NLIM;
    n = nb / N;
    /* Time limit on test: N = 30 */
@@ -3253,13 +3270,13 @@ static void DoMultinom (lebool fileFlag, /* */
   printf("value of L %lu\n",L);
 
    for (i = 0; i < Rep[j2]; ++i) {
-       smultin_MultinomialBitsOver (gen, par, res, N, n, 0, 32, L, TRUE);
-    /*  tbb::task_group group;
-      group.run( [&](){ parTask(workload_Clone(gen),par, res, N, n, 0, 32, L, TRUE); } );     
-      group.run( [&](){ parTask(workload_Clone(gen),par1, res1, N, n, 0, 32, L, TRUE); } );     
-      group.wait();  */   
+       // smultin_MultinomialBitsOver (gen, par, res, N, n, 0, 32, L, TRUE);
+      tbb::task_group group;
+      group.run( [&](){ parTask(workload_Clone(gen),parArray[0], resArray[0], N, n, 0, 32, L, TRUE); } );     
+      group.run( [&](){ parTask(workload_Clone(gen),parArray[1], resArray[1], N, n, 0, 32, L, TRUE); } );     
+      group.wait();     
       strcpy (bbattery_TestNames[++j], "MultinomialBitsOver");
-      bbattery_pVal[j] = res->pColl;
+      bbattery_pVal[j] = resArray[0]->pColl;
       TestNumber[j] = j2;
    }
 
@@ -3296,8 +3313,12 @@ static void DoMultinom (lebool fileFlag, /* */
    }
 #endif
    *pj = j;
-   smultin_DeleteRes (res);
-   smultin_DeleteParam (par);
+   for(int i =0; i<tasks;i++){
+    smultin_DeleteRes (resArray[i]);
+   smultin_DeleteParam (parArray[i]);
+   }
+   // smultin_DeleteRes (res);
+   // smultin_DeleteParam (par);
 }
 
 
