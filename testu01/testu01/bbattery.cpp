@@ -3225,7 +3225,8 @@ static void DoMultinom (lebool fileFlag, /* */
 
    // smultin_Res *res, *res1;
    // smultin_Param *par, *par1 = NULL;
-   int tasks = 2;
+   int tasks = 36;
+
    std::vector<smultin_Param *> parArray(tasks);
    std::vector<smultin_Res *> resArray(tasks);
    double ValDelta[] = { -1 };
@@ -3274,7 +3275,42 @@ static void DoMultinom (lebool fileFlag, /* */
       tbb::task_group group;
       group.run( [&](){ parTask(workload_Clone(gen),parArray[0], resArray[0], N, n, 0, 32, L, TRUE); } );     
       group.run( [&](){ parTask(workload_Clone(gen),parArray[1], resArray[1], N, n, 0, 32, L, TRUE); } );     
-      group.wait();     
+      group.run( [&](){ parTask(workload_Clone(gen),parArray[2], resArray[2], N, n, 0, 32, L, TRUE); } );     
+      group.run( [&](){ parTask(workload_Clone(gen),parArray[3], resArray[3], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[4], resArray[4], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[5], resArray[5], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[6], resArray[6], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[7], resArray[7], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[8], resArray[8], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[9], resArray[9], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[10], resArray[10], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[11], resArray[11], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[12], resArray[12], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[13], resArray[13], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[14], resArray[14], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[15], resArray[15], N, n, 0, 32, L, TRUE); } ); 
+group.run( [&](){ parTask(workload_Clone(gen),parArray[16], resArray[16], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[17], resArray[17], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[18], resArray[18], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[19], resArray[19], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[20], resArray[20], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[21], resArray[21], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[22], resArray[22], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[23], resArray[23], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[24], resArray[24], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[25], resArray[25], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[26], resArray[26], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[27], resArray[27], N, n, 0, 32, L, TRUE); } );    
+group.run( [&](){ parTask(workload_Clone(gen),parArray[28], resArray[28], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[29], resArray[29], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[30], resArray[30], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[31], resArray[31], N, n, 0, 32, L, TRUE); } );    
+group.run( [&](){ parTask(workload_Clone(gen),parArray[32], resArray[32], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[33], resArray[33], N, n, 0, 32, L, TRUE); } );    
+group.run( [&](){ parTask(workload_Clone(gen),parArray[34], resArray[34], N, n, 0, 32, L, TRUE); } );    
+group.run( [&](){ parTask(workload_Clone(gen),parArray[35], resArray[35], N, n, 0, 32, L, TRUE); } );    
+
+ group.wait();     
       strcpy (bbattery_TestNames[++j], "MultinomialBitsOver");
       bbattery_pVal[j] = resArray[0]->pColl;
       TestNumber[j] = j2;
