@@ -39,7 +39,7 @@ int main (int argc, char *argv[])
    std::string name=workload_Name(gen);
    
    // TODO : Choose the n that you think is achievable in timeBudget seconds
-   double n = t*1000000*2; // This is just a throwaway example of how to choose
+   double n = t*1000000*4; // This is just a throwaway example of how to choose
    
    // Make sure this happens _before_ starting the battery, so that the
    // client knows what you are trying.
