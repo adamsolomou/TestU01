@@ -4,7 +4,7 @@ clear all;
 % Version 1 : n = t*100000
 % value1_n/100000 = value1_t
 
-file_ID = fopen('stress_time_ref_full.log','r');
+file_ID = fopen('stress_time_par8_v1.log','r');
 % formatSpec = '%*4c %d %*c %f %*c'; 
 formatSpec = '%*s %*d %*s %*s %*d %*s %f'; 
 value = textscan(file_ID, formatSpec); 
@@ -13,7 +13,7 @@ value = value{1};
 
 % Version 2 : n = t*1000000
 % value2_n/1000000 = value2_t
-file_ID = fopen('stress_time_ref_v1.log','r');
+file_ID = fopen('stress_time_par16.log','r');
 % formatSpec = '%*4c %d %*c %f %*c'; 
 formatSpec = '%*s %*d %*s %*s %*d %*s %f'; 
 value2 = textscan(file_ID, formatSpec); 
@@ -50,12 +50,12 @@ end
 %plot real time (absolute times)
 figure
 subplot(1,2,1)
-plot(value_n,value_t(:,1),'k--o');
+plot(value_t(:,1),value_t(:,1),'k--o');
 hold on
-plot(value_n,value_g(:,1),'b--o')
+plot(value_t(:,1),value_g(:,1),'b--o')
 
 % plot(value2_n,value2_t(:,1),'k--o');
-plot(value2_n,value2_g(:,1),'r--o');
+plot(value2_t(:,1),value2_g(:,1),'r--o');
 legend('time budget','sequential','2 tasks');
 subplot(1,2,2)
 plot(value_t,value_score(:,1),'LineWidth',1);
