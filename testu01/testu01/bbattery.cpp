@@ -3225,7 +3225,7 @@ static void DoMultinom (lebool fileFlag, /* */
 
    // smultin_Res *res, *res1;
    // smultin_Param *par, *par1 = NULL;
-   int tasks = 2;
+   int tasks = 4;
    std::vector<smultin_Param *> parArray(tasks);
    std::vector<smultin_Res *> resArray(tasks);
    double ValDelta[] = { -1 };
@@ -3274,7 +3274,9 @@ static void DoMultinom (lebool fileFlag, /* */
       tbb::task_group group;
       group.run( [&](){ parTask(workload_Clone(gen),parArray[0], resArray[0], N, n, 0, 32, L, TRUE); } );     
       group.run( [&](){ parTask(workload_Clone(gen),parArray[1], resArray[1], N, n, 0, 32, L, TRUE); } );     
-      group.wait();     
+      group.run( [&](){ parTask(workload_Clone(gen),parArray[2], resArray[2], N, n, 0, 32, L, TRUE); } );     
+      group.run( [&](){ parTask(workload_Clone(gen),parArray[3], resArray[3], N, n, 0, 32, L, TRUE); } );     
+ group.wait();     
       strcpy (bbattery_TestNames[++j], "MultinomialBitsOver");
       bbattery_pVal[j] = resArray[0]->pColl;
       TestNumber[j] = j2;
