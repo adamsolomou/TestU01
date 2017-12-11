@@ -3225,7 +3225,7 @@ static void DoMultinom (lebool fileFlag, /* */
 
    // smultin_Res *res, *res1;
    // smultin_Param *par, *par1 = NULL;
-   int tasks = 36;
+   int tasks = 1;
 
    std::vector<smultin_Param *> parArray(tasks);
    std::vector<smultin_Res *> resArray(tasks);
@@ -3565,7 +3565,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
 
    j = -1;
    ++j2;
-  // DoMultinom (fileFlag, gen, nb, &j, j2, Rep, globals);
+  //DoMultinom (fileFlag, gen, nb, &j, j2, Rep, globals);
 
    {
       const long NLIM = 4000000;
