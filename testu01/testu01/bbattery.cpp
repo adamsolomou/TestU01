@@ -4014,7 +4014,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
 
       d = 1;
       N5 = 1 + nb / BILLION;
-      n5 = nb / N - d;
+      n5 = nb / N5 - d;
       n5 -= n5 % 32;
       N5 = util_Min (100, N5);
       if (fileFlag)
@@ -4084,29 +4084,30 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
    printf("value of j %d\n",j);
    printf("value of j2 %d\n",j2);
   };
+/*
+   rabbitTest1(workload_Clone(gen));
+   rabbitTest2(workload_Clone(gen));
+   rabbitTest3(workload_Clone(gen));
+   rabbitTest4(workload_Clone(gen));
+   rabbitTest5(workload_Clone(gen));
+*/
 
-  // rabbitTest1(workload_Clone(gen));
+
+
+   tbb::task_group othertests;
+   othertests.run([&](){  rabbitTest1(workload_Clone(gen)); });
+ othertests.run([&](){  rabbitTest2(workload_Clone(gen)); });
+ othertests.run([&](){  rabbitTest3(workload_Clone(gen)); });
+ othertests.run([&](){  rabbitTest4(workload_Clone(gen)); });
+ othertests.run([&](){  rabbitTest5(workload_Clone(gen)); });
+ othertests.wait();
+ 
+ // rabbitTest1(workload_Clone(gen));
   // rabbitTest2(workload_Clone(gen));
   // rabbitTest3(workload_Clone(gen));
   // rabbitTest4(workload_Clone(gen));
   // rabbitTest5(workload_Clone(gen));
-
-
-
-
-//   tbb::task_group othertests;
-//   othertests.run([&](){  rabbitTest1(workload_Clone(gen)); });
-// othertests.run([&](){  rabbitTest2(workload_Clone(gen)); });
-// othertests.run([&](){  rabbitTest3(workload_Clone(gen)); });
-// othertests.run([&](){  rabbitTest4(workload_Clone(gen)); });
-// othertests.run([&](){  rabbitTest5(workload_Clone(gen)); });
-// othertests.wait();
-  // rabbitTest1(workload_Clone(gen));
-  // rabbitTest2(workload_Clone(gen));
-  // rabbitTest3(workload_Clone(gen));
-  // rabbitTest4(workload_Clone(gen));
-  // rabbitTest5(workload_Clone(gen));
-
+/*
 
    {
       const long NLIM = 4000000;
@@ -4572,7 +4573,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
 
    DoWalk (fileFlag, gen, nb, &j, j2, Rep, globals);
 
-
+*/
 
 
 
