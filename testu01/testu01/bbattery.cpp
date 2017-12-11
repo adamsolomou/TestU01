@@ -3570,8 +3570,8 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
 
    auto rabbitTest1 = [&](unif01_Gen * locRabGen){
     {
-      int j = 0;
-      int j2 = 1;
+      int test1j = 0;
+      int test1j2 = 1;
 
       const long NLIM = 4000000;
       snpair_Res *res;
@@ -3583,22 +3583,22 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       N1 = util_Min (N1, 25);
       if (fileFlag)
          ufile_InitReadBin ();
-      ++j2;
-      for (i = 0; i < Rep[j2]; ++i) {
+      ++test1j2;
+      for (i = 0; i < Rep[test1j2]; ++i) {
          snpair_ClosePairsBitMatch (locRabGen, res, N1, n1 / 2, 0, 2);
-         bbattery_pVal[++j] = res->pVal[snpair_BM];
-         TestNumber[j] = j2;
-         strcpy (bbattery_TestNames[j], "ClosePairsBitMatch, t = 2");
+         bbattery_pVal[++test1j] = res->pVal[snpair_BM];
+         TestNumber[test1j] = test1j2;
+         strcpy (bbattery_TestNames[test1j], "ClosePairsBitMatch, t = 2");
       }
 
       if (fileFlag)
          ufile_InitReadBin ();
-      ++j2;
-      for (i = 0; i < Rep[j2]; ++i) {
+      ++test1j2;
+      for (i = 0; i < Rep[test1j2]; ++i) {
          snpair_ClosePairsBitMatch (locRabGen, res, N1, n1 / 4, 0, 4);
-         bbattery_pVal[++j] = res->pVal[snpair_BM];
-         TestNumber[j] = j2;
-         strcpy (bbattery_TestNames[j], "ClosePairsBitMatch, t = 4");
+         bbattery_pVal[++test1j] = res->pVal[snpair_BM];
+         TestNumber[test1j] = test1j2;
+         strcpy (bbattery_TestNames[test1j], "ClosePairsBitMatch, t = 4");
       }
       snpair_DeleteRes (res);
    }
@@ -3610,55 +3610,55 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
   auto rabbitTest2 = [&](unif01_Gen * locRabGen){
     
     
-      int j=21;
-      int j2=20;
+      int test2j=21;
+      int test2j2=20;
     
       long n2;
 
       sres_Chi2 *res;
       res = sres_CreateChi2 ();
       n2 = nb / (s * s);
-      n2 = util_Min (2, 50 * MILLION);
-      ++j2;
+      n2 = util_Min (n2, 50 * MILLION);
+      ++test2j2;
       if (n2 >= 50) {
          if (fileFlag)
             ufile_InitReadBin ();
-         for (i = 0; i < Rep[j2]; ++i) {
-            j++;
+         for (i = 0; i < Rep[test2j2]; ++i) {
+            test2j++;
             smarsa_MatrixRank (locRabGen, res, 1, n2, 0, s, s, s);
-            bbattery_pVal[j] = res->pVal2[gofw_Mean];
-            TestNumber[j] = j2;
-            strcpy (bbattery_TestNames[j], "MatrixRank, 32 x 32");
+            bbattery_pVal[test2j] = res->pVal2[gofw_Mean];
+            TestNumber[test2j] = test2j2;
+            strcpy (bbattery_TestNames[test2j], "MatrixRank, 32 x 32");
          }
       }
 
       n2 = nb / (100.0 * s * s);
       n2 = util_Min (n2, 300000);
-      ++j2;
+      ++test2j2;
       if (n2 >= 50) {
          if (fileFlag)
             ufile_InitReadBin ();
-         for (i = 0; i < Rep[j2]; ++i) {
-            j++;
+         for (i = 0; i < Rep[test2j2]; ++i) {
+            test2j++;
             smarsa_MatrixRank (locRabGen, res, 1, n2, 0, s, 10 * s, 10 * s);
-            bbattery_pVal[j] = res->pVal2[gofw_Mean];
-            TestNumber[j] = j2;
-            strcpy (bbattery_TestNames[j], "MatrixRank, 320 x 320");
+            bbattery_pVal[test2j] = res->pVal2[gofw_Mean];
+            TestNumber[test2j] = test2j2;
+            strcpy (bbattery_TestNames[test2j], "MatrixRank, 320 x 320");
          }
       }
 
       n2 = nb / (1024.0 * s * s);
       n2 = util_Min (n2, 20000);
-      ++j2;
+      ++test2j2;
       if (n2 >= 50) {
          if (fileFlag)
             ufile_InitReadBin ();
-         for (i = 0; i < Rep[j2]; ++i) {
-            j++;
+         for (i = 0; i < Rep[test2j2]; ++i) {
+            test2j++;
             smarsa_MatrixRank (locRabGen, res, 1, n2, 0, s, 32 * s, 32 * s);
-            bbattery_pVal[j] = res->pVal2[gofw_Mean];
-            TestNumber[j] = j2;
-            strcpy (bbattery_TestNames[j], "MatrixRank, 1024 x 1024");
+            bbattery_pVal[test2j] = res->pVal2[gofw_Mean];
+            TestNumber[test2j] = test2j2;
+            strcpy (bbattery_TestNames[test2j], "MatrixRank, 1024 x 1024");
          }
       }
       sres_DeleteChi2 (res);
@@ -3670,8 +3670,8 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
 
   auto rabbitTest3 = [&](unif01_Gen * locRabGen){
     {
-        int j = 5;
-        int j2 = 5;
+        int test3j = 5;
+        int test3j2 = 5;
         int k3 = num_Log2 (nb + 0.5);
          if (k3 > 28)
             k3 = 28;
@@ -3681,25 +3681,25 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
             res = sres_CreateBasic ();
             if (fileFlag)
                ufile_InitReadBin ();
-            ++j2;
-            for (i = 0; i < Rep[j2]; ++i) {
+            ++test3j2;
+            for (i = 0; i < Rep[test3j2]; ++i) {
                scomp_LempelZiv (locRabGen, res, N3, k3, 0, s);
-               j++;
+               test3j++;
                if (N == 1)
-                  bbattery_pVal[j] = res->pVal2[gofw_Mean];
+                  bbattery_pVal[test3j] = res->pVal2[gofw_Mean];
                else
-                  bbattery_pVal[j] = res->pVal2[gofw_Sum];
-               TestNumber[j] = j2;
-               strcpy (bbattery_TestNames[j], "LempelZiv");
+                  bbattery_pVal[test3j] = res->pVal2[gofw_Sum];
+               TestNumber[test3j] = test3j2;
+               strcpy (bbattery_TestNames[test3j], "LempelZiv");
             }
             sres_DeleteBasic (res);
          }
 
     }
     {
-      int j=23;
-      int j2=23;
-      DoWalk (fileFlag, locRabGen, nb, &j, j2, Rep, globals);
+      int test3j=23;
+      int test3j2=23;
+      DoWalk (fileFlag, locRabGen, nb, &test3j, test3j2, Rep, globals);
      }
 
   };
@@ -3708,8 +3708,8 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
 
 
       {
-      int j=6;
-      int j2=6;
+      int test4j=6;
+      int test4j2=6;
       int k4;
       sspectral_Res *res;
       k4 = num_Log2 (nb + 0.5);
@@ -3717,13 +3717,13 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       res = sspectral_CreateRes ();
       if (fileFlag)
          ufile_InitReadBin ();
-      ++j2;
-      for (i = 0; i < Rep[j2]; ++i) {
+      ++test4j2;
+      for (i = 0; i < Rep[test4j2]; ++i) {
          sspectral_Fourier1 (locRabGen, res, 1, k4, 0, s);
-         j++;
-         bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
-         TestNumber[j] = j2;
-         strcpy (bbattery_TestNames[j], "Fourier1");
+         test4j++;
+         bbattery_pVal[test4j] = res->Bas->pVal2[gofw_Mean];
+         TestNumber[test4j] = test4j2;
+         strcpy (bbattery_TestNames[test4j], "Fourier1");
       }
       double x4;
       long N4;
@@ -3744,13 +3744,13 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          N4--;
       if (fileFlag)
          ufile_InitReadBin ();
-      ++j2;
-      for (i = 0; i < Rep[j2]; ++i) {
+      ++test4j2;
+      for (i = 0; i < Rep[test4j2]; ++i) {
          sspectral_Fourier3 (locRabGen, res, N4, k4, 0, s);
-         j++;
-         bbattery_pVal[j] = res->Bas->pVal2[gofw_AD];
-         TestNumber[j] = j2;
-         strcpy (bbattery_TestNames[j], "Fourier3");
+         test4j++;
+         bbattery_pVal[test4j] = res->Bas->pVal2[gofw_AD];
+         TestNumber[test4j] = test4j2;
+         strcpy (bbattery_TestNames[test4j], "Fourier3");
       }
       sspectral_DeleteRes (res);
    }
@@ -4084,23 +4084,23 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
    printf("value of j %d\n",j);
    printf("value of j2 %d\n",j2);
   };
-/*
+
    rabbitTest1(workload_Clone(gen));
    rabbitTest2(workload_Clone(gen));
    rabbitTest3(workload_Clone(gen));
    rabbitTest4(workload_Clone(gen));
    rabbitTest5(workload_Clone(gen));
-*/
 
 
 
- tbb::task_group othertests;
- othertests.run([&](){  rabbitTest1(workload_Clone(gen)); });
- othertests.run([&](){  rabbitTest2(workload_Clone(gen)); });
- othertests.run([&](){  rabbitTest3(workload_Clone(gen)); });
- othertests.run([&](){  rabbitTest4(workload_Clone(gen)); });
- othertests.run([&](){  rabbitTest5(workload_Clone(gen)); });
- othertests.wait();
+
+ // tbb::task_group othertests;
+ // othertests.run([&](){  rabbitTest1(workload_Clone(gen)); });
+ // othertests.run([&](){  rabbitTest2(workload_Clone(gen)); });
+ // othertests.run([&](){  rabbitTest3(workload_Clone(gen)); });
+ // othertests.run([&](){  rabbitTest4(workload_Clone(gen)); });
+ // othertests.run([&](){  rabbitTest5(workload_Clone(gen)); });
+ // othertests.wait();
  
  // rabbitTest1(workload_Clone(gen));
   // rabbitTest2(workload_Clone(gen));
