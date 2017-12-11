@@ -3225,7 +3225,7 @@ static void DoMultinom (lebool fileFlag, /* */
 
    // smultin_Res *res, *res1;
    // smultin_Param *par, *par1 = NULL;
-   int tasks = 24;
+   int tasks = 36;
 
    std::vector<smultin_Param *> parArray(tasks);
    std::vector<smultin_Res *> resArray(tasks);
@@ -3297,7 +3297,6 @@ group.run( [&](){ parTask(workload_Clone(gen),parArray[20], resArray[20], N, n, 
 group.run( [&](){ parTask(workload_Clone(gen),parArray[21], resArray[21], N, n, 0, 32, L, TRUE); } );     
 group.run( [&](){ parTask(workload_Clone(gen),parArray[22], resArray[22], N, n, 0, 32, L, TRUE); } );     
 group.run( [&](){ parTask(workload_Clone(gen),parArray[23], resArray[23], N, n, 0, 32, L, TRUE); } );     
-/*
 group.run( [&](){ parTask(workload_Clone(gen),parArray[24], resArray[24], N, n, 0, 32, L, TRUE); } );     
 group.run( [&](){ parTask(workload_Clone(gen),parArray[25], resArray[25], N, n, 0, 32, L, TRUE); } );     
 group.run( [&](){ parTask(workload_Clone(gen),parArray[26], resArray[26], N, n, 0, 32, L, TRUE); } );     
@@ -3310,7 +3309,6 @@ group.run( [&](){ parTask(workload_Clone(gen),parArray[32], resArray[32], N, n, 
 group.run( [&](){ parTask(workload_Clone(gen),parArray[33], resArray[33], N, n, 0, 32, L, TRUE); } );    
 group.run( [&](){ parTask(workload_Clone(gen),parArray[34], resArray[34], N, n, 0, 32, L, TRUE); } );    
 group.run( [&](){ parTask(workload_Clone(gen),parArray[35], resArray[35], N, n, 0, 32, L, TRUE); } );    
-*/
  group.wait();     
       strcpy (bbattery_TestNames[++j], "MultinomialBitsOver");
       bbattery_pVal[j] = resArray[0]->pColl;
@@ -3566,7 +3564,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
 
    j = -1;
    ++j2;
-  DoMultinom (fileFlag, gen, nb, &j, j2, Rep, globals);
+//  DoMultinom (fileFlag, gen, nb, &j, j2, Rep, globals);
 /*
    {
       const long NLIM = 4000000;
@@ -3967,7 +3965,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
        }
       sstring_DeleteRes3 (res);
    }
-
+*/
    {
       sres_Chi2 *res;
       res = sres_CreateChi2 ();
@@ -4017,7 +4015,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       }
       sres_DeleteChi2 (res);
    }
-
+/*
    DoWalk (fileFlag, gen, nb, &j, j2, Rep, globals);
 */ 
   util_Assert (j2 <= RABBIT_NUM, "Rabbit:   j2 > RABBIT_NUM");
