@@ -3572,17 +3572,20 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
     {
       int j = 0;
       int j2 = 1;
+
       const long NLIM = 4000000;
       snpair_Res *res;
       res = snpair_CreateRes ();
-      N = 1 + nw / NLIM;
-      n = nw / N;
-      N = util_Min (N, 25);
+      long N1,n1;
+
+      N1 = 1 + nw / NLIM;
+      n1 = nw / N1;
+      N1 = util_Min (N1, 25);
       if (fileFlag)
          ufile_InitReadBin ();
       ++j2;
       for (i = 0; i < Rep[j2]; ++i) {
-         snpair_ClosePairsBitMatch (locRabGen, res, N, n / 2, 0, 2);
+         snpair_ClosePairsBitMatch (locRabGen, res, N1, n1 / 2, 0, 2);
          bbattery_pVal[++j] = res->pVal[snpair_BM];
          TestNumber[j] = j2;
          strcpy (bbattery_TestNames[j], "ClosePairsBitMatch, t = 2");
@@ -3592,7 +3595,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          ufile_InitReadBin ();
       ++j2;
       for (i = 0; i < Rep[j2]; ++i) {
-         snpair_ClosePairsBitMatch (locRabGen, res, N, n / 4, 0, 4);
+         snpair_ClosePairsBitMatch (locRabGen, res, N1, n1 / 4, 0, 4);
          bbattery_pVal[++j] = res->pVal[snpair_BM];
          TestNumber[j] = j2;
          strcpy (bbattery_TestNames[j], "ClosePairsBitMatch, t = 4");
@@ -3610,47 +3613,49 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       int j=21;
       int j2=20;
     
+      long n2;
+
       sres_Chi2 *res;
       res = sres_CreateChi2 ();
-      n = nb / (s * s);
-      n = util_Min (n, 50 * MILLION);
+      n2 = nb / (s * s);
+      n2 = util_Min (2, 50 * MILLION);
       ++j2;
-      if (n >= 50) {
+      if (n2 >= 50) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
             j++;
-            smarsa_MatrixRank (locRabGen, res, 1, n, 0, s, s, s);
+            smarsa_MatrixRank (locRabGen, res, 1, n2, 0, s, s, s);
             bbattery_pVal[j] = res->pVal2[gofw_Mean];
             TestNumber[j] = j2;
             strcpy (bbattery_TestNames[j], "MatrixRank, 32 x 32");
          }
       }
 
-      n = nb / (100.0 * s * s);
-      n = util_Min (n, 300000);
+      n2 = nb / (100.0 * s * s);
+      n2 = util_Min (n2, 300000);
       ++j2;
-      if (n >= 50) {
+      if (n2 >= 50) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
             j++;
-            smarsa_MatrixRank (locRabGen, res, 1, n, 0, s, 10 * s, 10 * s);
+            smarsa_MatrixRank (locRabGen, res, 1, n2, 0, s, 10 * s, 10 * s);
             bbattery_pVal[j] = res->pVal2[gofw_Mean];
             TestNumber[j] = j2;
             strcpy (bbattery_TestNames[j], "MatrixRank, 320 x 320");
          }
       }
 
-      n = nb / (1024.0 * s * s);
-      n = util_Min (n, 20000);
+      n2 = nb / (1024.0 * s * s);
+      n2 = util_Min (n2, 20000);
       ++j2;
-      if (n >= 50) {
+      if (n2 >= 50) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
             j++;
-            smarsa_MatrixRank (locRabGen, res, 1, n, 0, s, 32 * s, 32 * s);
+            smarsa_MatrixRank (locRabGen, res, 1, n2, 0, s, 32 * s, 32 * s);
             bbattery_pVal[j] = res->pVal2[gofw_Mean];
             TestNumber[j] = j2;
             strcpy (bbattery_TestNames[j], "MatrixRank, 1024 x 1024");
@@ -3667,10 +3672,10 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
     {
         int j = 5;
         int j2 = 5;
-         k = num_Log2 (nb + 0.5);
-         if (k > 28)
-            k = 28;
-         N = 1;
+        int k3 = num_Log2 (nb + 0.5);
+         if (k3 > 28)
+            k3 = 28;
+        long N3 = 1;
         {
             sres_Basic *res;
             res = sres_CreateBasic ();
@@ -3678,7 +3683,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
                ufile_InitReadBin ();
             ++j2;
             for (i = 0; i < Rep[j2]; ++i) {
-               scomp_LempelZiv (locRabGen, res, N, k, 0, s);
+               scomp_LempelZiv (locRabGen, res, N3, k3, 0, s);
                j++;
                if (N == 1)
                   bbattery_pVal[j] = res->pVal2[gofw_Mean];
@@ -3705,42 +3710,43 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       {
       int j=6;
       int j2=6;
-      
+      int k4;
       sspectral_Res *res;
-      k = num_Log2 (nb + 0.5);
-      k = util_Min (20, k);
+      k4 = num_Log2 (nb + 0.5);
+      k4 = util_Min (20, k4);
       res = sspectral_CreateRes ();
       if (fileFlag)
          ufile_InitReadBin ();
       ++j2;
       for (i = 0; i < Rep[j2]; ++i) {
-         sspectral_Fourier1 (locRabGen, res, 1, k, 0, s);
+         sspectral_Fourier1 (locRabGen, res, 1, k4, 0, s);
          j++;
          bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
          TestNumber[j] = j2;
          strcpy (bbattery_TestNames[j], "Fourier1");
       }
-
-      x = sqrt (2.0 * nb);
-      N = x / 2.0;
-      if (N < 32) {
-         k = 5;
-         N = nb / 32.0;
-      } else if (N >= 16384) {
-         k = 14;
-         N = nb / 16384.0;
+      double x4;
+      long N4;
+      x4 = sqrt (2.0 * nb);
+      N4 = x4 / 2.0;
+      if (N4 < 32) {
+         k4 = 5;
+         N4 = nb / 32.0;
+      } else if (N4 >= 16384) {
+         k4 = 14;
+         N4 = nb / 16384.0;
       } else {
-         k = num_Log2 (x / 2.0 + 0.5);
-         N = nb / (num_TwoExp[k]);
+         k4 = num_Log2 (x4 / 2.0 + 0.5);
+         N4 = nb / (num_TwoExp[k4]);
       }
-      N = util_Min (N, 300000);
-      while ((num_TwoExp[k] + 32) * N > nb)
-         N--;
+      N4 = util_Min (N4, 300000);
+      while ((num_TwoExp[k4] + 32) * N4 > nb)
+         N4--;
       if (fileFlag)
          ufile_InitReadBin ();
       ++j2;
       for (i = 0; i < Rep[j2]; ++i) {
-         sspectral_Fourier3 (locRabGen, res, N, k, 0, s);
+         sspectral_Fourier3 (locRabGen, res, N4, k4, 0, s);
          j++;
          bbattery_pVal[j] = res->Bas->pVal2[gofw_AD];
          TestNumber[j] = j2;
@@ -3769,24 +3775,25 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       const long NLIM2 = 10000;
       scomp_Res *res;
       res = scomp_CreateRes ();
-      n = NLIM2 + 2.0 * sqrt (nb);
-      n = util_Min (n, nb);
-      n = util_Min (n, NLIM1);
-      N = 1;
+      long n5,N5;
+      n5 = NLIM2 + 2.0 * sqrt (nb);
+      n5 = util_Min (n5, nb);
+      n5 = util_Min (n5, NLIM1);
+      N5 = 1;
       if (fileFlag)
          ufile_InitReadBin ();
       ++j2;
       for (i = 0; i < Rep[j2]; ++i) {
-         scomp_LinearComp (locRabGen, res, N, n, 0, s);
+         scomp_LinearComp (locRabGen, res, N5, n5, 0, s);
          j++;
-         if (N == 1)
+         if (N5 == 1)
             bbattery_pVal[j] = res->JumpSize->pVal2[gofw_Mean];
          else
             bbattery_pVal[j] = res->JumpSize->pVal2[gofw_Sum];
          TestNumber[j] = j2;
          strcpy (bbattery_TestNames[j], "LinearComp");
          j++;
-         if (N == 1)
+         if (N5 == 1)
             bbattery_pVal[j] = res->JumpNum->pVal2[gofw_Mean];
          else
             bbattery_pVal[j] = res->JumpNum->pVal2[gofw_Sum];
@@ -3798,26 +3805,30 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
 
       int j=8;
       int j2=8;
+      long n5,N5;
+
       {
       sstring_Res2 *res;
       res = sstring_CreateRes2 ();
-      x = util_Min (BILLION * 100.0, nb);
-      n = 600;
-      L = x / n;
-      if (L <= 100000) {
-         n /= 10;
-         L *= 10;
+      double x5;
+      x5 = util_Min (BILLION * 100.0, nb);
+      n5 = 600;
+      long L5;
+      L5 = x5 / n5;
+      if (L5 <= 100000) {
+         n5 /= 10;
+         L5 *= 10;
       }
-      if (L <= 10000) {
-         n /= 2;
-         L *= 2;
+      if (L5 <= 10000) {
+         n5 /= 2;
+         L5 *= 2;
       }
       ++j2;
-      if ((L >= 1032) && (n >= 30)) {
+      if ((L5 >= 1032) && (n5 >= 30)) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
-            sstring_LongestHeadRun (locRabGen, res, 1, n, 0, s, L);
+            sstring_LongestHeadRun (locRabGen, res, 1, n5, 0, s, L5);
             j++;
             bbattery_pVal[j] = res->Chi->pVal2[gofw_Mean];
             TestNumber[j] = j2;
@@ -3826,21 +3837,23 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       }
       sstring_DeleteRes2 (res);
    }
+      double nw5;
+
    {
       sres_Chi2 *res;
       res = sres_CreateChi2 ();
-      nw = nb / 32.0;
-      nw = util_Min (nw, 4.0 * BILLION);
-      N = 1 + nw / BILLION;
-      n = nw / N;
+      nw5 = nb / 32.0;
+      nw5 = util_Min (nw5, 4.0 * BILLION);
+      N5 = 1 + nw / BILLION;
+      n5 = nw5 / N5;
       ++j2;
-      if (n >= 30) {
+      if (n5 >= 30) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
-            sstring_PeriodsInStrings (locRabGen, res, N, n, 0, 31);
+            sstring_PeriodsInStrings (locRabGen, res, N5, n5, 0, 31);
             ++j;
-            if (N == 1)
+            if (N5 == 1)
                bbattery_pVal[j] = res->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->pVal2[gofw_Sum];
@@ -3849,18 +3862,18 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          }
       }
 
-      nw = nb / s;
-      N = 1 + nw / BILLION;
-      n = nw / N;
-      N = util_Min (10, N);
+      nw5 = nb / s;
+      N5 = 1 + nw5 / BILLION;
+      n5 = nw5 / N5;
+      N5 = util_Min (10, N5);
       ++j2;
-      if (n > 29) {
+      if (n5 > 29) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
-            sstring_HammingWeight (locRabGen, res, N, n, 0, s, s);
+            sstring_HammingWeight (locRabGen, res, N5, n5, 0, s, s);
             ++j;
-            if (N == 1)
+            if (N5 == 1)
                bbattery_pVal[j] = res->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->pVal2[gofw_Sum];
@@ -3873,18 +3886,18 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
    {
       sstring_Res *res;
       res = sstring_CreateRes ();
-      nw = nb / s;
-      N = 1 + nw / BILLION;
-      n = nw / N;
-      N = util_Min (10, N);
+      nw5 = nb / s;
+      N5 = 1 + nw5 / BILLION;
+      n5 = nw5 / N5;
+      N5 = util_Min (10, N5);
       ++j2;
-      if (n > 2) {
+      if (n5 > 2) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
             j++;
-            sstring_HammingCorr (locRabGen, res, N, n, 0, s, 32);
-            if (N == 1)
+            sstring_HammingCorr (locRabGen, res, N5, n5, 0, s, 32);
+            if (N5 == 1)
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
@@ -3893,18 +3906,18 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          }
       }
 
-      nw = nb / 64;
-      N = 1 + nw / BILLION;
-      n = nw / N;
-      N = 1;
+      nw5 = nb / 64;
+      N5 = 1 + nw5 / BILLION;
+      n5 = nw5 / N5;
+      N5 = 1;
       ++j2;
-      if (n > 2) {
+      if (n5 > 2) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
             j++;
-            sstring_HammingCorr (locRabGen, res, N, n, 0, s, 2 * s);
-            if (N == 1)
+            sstring_HammingCorr (locRabGen, res, N5, n5, 0, s, 2 * s);
+            if (N5 == 1)
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
@@ -3913,18 +3926,18 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          }
       }
 
-      nw = nb / (4 * s);
-      N = 1 + nw / BILLION * 4;
-      n = nw / N;
-      N = 1;
+      nw5 = nb / (4 * s);
+      N5 = 1 + nw5 / BILLION * 4;
+      n5 = nw5 / N5;
+      N5 = 1;
       ++j2;
-      if (n > 2) {
+      if (n5 > 2) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
-            sstring_HammingCorr (locRabGen, res, N, n, 0, s, 4 * s);
+            sstring_HammingCorr (locRabGen, res, N5, n5, 0, s, 4 * s);
             j++;
-            if (N == 1)
+            if (N5 == 1)
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
@@ -3933,18 +3946,18 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          }
       }
 
-      nw = nb / s;
-      N = 1 + nw / BILLION;
-      n = nw / N;
-      N = util_Min (5, N);
+      nw5 = nb / s;
+      N5 = 1 + nw5 / BILLION;
+      n5 = nw5 / N5;
+      N5 = util_Min (5, N5);
       ++j2;
-      if (n > 29) {
+      if (n5 > 29) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
             j++;
-            sstring_HammingIndep (locRabGen, res, N, n, 0, s, 16, 0);
-            if (N == 1)
+            sstring_HammingIndep (locRabGen, res, N5, n5, 0, s, 16, 0);
+            if (N5 == 1)
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
@@ -3953,18 +3966,18 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          }
       }
 
-      nw = nb / (2 * s);
-      N = 1 + nw / BILLION * 2;
-      n = nw / N;
-      N = 1;
+      nw5 = nb / (2 * s);
+      N5 = 1 + nw5 / BILLION * 2;
+      n5 = nw5 / N5;
+      N5 = 1;
       ++j2;
-      if (n > 29) {
+      if (n5 > 29) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
             j++;
-            sstring_HammingIndep (locRabGen, res, N, n, 0, s, s, 0);
-            if (N == 1)
+            sstring_HammingIndep (locRabGen, res, N5, n5, 0, s, s, 0);
+            if (N5 == 1)
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
@@ -3973,18 +3986,18 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          }
       }
 
-      nw = nb / (4 * s);
-      N = 1 + nw / BILLION * 10;
-      n = nw / N;
-      N = 1;
+      nw5 = nb / (4 * s);
+      N5 = 1 + nw5 / BILLION * 10;
+      n5 = nw5 / N5;
+      N5 = 1;
       ++j2;
-      if (n > 29) {
+      if (n5 > 29) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
             j++;
-            sstring_HammingIndep (locRabGen, res, N, n, 0, s, 2 * s, 0);
-            if (N == 1)
+            sstring_HammingIndep (locRabGen, res, N5, n5, 0, s, 2 * s, 0);
+            if (N5 == 1)
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
@@ -4000,17 +4013,17 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       res = sres_CreateBasic ();
 
       d = 1;
-      N = 1 + nb / BILLION;
-      n = nb / N - d;
-      n -= n % 32;
-      N = util_Min (100, N);
+      N5 = 1 + nb / BILLION;
+      n5 = nb / N - d;
+      n5 -= n5 % 32;
+      N5 = util_Min (100, N5);
       if (fileFlag)
          ufile_InitReadBin ();
       ++j2;
       for (i = 0; i < Rep[j2]; ++i) {
-         sstring_AutoCor (locRabGen, res, N, n, 0, s, d);
+         sstring_AutoCor (locRabGen, res, N5, n5, 0, s, d);
          j++;
-         if (N == 1)
+         if (N5 == 1)
             bbattery_pVal[j] = res->pVal2[gofw_Mean];
          else
             bbattery_pVal[j] = res->pVal2[gofw_Sum];
@@ -4019,17 +4032,17 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       }
 
       d = 2;
-      N = 1 + nb / BILLION;
-      n = nb / N - d;
-      n -= n % 32;
-      N = util_Min (100, N);
+      N5 = 1 + nb / BILLION;
+      n5 = nb / N5 - d;
+      n5 -= n5 % 32;
+      N5 = util_Min (100, N5);
       if (fileFlag)
          ufile_InitReadBin ();
       ++j2;
       for (i = 0; i < Rep[j2]; ++i) {
-         sstring_AutoCor (locRabGen, res, N, n, 0, s, d);
+         sstring_AutoCor (locRabGen, res, N5, n5, 0, s, d);
          j++;
-         if (N == 1)
+         if (N5 == 1)
             bbattery_pVal[j] = res->pVal2[gofw_Mean];
          else
             bbattery_pVal[j] = res->pVal2[gofw_Sum];
@@ -4042,24 +4055,24 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
    {
       sstring_Res3 *res;
       res = sstring_CreateRes3 ();
-      nw = nb / 5;
-      N = 1 + nw / BILLION;
-      n = nw / N;
-      N = util_Min (20, N);
+      nw5 = nb / 5;
+      N5 = 1 + nw5 / BILLION;
+      n5 = nw5 / N5;
+      N5 = util_Min (20, N5);
       if (fileFlag)
          ufile_InitReadBin ();
       ++j2;
       for (i = 0; i < Rep[j2]; ++i) {
-         sstring_Run (locRabGen, res, N, n, 0, s);
+         sstring_Run (locRabGen, res, N5, n5, 0, s);
          j++;
-         if (N == 1)
+         if (N5 == 1)
             bbattery_pVal[j] = res->NRuns->pVal2[gofw_Mean];
          else
             bbattery_pVal[j] = res->NRuns->pVal2[gofw_Sum];
          TestNumber[j] = j2;
          strcpy (bbattery_TestNames[j], "Run of bits");
          j++;
-         if (N == 1)
+         if (N5 == 1)
             bbattery_pVal[j] = res->NBits->pVal2[gofw_Mean];
          else
             bbattery_pVal[j] = res->NBits->pVal2[gofw_Sum];
