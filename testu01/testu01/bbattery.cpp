@@ -4081,13 +4081,13 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
 
 
 
-  tbb::task_group othertests;
-  othertests.run([&](){  rabbitTest1(workload_Clone(gen)); });
-othertests.run([&](){  rabbitTest2(workload_Clone(gen)); });
-othertests.run([&](){  rabbitTest3(workload_Clone(gen)); });
-othertests.run([&](){  rabbitTest4(workload_Clone(gen)); });
-othertests.run([&](){  rabbitTest5(workload_Clone(gen)); });
-othertests.wait();
+//   tbb::task_group othertests;
+//   othertests.run([&](){  rabbitTest1(workload_Clone(gen)); });
+// othertests.run([&](){  rabbitTest2(workload_Clone(gen)); });
+// othertests.run([&](){  rabbitTest3(workload_Clone(gen)); });
+// othertests.run([&](){  rabbitTest4(workload_Clone(gen)); });
+// othertests.run([&](){  rabbitTest5(workload_Clone(gen)); });
+// othertests.wait();
   // rabbitTest1(workload_Clone(gen));
   // rabbitTest2(workload_Clone(gen));
   // rabbitTest3(workload_Clone(gen));
@@ -4095,469 +4095,469 @@ othertests.wait();
   // rabbitTest5(workload_Clone(gen));
 
 
-  //  {
-  //     const long NLIM = 4000000;
-  //     snpair_Res *res;
-  //     res = snpair_CreateRes ();
-  //     N = 1 + nw / NLIM;
-  //     n = nw / N;
-  //     N = util_Min (N, 25);
-  //     if (fileFlag)
-  //        ufile_InitReadBin ();
-  //     ++j2;
-  //     for (i = 0; i < Rep[j2]; ++i) {
-  //        snpair_ClosePairsBitMatch (gen, res, N, n / 2, 0, 2);
-  //        bbattery_pVal[++j] = res->pVal[snpair_BM];
-  //        TestNumber[j] = j2;
-  //        strcpy (bbattery_TestNames[j], "ClosePairsBitMatch, t = 2");
-  //     }
+   {
+      const long NLIM = 4000000;
+      snpair_Res *res;
+      res = snpair_CreateRes ();
+      N = 1 + nw / NLIM;
+      n = nw / N;
+      N = util_Min (N, 25);
+      if (fileFlag)
+         ufile_InitReadBin ();
+      ++j2;
+      for (i = 0; i < Rep[j2]; ++i) {
+         snpair_ClosePairsBitMatch (gen, res, N, n / 2, 0, 2);
+         bbattery_pVal[++j] = res->pVal[snpair_BM];
+         TestNumber[j] = j2;
+         strcpy (bbattery_TestNames[j], "ClosePairsBitMatch, t = 2");
+      }
 
-  //     if (fileFlag)
-  //        ufile_InitReadBin ();
-  //     ++j2;
-  //     for (i = 0; i < Rep[j2]; ++i) {
-  //        snpair_ClosePairsBitMatch (gen, res, N, n / 4, 0, 4);
-  //        bbattery_pVal[++j] = res->pVal[snpair_BM];
-  //        TestNumber[j] = j2;
-  //        strcpy (bbattery_TestNames[j], "ClosePairsBitMatch, t = 4");
-  //     }
-  //     snpair_DeleteRes (res);
-  //  }
-  //  ++j2;
-
-
-  //  DoAppear (fileFlag, gen, nb, &j, j2, Rep, globals);
+      if (fileFlag)
+         ufile_InitReadBin ();
+      ++j2;
+      for (i = 0; i < Rep[j2]; ++i) {
+         snpair_ClosePairsBitMatch (gen, res, N, n / 4, 0, 4);
+         bbattery_pVal[++j] = res->pVal[snpair_BM];
+         TestNumber[j] = j2;
+         strcpy (bbattery_TestNames[j], "ClosePairsBitMatch, t = 4");
+      }
+      snpair_DeleteRes (res);
+   }
+   ++j2;
 
 
-  //  {
-  //     const long NLIM1 = 300000;
-  //     const long NLIM2 = 10000;
-  //     scomp_Res *res;
-  //     res = scomp_CreateRes ();
-  //     n = NLIM2 + 2.0 * sqrt (nb);
-  //     n = util_Min (n, nb);
-  //     n = util_Min (n, NLIM1);
-  //     N = 1;
-  //     if (fileFlag)
-  //        ufile_InitReadBin ();
-  //     ++j2;
-  //     for (i = 0; i < Rep[j2]; ++i) {
-  //        scomp_LinearComp (gen, res, N, n, 0, s);
-  //        j++;
-  //        if (N == 1)
-  //           bbattery_pVal[j] = res->JumpSize->pVal2[gofw_Mean];
-  //        else
-  //           bbattery_pVal[j] = res->JumpSize->pVal2[gofw_Sum];
-  //        TestNumber[j] = j2;
-  //        strcpy (bbattery_TestNames[j], "LinearComp");
-  //        j++;
-  //        if (N == 1)
-  //           bbattery_pVal[j] = res->JumpNum->pVal2[gofw_Mean];
-  //        else
-  //           bbattery_pVal[j] = res->JumpNum->pVal2[gofw_Sum];
-  //        TestNumber[j] = j2;
-  //        strcpy (bbattery_TestNames[j], "LinearComp");
-  //     }
-  //     scomp_DeleteRes (res);
-  //  }
-
-  //  k = num_Log2 (nb + 0.5);
-  //  if (k > 28)
-  //     k = 28;
-  //  N = 1;
-  // {
-  //     sres_Basic *res;
-  //     res = sres_CreateBasic ();
-  //     if (fileFlag)
-  //        ufile_InitReadBin ();
-  //     ++j2;
-  //     for (i = 0; i < Rep[j2]; ++i) {
-  //        scomp_LempelZiv (gen, res, N, k, 0, s);
-  //        j++;
-  //        if (N == 1)
-  //           bbattery_pVal[j] = res->pVal2[gofw_Mean];
-  //        else
-  //           bbattery_pVal[j] = res->pVal2[gofw_Sum];
-  //        TestNumber[j] = j2;
-  //        strcpy (bbattery_TestNames[j], "LempelZiv");
-  //     }
-  //     sres_DeleteBasic (res);
-  //  }
-  //  {
-  //     sspectral_Res *res;
-  //     k = num_Log2 (nb + 0.5);
-  //     k = util_Min (20, k);
-  //     res = sspectral_CreateRes ();
-  //     if (fileFlag)
-  //        ufile_InitReadBin ();
-  //     ++j2;
-  //     for (i = 0; i < Rep[j2]; ++i) {
-  //        sspectral_Fourier1 (gen, res, 1, k, 0, s);
-  //        j++;
-  //        bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
-  //        TestNumber[j] = j2;
-  //        strcpy (bbattery_TestNames[j], "Fourier1");
-  //     }
-
-  //     x = sqrt (2.0 * nb);
-  //     N = x / 2.0;
-  //     if (N < 32) {
-  //        k = 5;
-  //        N = nb / 32.0;
-  //     } else if (N >= 16384) {
-  //        k = 14;
-  //        N = nb / 16384.0;
-  //     } else {
-  //        k = num_Log2 (x / 2.0 + 0.5);
-  //        N = nb / (num_TwoExp[k]);
-  //     }
-  //     N = util_Min (N, 300000);
-  //     while ((num_TwoExp[k] + 32) * N > nb)
-  //        N--;
-  //     if (fileFlag)
-  //        ufile_InitReadBin ();
-  //     ++j2;
-  //     for (i = 0; i < Rep[j2]; ++i) {
-  //        sspectral_Fourier3 (gen, res, N, k, 0, s);
-  //        j++;
-  //        bbattery_pVal[j] = res->Bas->pVal2[gofw_AD];
-  //        TestNumber[j] = j2;
-  //        strcpy (bbattery_TestNames[j], "Fourier3");
-  //     }
-  //     sspectral_DeleteRes (res);
-  //  }
+   DoAppear (fileFlag, gen, nb, &j, j2, Rep, globals);
 
 
-  //   printf("value of j2 %u\n", j2);    //3
-  //   printf("value of j %u\n", j);      //2
-  // {
-  //     sstring_Res2 *res;
-  //     res = sstring_CreateRes2 ();
-  //     x = util_Min (BILLION * 100.0, nb);
-  //     n = 600;
-  //     L = x / n;
-  //     if (L <= 100000) {
-  //        n /= 10;
-  //        L *= 10;
-  //     }
-  //     if (L <= 10000) {
-  //        n /= 2;
-  //        L *= 2;
-  //     }
-  //     ++j2;
-  //     if ((L >= 1032) && (n >= 30)) {
-  //        if (fileFlag)
-  //           ufile_InitReadBin ();
-  //        for (i = 0; i < Rep[j2]; ++i) {
-  //           sstring_LongestHeadRun (gen, res, 1, n, 0, s, L);
-  //           j++;
-  //           bbattery_pVal[j] = res->Chi->pVal2[gofw_Mean];
-  //           TestNumber[j] = j2;
-  //           strcpy (bbattery_TestNames[j], "LongestHeadRun");
-  //        }
-  //     }
-  //     sstring_DeleteRes2 (res);
-  //  }
-  //  {
-  //     sres_Chi2 *res;
-  //     res = sres_CreateChi2 ();
-  //     nw = nb / 32.0;
-  //     nw = util_Min (nw, 4.0 * BILLION);
-  //     N = 1 + nw / BILLION;
-  //     n = nw / N;
-  //     ++j2;
-  //     if (n >= 30) {
-  //        if (fileFlag)
-  //           ufile_InitReadBin ();
-  //        for (i = 0; i < Rep[j2]; ++i) {
-  //           sstring_PeriodsInStrings (gen, res, N, n, 0, 31);
-  //           ++j;
-  //           if (N == 1)
-  //              bbattery_pVal[j] = res->pVal2[gofw_Mean];
-  //           else
-  //              bbattery_pVal[j] = res->pVal2[gofw_Sum];
-  //           TestNumber[j] = j2;
-  //           strcpy (bbattery_TestNames[j], "PeriodsInStrings");
-  //        }
-  //     }
+   {
+      const long NLIM1 = 300000;
+      const long NLIM2 = 10000;
+      scomp_Res *res;
+      res = scomp_CreateRes ();
+      n = NLIM2 + 2.0 * sqrt (nb);
+      n = util_Min (n, nb);
+      n = util_Min (n, NLIM1);
+      N = 1;
+      if (fileFlag)
+         ufile_InitReadBin ();
+      ++j2;
+      for (i = 0; i < Rep[j2]; ++i) {
+         scomp_LinearComp (gen, res, N, n, 0, s);
+         j++;
+         if (N == 1)
+            bbattery_pVal[j] = res->JumpSize->pVal2[gofw_Mean];
+         else
+            bbattery_pVal[j] = res->JumpSize->pVal2[gofw_Sum];
+         TestNumber[j] = j2;
+         strcpy (bbattery_TestNames[j], "LinearComp");
+         j++;
+         if (N == 1)
+            bbattery_pVal[j] = res->JumpNum->pVal2[gofw_Mean];
+         else
+            bbattery_pVal[j] = res->JumpNum->pVal2[gofw_Sum];
+         TestNumber[j] = j2;
+         strcpy (bbattery_TestNames[j], "LinearComp");
+      }
+      scomp_DeleteRes (res);
+   }
 
-  //     nw = nb / s;
-  //     N = 1 + nw / BILLION;
-  //     n = nw / N;
-  //     N = util_Min (10, N);
-  //     ++j2;
-  //     if (n > 29) {
-  //        if (fileFlag)
-  //           ufile_InitReadBin ();
-  //        for (i = 0; i < Rep[j2]; ++i) {
-  //           sstring_HammingWeight (gen, res, N, n, 0, s, s);
-  //           ++j;
-  //           if (N == 1)
-  //              bbattery_pVal[j] = res->pVal2[gofw_Mean];
-  //           else
-  //              bbattery_pVal[j] = res->pVal2[gofw_Sum];
-  //           TestNumber[j] = j2;
-  //           strcpy (bbattery_TestNames[j], "HammingWeight");
-  //        }
-  //     }
-  //     sres_DeleteChi2 (res);
-  //  }
-  //  {
-  //     sstring_Res *res;
-  //     res = sstring_CreateRes ();
-  //     nw = nb / s;
-  //     N = 1 + nw / BILLION;
-  //     n = nw / N;
-  //     N = util_Min (10, N);
-  //     ++j2;
-  //     if (n > 2) {
-  //        if (fileFlag)
-  //           ufile_InitReadBin ();
-  //        for (i = 0; i < Rep[j2]; ++i) {
-  //           j++;
-  //           sstring_HammingCorr (gen, res, N, n, 0, s, 32);
-  //           if (N == 1)
-  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
-  //           else
-  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
-  //           TestNumber[j] = j2;
-  //           strcpy (bbattery_TestNames[j], "HammingCorr, L = 32");
-  //        }
-  //     }
+   k = num_Log2 (nb + 0.5);
+   if (k > 28)
+      k = 28;
+   N = 1;
+  {
+      sres_Basic *res;
+      res = sres_CreateBasic ();
+      if (fileFlag)
+         ufile_InitReadBin ();
+      ++j2;
+      for (i = 0; i < Rep[j2]; ++i) {
+         scomp_LempelZiv (gen, res, N, k, 0, s);
+         j++;
+         if (N == 1)
+            bbattery_pVal[j] = res->pVal2[gofw_Mean];
+         else
+            bbattery_pVal[j] = res->pVal2[gofw_Sum];
+         TestNumber[j] = j2;
+         strcpy (bbattery_TestNames[j], "LempelZiv");
+      }
+      sres_DeleteBasic (res);
+   }
+   {
+      sspectral_Res *res;
+      k = num_Log2 (nb + 0.5);
+      k = util_Min (20, k);
+      res = sspectral_CreateRes ();
+      if (fileFlag)
+         ufile_InitReadBin ();
+      ++j2;
+      for (i = 0; i < Rep[j2]; ++i) {
+         sspectral_Fourier1 (gen, res, 1, k, 0, s);
+         j++;
+         bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+         TestNumber[j] = j2;
+         strcpy (bbattery_TestNames[j], "Fourier1");
+      }
 
-  //     nw = nb / 64;
-  //     N = 1 + nw / BILLION;
-  //     n = nw / N;
-  //     N = 1;
-  //     ++j2;
-  //     if (n > 2) {
-  //        if (fileFlag)
-  //           ufile_InitReadBin ();
-  //        for (i = 0; i < Rep[j2]; ++i) {
-  //           j++;
-  //           sstring_HammingCorr (gen, res, N, n, 0, s, 2 * s);
-  //           if (N == 1)
-  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
-  //           else
-  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
-  //           TestNumber[j] = j2;
-  //           strcpy (bbattery_TestNames[j], "HammingCorr, L = 64");
-  //        }
-  //     }
+      x = sqrt (2.0 * nb);
+      N = x / 2.0;
+      if (N < 32) {
+         k = 5;
+         N = nb / 32.0;
+      } else if (N >= 16384) {
+         k = 14;
+         N = nb / 16384.0;
+      } else {
+         k = num_Log2 (x / 2.0 + 0.5);
+         N = nb / (num_TwoExp[k]);
+      }
+      N = util_Min (N, 300000);
+      while ((num_TwoExp[k] + 32) * N > nb)
+         N--;
+      if (fileFlag)
+         ufile_InitReadBin ();
+      ++j2;
+      for (i = 0; i < Rep[j2]; ++i) {
+         sspectral_Fourier3 (gen, res, N, k, 0, s);
+         j++;
+         bbattery_pVal[j] = res->Bas->pVal2[gofw_AD];
+         TestNumber[j] = j2;
+         strcpy (bbattery_TestNames[j], "Fourier3");
+      }
+      sspectral_DeleteRes (res);
+   }
 
-  //     nw = nb / (4 * s);
-  //     N = 1 + nw / BILLION * 4;
-  //     n = nw / N;
-  //     N = 1;
-  //     ++j2;
-  //     if (n > 2) {
-  //        if (fileFlag)
-  //           ufile_InitReadBin ();
-  //        for (i = 0; i < Rep[j2]; ++i) {
-  //           sstring_HammingCorr (gen, res, N, n, 0, s, 4 * s);
-  //           j++;
-  //           if (N == 1)
-  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
-  //           else
-  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
-  //           TestNumber[j] = j2;
-  //           strcpy (bbattery_TestNames[j], "HammingCorr, L = 128");
-  //        }
-  //     }
 
-  //     nw = nb / s;
-  //     N = 1 + nw / BILLION;
-  //     n = nw / N;
-  //     N = util_Min (5, N);
-  //     ++j2;
-  //     if (n > 29) {
-  //        if (fileFlag)
-  //           ufile_InitReadBin ();
-  //        for (i = 0; i < Rep[j2]; ++i) {
-  //           j++;
-  //           sstring_HammingIndep (gen, res, N, n, 0, s, 16, 0);
-  //           if (N == 1)
-  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
-  //           else
-  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
-  //           TestNumber[j] = j2;
-  //           strcpy (bbattery_TestNames[j], "HammingIndep, L = 16");
-  //        }
-  //     }
+    printf("value of j2 %u\n", j2);    //3
+    printf("value of j %u\n", j);      //2
+  {
+      sstring_Res2 *res;
+      res = sstring_CreateRes2 ();
+      x = util_Min (BILLION * 100.0, nb);
+      n = 600;
+      L = x / n;
+      if (L <= 100000) {
+         n /= 10;
+         L *= 10;
+      }
+      if (L <= 10000) {
+         n /= 2;
+         L *= 2;
+      }
+      ++j2;
+      if ((L >= 1032) && (n >= 30)) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            sstring_LongestHeadRun (gen, res, 1, n, 0, s, L);
+            j++;
+            bbattery_pVal[j] = res->Chi->pVal2[gofw_Mean];
+            TestNumber[j] = j2;
+            strcpy (bbattery_TestNames[j], "LongestHeadRun");
+         }
+      }
+      sstring_DeleteRes2 (res);
+   }
+   {
+      sres_Chi2 *res;
+      res = sres_CreateChi2 ();
+      nw = nb / 32.0;
+      nw = util_Min (nw, 4.0 * BILLION);
+      N = 1 + nw / BILLION;
+      n = nw / N;
+      ++j2;
+      if (n >= 30) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            sstring_PeriodsInStrings (gen, res, N, n, 0, 31);
+            ++j;
+            if (N == 1)
+               bbattery_pVal[j] = res->pVal2[gofw_Mean];
+            else
+               bbattery_pVal[j] = res->pVal2[gofw_Sum];
+            TestNumber[j] = j2;
+            strcpy (bbattery_TestNames[j], "PeriodsInStrings");
+         }
+      }
 
-  //     nw = nb / (2 * s);
-  //     N = 1 + nw / BILLION * 2;
-  //     n = nw / N;
-  //     N = 1;
-  //     ++j2;
-  //     if (n > 29) {
-  //        if (fileFlag)
-  //           ufile_InitReadBin ();
-  //        for (i = 0; i < Rep[j2]; ++i) {
-  //           j++;
-  //           sstring_HammingIndep (gen, res, N, n, 0, s, s, 0);
-  //           if (N == 1)
-  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
-  //           else
-  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
-  //           TestNumber[j] = j2;
-  //           strcpy (bbattery_TestNames[j], "HammingIndep, L = 32");
-  //        }
-  //     }
+      nw = nb / s;
+      N = 1 + nw / BILLION;
+      n = nw / N;
+      N = util_Min (10, N);
+      ++j2;
+      if (n > 29) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            sstring_HammingWeight (gen, res, N, n, 0, s, s);
+            ++j;
+            if (N == 1)
+               bbattery_pVal[j] = res->pVal2[gofw_Mean];
+            else
+               bbattery_pVal[j] = res->pVal2[gofw_Sum];
+            TestNumber[j] = j2;
+            strcpy (bbattery_TestNames[j], "HammingWeight");
+         }
+      }
+      sres_DeleteChi2 (res);
+   }
+   {
+      sstring_Res *res;
+      res = sstring_CreateRes ();
+      nw = nb / s;
+      N = 1 + nw / BILLION;
+      n = nw / N;
+      N = util_Min (10, N);
+      ++j2;
+      if (n > 2) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            j++;
+            sstring_HammingCorr (gen, res, N, n, 0, s, 32);
+            if (N == 1)
+               bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+            else
+               bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
+            TestNumber[j] = j2;
+            strcpy (bbattery_TestNames[j], "HammingCorr, L = 32");
+         }
+      }
 
-  //     nw = nb / (4 * s);
-  //     N = 1 + nw / BILLION * 10;
-  //     n = nw / N;
-  //     N = 1;
-  //     ++j2;
-  //     if (n > 29) {
-  //        if (fileFlag)
-  //           ufile_InitReadBin ();
-  //        for (i = 0; i < Rep[j2]; ++i) {
-  //           j++;
-  //           sstring_HammingIndep (gen, res, N, n, 0, s, 2 * s, 0);
-  //           if (N == 1)
-  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
-  //           else
-  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
-  //           strcpy (bbattery_TestNames[j], "HammingIndep, L = 64");
-  //           TestNumber[j] = j2;
-  //        }
-  //     }
-  //     sstring_DeleteRes (res);
-  //  }
-  //  {
-  //     sres_Basic *res;
-  //     int d;
-  //     res = sres_CreateBasic ();
+      nw = nb / 64;
+      N = 1 + nw / BILLION;
+      n = nw / N;
+      N = 1;
+      ++j2;
+      if (n > 2) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            j++;
+            sstring_HammingCorr (gen, res, N, n, 0, s, 2 * s);
+            if (N == 1)
+               bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+            else
+               bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
+            TestNumber[j] = j2;
+            strcpy (bbattery_TestNames[j], "HammingCorr, L = 64");
+         }
+      }
 
-  //     d = 1;
-  //     N = 1 + nb / BILLION;
-  //     n = nb / N - d;
-  //     n -= n % 32;
-  //     N = util_Min (100, N);
-  //     if (fileFlag)
-  //        ufile_InitReadBin ();
-  //     ++j2;
-  //     for (i = 0; i < Rep[j2]; ++i) {
-  //        sstring_AutoCor (gen, res, N, n, 0, s, d);
-  //        j++;
-  //        if (N == 1)
-  //           bbattery_pVal[j] = res->pVal2[gofw_Mean];
-  //        else
-  //           bbattery_pVal[j] = res->pVal2[gofw_Sum];
-  //        TestNumber[j] = j2;
-  //        strcpy (bbattery_TestNames[j], "AutoCor");
-  //     }
+      nw = nb / (4 * s);
+      N = 1 + nw / BILLION * 4;
+      n = nw / N;
+      N = 1;
+      ++j2;
+      if (n > 2) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            sstring_HammingCorr (gen, res, N, n, 0, s, 4 * s);
+            j++;
+            if (N == 1)
+               bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+            else
+               bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
+            TestNumber[j] = j2;
+            strcpy (bbattery_TestNames[j], "HammingCorr, L = 128");
+         }
+      }
 
-  //     d = 2;
-  //     N = 1 + nb / BILLION;
-  //     n = nb / N - d;
-  //     n -= n % 32;
-  //     N = util_Min (100, N);
-  //     if (fileFlag)
-  //        ufile_InitReadBin ();
-  //     ++j2;
-  //     for (i = 0; i < Rep[j2]; ++i) {
-  //        sstring_AutoCor (gen, res, N, n, 0, s, d);
-  //        j++;
-  //        if (N == 1)
-  //           bbattery_pVal[j] = res->pVal2[gofw_Mean];
-  //        else
-  //           bbattery_pVal[j] = res->pVal2[gofw_Sum];
-  //        TestNumber[j] = j2;
-  //        strcpy (bbattery_TestNames[j], "AutoCor");
-  //     }
+      nw = nb / s;
+      N = 1 + nw / BILLION;
+      n = nw / N;
+      N = util_Min (5, N);
+      ++j2;
+      if (n > 29) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            j++;
+            sstring_HammingIndep (gen, res, N, n, 0, s, 16, 0);
+            if (N == 1)
+               bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+            else
+               bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
+            TestNumber[j] = j2;
+            strcpy (bbattery_TestNames[j], "HammingIndep, L = 16");
+         }
+      }
 
-  //     sres_DeleteBasic (res);
-  //  }
-  //  {
-  //     sstring_Res3 *res;
-  //     res = sstring_CreateRes3 ();
-  //     nw = nb / 5;
-  //     N = 1 + nw / BILLION;
-  //     n = nw / N;
-  //     N = util_Min (20, N);
-  //     if (fileFlag)
-  //        ufile_InitReadBin ();
-  //     ++j2;
-  //     for (i = 0; i < Rep[j2]; ++i) {
-  //        sstring_Run (gen, res, N, n, 0, s);
-  //        j++;
-  //        if (N == 1)
-  //           bbattery_pVal[j] = res->NRuns->pVal2[gofw_Mean];
-  //        else
-  //           bbattery_pVal[j] = res->NRuns->pVal2[gofw_Sum];
-  //        TestNumber[j] = j2;
-  //        strcpy (bbattery_TestNames[j], "Run of bits");
-  //        j++;
-  //        if (N == 1)
-  //           bbattery_pVal[j] = res->NBits->pVal2[gofw_Mean];
-  //        else
-  //           bbattery_pVal[j] = res->NBits->pVal2[gofw_Sum];
-  //        TestNumber[j] = j2;
-  //        strcpy (bbattery_TestNames[j], "Run of bits");
-  //      }
-  //     sstring_DeleteRes3 (res);
-  //  }
+      nw = nb / (2 * s);
+      N = 1 + nw / BILLION * 2;
+      n = nw / N;
+      N = 1;
+      ++j2;
+      if (n > 29) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            j++;
+            sstring_HammingIndep (gen, res, N, n, 0, s, s, 0);
+            if (N == 1)
+               bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+            else
+               bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
+            TestNumber[j] = j2;
+            strcpy (bbattery_TestNames[j], "HammingIndep, L = 32");
+         }
+      }
 
-  //   printf("value of j2 %u\n", j2);    //3
-  //   printf("value of j %u\n", j);      //2
-  //  {
-  //     sres_Chi2 *res;
-  //     res = sres_CreateChi2 ();
-  //     n = nb / (s * s);
-  //     n = util_Min (n, 50 * MILLION);
-  //     ++j2;
-  //     if (n >= 50) {
-  //        if (fileFlag)
-  //           ufile_InitReadBin ();
-  //        for (i = 0; i < Rep[j2]; ++i) {
-  //           j++;
-  //           smarsa_MatrixRank (gen, res, 1, n, 0, s, s, s);
-  //           bbattery_pVal[j] = res->pVal2[gofw_Mean];
-  //           TestNumber[j] = j2;
-  //           strcpy (bbattery_TestNames[j], "MatrixRank, 32 x 32");
-  //        }
-  //     }
-  //   printf("value of j2 %u\n", j2);    //3
-  //   printf("value of j %u\n", j);      //2
-  //     n = nb / (100.0 * s * s);
-  //     n = util_Min (n, 300000);
-  //     ++j2;
-  //     if (n >= 50) {
-  //        if (fileFlag)
-  //           ufile_InitReadBin ();
-  //        for (i = 0; i < Rep[j2]; ++i) {
-  //           j++;
-  //           smarsa_MatrixRank (gen, res, 1, n, 0, s, 10 * s, 10 * s);
-  //           bbattery_pVal[j] = res->pVal2[gofw_Mean];
-  //           TestNumber[j] = j2;
-  //           strcpy (bbattery_TestNames[j], "MatrixRank, 320 x 320");
-  //        }
-  //     }
-  //   printf("value of j2 %u\n", j2);    //3
-  //   printf("value of j %u\n", j);      //2
-  //     n = nb / (1024.0 * s * s);
-  //     n = util_Min (n, 20000);
-  //     ++j2;
-  //     if (n >= 50) {
-  //        if (fileFlag)
-  //           ufile_InitReadBin ();
-  //        for (i = 0; i < Rep[j2]; ++i) {
-  //           j++;
-  //           smarsa_MatrixRank (gen, res, 1, n, 0, s, 32 * s, 32 * s);
-  //           bbattery_pVal[j] = res->pVal2[gofw_Mean];
-  //           TestNumber[j] = j2;
-  //           strcpy (bbattery_TestNames[j], "MatrixRank, 1024 x 1024");
-  //        }
-  //     }
-  //     sres_DeleteChi2 (res);
-  //  }
-  //   printf("value of j2 %u\n", j2);    //3
-  //   printf("value of j %u\n", j);      //2
+      nw = nb / (4 * s);
+      N = 1 + nw / BILLION * 10;
+      n = nw / N;
+      N = 1;
+      ++j2;
+      if (n > 29) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            j++;
+            sstring_HammingIndep (gen, res, N, n, 0, s, 2 * s, 0);
+            if (N == 1)
+               bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+            else
+               bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
+            strcpy (bbattery_TestNames[j], "HammingIndep, L = 64");
+            TestNumber[j] = j2;
+         }
+      }
+      sstring_DeleteRes (res);
+   }
+   {
+      sres_Basic *res;
+      int d;
+      res = sres_CreateBasic ();
 
-  //  DoWalk (fileFlag, gen, nb, &j, j2, Rep, globals);
+      d = 1;
+      N = 1 + nb / BILLION;
+      n = nb / N - d;
+      n -= n % 32;
+      N = util_Min (100, N);
+      if (fileFlag)
+         ufile_InitReadBin ();
+      ++j2;
+      for (i = 0; i < Rep[j2]; ++i) {
+         sstring_AutoCor (gen, res, N, n, 0, s, d);
+         j++;
+         if (N == 1)
+            bbattery_pVal[j] = res->pVal2[gofw_Mean];
+         else
+            bbattery_pVal[j] = res->pVal2[gofw_Sum];
+         TestNumber[j] = j2;
+         strcpy (bbattery_TestNames[j], "AutoCor");
+      }
+
+      d = 2;
+      N = 1 + nb / BILLION;
+      n = nb / N - d;
+      n -= n % 32;
+      N = util_Min (100, N);
+      if (fileFlag)
+         ufile_InitReadBin ();
+      ++j2;
+      for (i = 0; i < Rep[j2]; ++i) {
+         sstring_AutoCor (gen, res, N, n, 0, s, d);
+         j++;
+         if (N == 1)
+            bbattery_pVal[j] = res->pVal2[gofw_Mean];
+         else
+            bbattery_pVal[j] = res->pVal2[gofw_Sum];
+         TestNumber[j] = j2;
+         strcpy (bbattery_TestNames[j], "AutoCor");
+      }
+
+      sres_DeleteBasic (res);
+   }
+   {
+      sstring_Res3 *res;
+      res = sstring_CreateRes3 ();
+      nw = nb / 5;
+      N = 1 + nw / BILLION;
+      n = nw / N;
+      N = util_Min (20, N);
+      if (fileFlag)
+         ufile_InitReadBin ();
+      ++j2;
+      for (i = 0; i < Rep[j2]; ++i) {
+         sstring_Run (gen, res, N, n, 0, s);
+         j++;
+         if (N == 1)
+            bbattery_pVal[j] = res->NRuns->pVal2[gofw_Mean];
+         else
+            bbattery_pVal[j] = res->NRuns->pVal2[gofw_Sum];
+         TestNumber[j] = j2;
+         strcpy (bbattery_TestNames[j], "Run of bits");
+         j++;
+         if (N == 1)
+            bbattery_pVal[j] = res->NBits->pVal2[gofw_Mean];
+         else
+            bbattery_pVal[j] = res->NBits->pVal2[gofw_Sum];
+         TestNumber[j] = j2;
+         strcpy (bbattery_TestNames[j], "Run of bits");
+       }
+      sstring_DeleteRes3 (res);
+   }
+
+    printf("value of j2 %u\n", j2);    //3
+    printf("value of j %u\n", j);      //2
+   {
+      sres_Chi2 *res;
+      res = sres_CreateChi2 ();
+      n = nb / (s * s);
+      n = util_Min (n, 50 * MILLION);
+      ++j2;
+      if (n >= 50) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            j++;
+            smarsa_MatrixRank (gen, res, 1, n, 0, s, s, s);
+            bbattery_pVal[j] = res->pVal2[gofw_Mean];
+            TestNumber[j] = j2;
+            strcpy (bbattery_TestNames[j], "MatrixRank, 32 x 32");
+         }
+      }
+    printf("value of j2 %u\n", j2);    //3
+    printf("value of j %u\n", j);      //2
+      n = nb / (100.0 * s * s);
+      n = util_Min (n, 300000);
+      ++j2;
+      if (n >= 50) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            j++;
+            smarsa_MatrixRank (gen, res, 1, n, 0, s, 10 * s, 10 * s);
+            bbattery_pVal[j] = res->pVal2[gofw_Mean];
+            TestNumber[j] = j2;
+            strcpy (bbattery_TestNames[j], "MatrixRank, 320 x 320");
+         }
+      }
+    printf("value of j2 %u\n", j2);    //3
+    printf("value of j %u\n", j);      //2
+      n = nb / (1024.0 * s * s);
+      n = util_Min (n, 20000);
+      ++j2;
+      if (n >= 50) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            j++;
+            smarsa_MatrixRank (gen, res, 1, n, 0, s, 32 * s, 32 * s);
+            bbattery_pVal[j] = res->pVal2[gofw_Mean];
+            TestNumber[j] = j2;
+            strcpy (bbattery_TestNames[j], "MatrixRank, 1024 x 1024");
+         }
+      }
+      sres_DeleteChi2 (res);
+   }
+    printf("value of j2 %u\n", j2);    //3
+    printf("value of j %u\n", j);      //2
+
+   DoWalk (fileFlag, gen, nb, &j, j2, Rep, globals);
 
 
 
