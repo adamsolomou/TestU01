@@ -3566,7 +3566,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
    j = -1;
    ++j2;
   DoMultinom (fileFlag, gen, nb, &j, j2, Rep, globals);
-
+/*
    {
       const long NLIM = 4000000;
       snpair_Res *res;
@@ -4018,7 +4018,8 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
    }
 
    DoWalk (fileFlag, gen, nb, &j, j2, Rep, globals);
-   util_Assert (j2 <= RABBIT_NUM, "Rabbit:   j2 > RABBIT_NUM");
+*/ 
+  util_Assert (j2 <= RABBIT_NUM, "Rabbit:   j2 > RABBIT_NUM");
 
    bbattery_NTests = ++j;
    if (fileFlag) {
