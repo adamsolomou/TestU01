@@ -39,8 +39,13 @@ int main (int argc, char *argv[])
    std::string name=workload_Name(gen);
    
    // TODO : Choose the n that you think is achievable in timeBudget seconds
-   double n = t*1000000; // This is just a throwaway example of how to choose
-   
+
+if(t>100){
+n = t*1000000*13;
+}
+else{
+    n = t*1000000*12; // This is just a throwaway example of how to choose
+}   
    // Make sure this happens _before_ starting the battery, so that the
    // client knows what you are trying.
    fprintf(stdout, "%s, -1, TimeBudget, 0, %g\n", name.c_str(), t);

@@ -3787,10 +3787,11 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       N5 = 1;
       if (fileFlag)
          ufile_InitReadBin ();
-      ++j2;
-      for (i = 0; i < Rep[j2]; ++i) {
+
+      ++test51j2;
+      for (i = 0; i < Rep[test51j2]; ++i) {
          scomp_LinearComp (locRabGen, res, N5, n5, 0, s);
-         j++;
+         test51j++;
          if (N5 == 1)
             bbattery_pVal[j] = res->JumpSize->pVal2[gofw_Mean];
          else
