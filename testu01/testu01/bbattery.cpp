@@ -3564,9 +3564,9 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
 
    j = -1;
    ++j2;
-  // DoMultinom (fileFlag, gen, nb, &j, j2, Rep, globals);
-   j=0;
-  j2=1;
+  DoMultinom (fileFlag, gen, nb, &j, j2, Rep, globals);
+  //  j=0;
+  // j2=1;
 
 
    auto rabbitTest1 = [&](unif01_Gen * locRabGen){
@@ -3670,15 +3670,16 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
   
 
   auto rabbitTest3 = [&](unif01_Gen * locRabGen){
-    {
+    
         int test3j = 5;
         int test3j2 = 5;
+        
         int k3 = num_Log2 (nb + 0.5);
          if (k3 > 28)
             k3 = 28;
         long N3 = 1;
-        
-            sres_Basic *res;
+     {   
+                  sres_Basic *res;
             res = sres_CreateBasic ();
             if (fileFlag)
                ufile_InitReadBin ();
@@ -3686,7 +3687,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
             for (i = 0; i < Rep[test3j2]; ++i) {
                scomp_LempelZiv (locRabGen, res, N3, k3, 0, s);
                test3j++;
-               if (N == 1)
+               if (N3 == 1)
                   bbattery_pVal[test3j] = res->pVal2[gofw_Mean];
                else
                   bbattery_pVal[test3j] = res->pVal2[gofw_Sum];
@@ -3770,22 +3771,24 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
     // next test
     {
       int test51j=3;
-      int test51j2 = 4;
+      int test51j2 =4;
 
       const long NLIM1 = 300000;
       const long NLIM2 = 10000;
       scomp_Res *res;
       res = scomp_CreateRes ();
+      
       long n5,N5;
       n5 = NLIM2 + 2.0 * sqrt (nb);
       n5 = util_Min (n5, nb);
       n5 = util_Min (n5, NLIM1);
       N5 = 1;
+
       if (fileFlag)
          ufile_InitReadBin ();
       ++test51j2;
       for (i = 0; i < Rep[test51j2]; ++i) {
-         scomp_LinearComp (locRabGen, res, N5, n5, 0, s);
+         scomp_LinearComp (locRabGen, res, N, n, 0, s);
          test51j++;
          if (N5 == 1)
             bbattery_pVal[test51j] = res->JumpSize->pVal2[gofw_Mean];
@@ -3798,7 +3801,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
             bbattery_pVal[test51j] = res->JumpNum->pVal2[gofw_Mean];
          else
             bbattery_pVal[test51j] = res->JumpNum->pVal2[gofw_Sum];
-         TestNumber[test51j] = j2;
+         TestNumber[test51j] = test51j2;
          strcpy (bbattery_TestNames[test51j], "LinearComp");
       }
       scomp_DeleteRes (res);
@@ -4086,22 +4089,22 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
    printf("value of j2 %d\n",j2);
   };
 
-   rabbitTest1(workload_Clone(gen));
-   rabbitTest2(workload_Clone(gen));
-   rabbitTest3(workload_Clone(gen));
-   rabbitTest4(workload_Clone(gen));
-   rabbitTest5(workload_Clone(gen));
+   // rabbitTest1(workload_Clone(gen));
+   // rabbitTest2(workload_Clone(gen));
+   // rabbitTest3(workload_Clone(gen));
+   // rabbitTest4(workload_Clone(gen));
+   // rabbitTest5(workload_Clone(gen));
 
 
 
 
- // tbb::task_group othertests;
- // othertests.run([&](){  rabbitTest1(workload_Clone(gen)); });
- // othertests.run([&](){  rabbitTest2(workload_Clone(gen)); });
- // othertests.run([&](){  rabbitTest3(workload_Clone(gen)); });
- // othertests.run([&](){  rabbitTest4(workload_Clone(gen)); });
- // othertests.run([&](){  rabbitTest5(workload_Clone(gen)); });
- // othertests.wait();
+ tbb::task_group othertests;
+ othertests.run([&](){  rabbitTest1(workload_Clone(gen)); });
+ othertests.run([&](){  rabbitTest2(workload_Clone(gen)); });
+ othertests.run([&](){  rabbitTest3(workload_Clone(gen)); });
+ othertests.run([&](){  rabbitTest4(workload_Clone(gen)); });
+ othertests.run([&](){  rabbitTest5(workload_Clone(gen)); });
+ othertests.wait();
  
  // rabbitTest1(workload_Clone(gen));
   // rabbitTest2(workload_Clone(gen));
