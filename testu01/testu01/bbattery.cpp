@@ -3594,7 +3594,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       }
       snpair_DeleteRes (res);
    }
-
+*/
    ++j2;
    DoAppear (fileFlag, gen, nb, &j, j2, Rep, globals);
 
@@ -3634,7 +3634,8 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
    if (k > 28)
       k = 28;
    N = 1;
-   {
+/* 
+  {
       sres_Basic *res;
       res = sres_CreateBasic ();
       if (fileFlag)
@@ -3695,7 +3696,8 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       }
       sspectral_DeleteRes (res);
    }
-   {
+*/ 
+  {
       sstring_Res2 *res;
       res = sstring_CreateRes2 ();
       x = util_Min (BILLION * 100.0, nb);
@@ -3965,7 +3967,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
        }
       sstring_DeleteRes3 (res);
    }
-*/
+/*
    {
       sres_Chi2 *res;
       res = sres_CreateChi2 ();
@@ -4015,7 +4017,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       }
       sres_DeleteChi2 (res);
    }
-/*
+
    DoWalk (fileFlag, gen, nb, &j, j2, Rep, globals);
 */ 
   util_Assert (j2 <= RABBIT_NUM, "Rabbit:   j2 > RABBIT_NUM");
