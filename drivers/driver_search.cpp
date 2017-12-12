@@ -10,7 +10,7 @@
 
 #include "tbb/parallel_for.h"
 
-#define PARALLEL_RNGs 18
+#define PARALLEL_RNGs 36
 
 int main (int argc, char *argv[])
 {  
@@ -24,6 +24,7 @@ int main (int argc, char *argv[])
    
    //Loop forever - the user will kill the process
    //while(1){
+   for(int q=1; q<=5; q++){
       /* Store the RNG instances in a vector */ 
       for(int i=0; i<PARALLEL_RNGs; i++){
          genArray[i] = workload_Create();
@@ -40,7 +41,8 @@ int main (int argc, char *argv[])
            fprintf(stdout, "%s, %d, %s, %d, %.16g\n", nameArray[i].c_str(), r.TestIndex, r.TestName.c_str(), r.SubIndex, r.pVal);
          }
          fflush(stdout);
-      });   
+      });  
+   } 
    //}
 
    /* Sequential execution */
