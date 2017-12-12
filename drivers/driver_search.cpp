@@ -23,7 +23,7 @@ int main (int argc, char *argv[])
    std::string nameArray[PARALLEL_RNGs];
    
    //Loop forever - the user will kill the process
-   while(1){
+   //while(1){
       /* Store the RNG instances in a vector */ 
       for(int i=0; i<PARALLEL_RNGs; i++){
          genArray[i] = workload_Create();
@@ -41,25 +41,25 @@ int main (int argc, char *argv[])
          }
          fflush(stdout);
       });   
-   }
+   //}
 
    /* Sequential execution */
    //Loop forever - the user will kill the process
-   //while(1){
-   // for(int i=0; i<PARALLEL_RNGs; i++){
-   //    unif01_Gen *gen=workload_Create();
-   //    std::string name=workload_Name(gen);
+   // while(1){
+   //    for(int i=0; i<PARALLEL_RNGs; i++){
+   //       unif01_Gen *gen=workload_Create();
+   //       std::string name=workload_Name(gen);
 
-   //    std::vector<bbattery_Result> results;
-   //    results=bbattery_ParallelSmallCrush(gen);
+   //       std::vector<bbattery_Result> results;
+   //       results=bbattery_ParallelSmallCrush(gen);
 
-   //    for(auto & r : results){
-   //      fprintf(stdout, "%s, %d, %s, %d, %.16g\n", name.c_str(), r.TestIndex, r.TestName.c_str(), r.SubIndex, r.pVal);
+   //       for(auto & r : results){
+   //         fprintf(stdout, "%s, %d, %s, %d, %.16g\n", name.c_str(), r.TestIndex, r.TestName.c_str(), r.SubIndex, r.pVal);
+   //       }
+   //       fflush(stdout);
+
+   //       workload_Next();
    //    }
-   //    fflush(stdout);
-
-   //    workload_Next();
    // }
-   //}
    return 0;
 }
