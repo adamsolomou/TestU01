@@ -40,19 +40,19 @@ int main (int argc, char *argv[])
   double n; 
    // TODO : Choose the n that you think is achievable in timeBudget seconds
 if(t>60){
-n = t*1000000*20.5;
+n = t*1000000*20;
 }
 else if(t<23){
     n = t*1000000*11.6; // This is just a throwaway example of how to choose
 }  
 else if(t>40){
-n = t*1000000*18.5;
+n = t*1000000*18;
 }
 else if(t>31){
 n = t*1000000*14.5;
 }
 else{
-n = t*1000000*11.4;
+n = t*1000000*11;
 } 
    
    // Make sure this happens _before_ starting the battery, so that the
