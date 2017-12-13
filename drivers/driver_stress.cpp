@@ -40,11 +40,17 @@ int main (int argc, char *argv[])
   double n; 
    // TODO : Choose the n that you think is achievable in timeBudget seconds
 if(t>60){
-n = t*1000000*20;
+n = t*1000000*20.5;
+}
+else if(t<10){
+    n = t*1000000*11.7; // This is just a throwaway example of how to choose
+}  
+else if(t>30){
+n = t*1000000*14.5;
 }
 else{
-    n = t*1000000*11.7; // This is just a throwaway example of how to choose
-}   
+n = t*1000000*11.6;
+} 
    // Make sure this happens _before_ starting the battery, so that the
    // client knows what you are trying.
    fprintf(stdout, "%s, -1, TimeBudget, 0, %g\n", name.c_str(), t);
