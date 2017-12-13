@@ -39,7 +39,7 @@ int main (int argc, char *argv[])
    std::string name=workload_Name(gen);
   double n; 
    // TODO : Choose the n that you think is achievable in timeBudget seconds
-if(t>40){
+if(t>60){
 n = t*1000000*20;
 }
 else{
