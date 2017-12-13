@@ -54,6 +54,7 @@ n = t*1000000*14.5;
 else{
 n = t*1000000*11.4;
 } 
+   
    // Make sure this happens _before_ starting the battery, so that the
    // client knows what you are trying.
    fprintf(stdout, "%s, -1, TimeBudget, 0, %g\n", name.c_str(), t);
