@@ -44,19 +44,64 @@ figure
 subplot(1,2,1)
 plot(ref.t,ref.t,'k');
 hold on
-plot(ref.t,ref.g,'b--o')
+plot(ref.t,ref.g,'k--o')
 plot(par36v2.t,par36v2.g,'b--x');
 % plot(parall.t,parall.g,'r--o');
 
-legend('Time budget','sequential','parallelize DoMultinom');
-ylabel('execution time');
-xlabel('Time budget');
+legend('Time budget','Sequential Rabbit','Rabbit with parallelized DoMultinom');
+ylabel('Execution Time');
+xlabel('Time Budget');
 subplot(1,2,2)
 plot(ref.t,ref.score,'k-o');
 hold on
 plot(par36v2.t,par36v2.score,'b-x');
 % plot(parall.t,parall.score,'r--o');
-legend('Sequential','parallelize DoMultinom');
+ylabel('Score');
+xlabel('Time Budget');
+legend('Sequential Rabbit','Rabbit with parallelized DoMultinom');
+
+figure
+plot(ref.t,ref.t,'k');
+hold on
+plot(par36v2.t,par36v2.g,'b--x');
+plot(multi.t,multi.g,'r--o');
+legend('Time budget','Rabbit with parallelized DoMultinom','parallelized DoMulitnom only');
+ylabel('Execution Time');
+xlabel('Time Budget');
+
+figure
+plot(ref.t,ref.t,'k');
+hold on
+plot(multi.t,multi.g,'r--o');
+plot(fourier.t,fourier.g,'-o');
+plot(lasttwo.t,lasttwo.g,'-o');
+plot(matrix.t,matrix.g,'-o');
+plot(pairs.t,pairs.g,'-o');
+plot(rest.t,rest.g,'-o');
+
+legend('Time budget','parallelized DoMulitnom only','Task 1','Task 2','Task 3','Task 4','Task 5');
+ylabel('Execution Time');
+xlabel('Time Budget');
+
+figure
+subplot(1,2,1)
+plot(ref.t,ref.t,'k');
+hold on
+plot(ref.t,ref.g,'k--o')
+plot(par36v2.t,par36v2.g,'b--x');
+plot(test1.t,test1.g,'r--o');
+legend('Time budget','Sequential Rabbit','Rabbit with parallelized DoMultinom','Rabbit with parallelized tests');
+ylabel('Execution Time');
+xlabel('Time Budget');
+subplot(1,2,2)
+plot(ref.t,ref.score,'k-o');
+hold on
+plot(par36v2.t,par36v2.score,'b-x');
+plot(test1.t,test1.score,'r--o');
+
+ylabel('Score');
+xlabel('Time Budget');
+legend('Sequential Rabbit','Rabbit with parallelized DoMultinom','Rabbit with parallelized tests');
 
 % 
 % figure
