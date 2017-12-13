@@ -62,11 +62,7 @@
 
 #include "workload.hpp"
 #include "tbb/task_group.h"
-<<<<<<< HEAD
 
-
-=======
->>>>>>> c90f9cfd0ececb04e36f98895a5289d887d2967b
 
 #define LEN 120
 #define NAMELEN 30
