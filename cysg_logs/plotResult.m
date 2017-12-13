@@ -22,7 +22,7 @@ test = readLogs('test.log');
 test1 = readLogs('test1.log');
 test2 = readLogs('test2.log');
 test3 = readLogs('test3.log');
-
+test4 = readLogs('test4.log');
 % 
 % %plot real time (absolute times)
 % figure
@@ -67,53 +67,27 @@ test3 = readLogs('test3.log');
 % legend('Time budget','parallelized DoMulitnom only','Task 1','Task 2','Task 3','Task 4','Task 5');
 % ylabel('Execution Time');
 % xlabel('Time Budget');
-% 
-% figure
-% subplot(1,2,1)
-% plot(ref.t,ref.t,'k');
-% hold on
-% plot(ref.t,ref.g,'k--o')
-% plot(par36v2.t,par36v2.g,'b--x');
-% plot(test1.t,test1.g,'r--o');
-% legend('Time budget','Sequential Rabbit','Rabbit with parallelized DoMultinom','Rabbit with parallelized tests');
-% ylabel('Execution Time');
-% xlabel('Time Budget');
-% subplot(1,2,2)
-% plot(ref.t,ref.score,'k-o');
-% hold on
-% plot(par36v2.t,par36v2.score,'b-x');
-% plot(test1.t,test1.score,'r--o');
-% 
-% ylabel('Score');
-% xlabel('Time Budget');
-% legend('Sequential Rabbit','Rabbit with parallelized DoMultinom','Rabbit with parallelized tests');
-% 
 
-% figure
-% subplot(1,2,1)
-% plot(ref.t,ref.t,'k--o');
-% hold on
-% plot(parall.t,parall.g,'b--o');
-% plot(parallv1.t,parallv1.g,'k--x');
-% plot(parallv2.t,parallv2.g,'r--x');
-% % plot(parallv2.t,parallv3.g,'b--x');
-% plot(parallv2.t,parallv4.g,'r--x');
-% 
-% legend('Time budget','nx6','nx13','nx14');
-% ylabel('execution time');
-% xlabel('Time budget');
-% subplot(1,2,2)
-% % plot(ref.t,ref.score,'LineWidth',1);
-% hold on
-% plot(parall.t,parall.score,'LineWidth',1);
-% plot(parallv1.t,parallv1.score,'LineWidth',1);
-% plot(parallv2.t,parallv2.score,'LineWidth',1);
-% % plot(parallv2.t,parallv3.score,'LineWidth',1);
-% plot(parallv2.t,parallv4.score,'LineWidth',1);
-% 
-% % plot(parallv2.t,log2(parallv3.n),'LineWidth',1);
-% 
-% legend('nx6','nx13','nx14');
+figure
+subplot(1,2,1)
+plot(ref.t,ref.t,'k');
+hold on
+plot(ref.t,ref.g,'k--o')
+plot(par36v2.t,par36v2.g,'b--x');
+plot(test1.t,test1.g,'r--o');
+legend('Time budget','Sequential Rabbit','Rabbit with parallelized DoMultinom','Rabbit with parallelized tests');
+ylabel('Execution Time');
+xlabel('Time Budget');
+subplot(1,2,2)
+plot(ref.t,ref.score,'k-o');
+hold on
+plot(par36v2.t,par36v2.score,'b-x');
+plot(test1.t,test1.score,'r--o');
+plot(test3.t,test3.score,'LineWidth',1);
+ylabel('Score');
+xlabel('Time Budget');
+legend('Sequential Rabbit','Rabbit with parallelized DoMultinom','Rabbit with parallelized tests');
+
 
 
 figure
@@ -125,14 +99,19 @@ hold on
 % plot(test2.t,test2.g,'r--o');
 plot(test3.t,test3.g,'b--o');
 
+plot(test4.t,test4.g,'r--o');
+% 
 ylabel('execution time');
 xlabel('Time budget');
 subplot(1,2,2)
 plot(ref.t,ref.score,'LineWidth',1);
 hold on
-plot(test.t,test2.score,'LineWidth',1);
+% plot(test.t,test2.score,'LineWidth',1);
 % plot(parallv2.t,parallv4.score,'LineWidth',1);
 plot(test3.t,test3.score,'LineWidth',1);
+
+plot(test4.t,test4.score,'LineWidth',1);
+
 
 
 
