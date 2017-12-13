@@ -44,7 +44,7 @@ The statistical nature of the test allows tasks to work on the same sequence of 
 
 ### How well did it work?:
 
-Using 36 taskgroups sped up the DoMultinom test significantly, but it was now taking the same time as the other tests. Hence, the remaining tests were done in parallel after the execution of the DoMultinom test. Care was taken to ensure the remaining tasks had same workloads. (see graphs).
+Using 36 taskgroups sped up the DoMultinom test significantly, and is no longer the bottleneck. Hence, the remaining tests were done in parallel after the execution of the DoMultinom test. Care was taken to ensure the remaining tasks had same workloads. (see graphs).
 
 Improvement : Executing multiple workloads/RNGs in parallel and parallelising the SmallCrush tests for the search use-case
 --------------------------------------
@@ -90,7 +90,7 @@ Simple in concept, but need to ensure that the grainsize is not too small, and t
 
 ### How much of an improvment would you expect?
 
-In theory, at most a 50% speed up, since from current results, DoMultinom takes up half the time with 36 cores, and if the other tasks can be executed in zero time, ideally the total execution time can be halved. Howver, a 25% speedup is expected due to overheads.
+In theory, at most a 50% speed up, since from current results, DoMultinom takes up half the time with 36 cores, and if the other tasks can be executed in zero time, ideally the total execution time can be halved. However, a 25% speedup is expected due to overheads.
 
 Further Change : Implement a "proper" pipeline parallelism, potentially implementing it on a GPU
 ----------------------------------------
