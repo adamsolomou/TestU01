@@ -25,7 +25,7 @@ more of a lead.
 Identify two (pairs) or three (triples) key improvements you made
 =================================================================
 
-Improvement : <some descriptive name>
+Improvement : Using all cores to execute the dominant test, then execute all other tests in parallel
 --------------------------------------
 
 Initial idea : zkl14
@@ -36,15 +36,15 @@ Implementation : zkl14
 
 ### What was the big idea?:
 
-(at most 50 words)
+To identify the test (DoMultinom) which took the most time, and to use 36 cores chunk the workload n into 36 taskgroups. 
 
 ### Why was it expected to improve things?:
 
-(at most 50 words)
+The statistical nature of the test allows tasks to work on the same sequence of n. The functions were also thread safe, as long as different arguments are passed to the functions.
 
 ### How well did it work?:
 
-(at most 50 words)
+Using 36 taskgroups sped up the DoMultinom test significantly, but it was now taking the same time as the other tests. Hence, the remaining tests were done in parallel after the execution of the DoMultinom test. Care was taken to ensure the remaining tasks had same workloads. (see graphs).
 
 Improvement : Executing multiple workloads/RNGs in parallel and parallelising the SmallCrush tests for the search use-case
 --------------------------------------
@@ -74,22 +74,23 @@ Identify two (pairs) or three (triples) further changes that should be made
 These can include API changes, restructuring, moving to a
 different platform, ...
 
-Further Change : <some descriptive name>
+Further Change : Maximize core usage for other tests
 ----------------------------------------
 
 Initial idea : zkl14
 
 ### What is the big idea?:
 
-(at most 50 words)
+The remaining tests aside from the DoMultinom test were grouped into 5 workgroups that took approximately the same time to execute. More parallelism could be achieved using the other 31 cores.
 
 ### How difficult would it be, what would the impact be on users?
 
-(at most 50 words)
+Simple in concept, but need to ensure that the grainsize is not too small, and that the taskgroups have equal work, which can be laborious in terms of testing.
+
 
 ### How much of an improvment would you expect?
 
-(at most 50 words)
+In theory, at most a 50% speed up, since from current results, DoMultinom takes up half the time with 36 cores, and if the other tasks can be executed in zero time, ideally the total execution time can be halved. Howver, a 25% speedup is expected due to overheads.
 
 Further Change : Implement a "proper" pipeline parallelism, potentially implementing it on a GPU
 ----------------------------------------
