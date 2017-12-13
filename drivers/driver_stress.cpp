@@ -45,6 +45,9 @@ n = t*1000000*20.5;
 else if(t<10){
     n = t*1000000*11.7; // This is just a throwaway example of how to choose
 }  
+else if(t>40){
+n = t*1000000*16.5;
+}
 else if(t>30){
 n = t*1000000*14.5;
 }
