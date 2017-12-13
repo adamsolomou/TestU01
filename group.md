@@ -46,7 +46,7 @@ Implementation : zkl14
 
 (at most 50 words)
 
-Improvement : Parallelising over multiple workloads/RNGs for the search use-case
+Improvement : Executing multiple workloads/RNGs in parallel and parallelising the SmallCrush tests for the search use-case
 --------------------------------------
 
 Initial idea : aes414
@@ -57,15 +57,15 @@ Implementation : aes414
 
 ### What was the big idea?:
 
-Refernce driver evaluates a single RNG instance at a time. The use-case targets a rate-based metric, so the key idea was to evaluate over multiple different RNGs at the same time. On a 36-core machine, we could have up to 36 RNGs running in parallel. Each RNG takes ~9.2sec to execute sequentially. So this approach would result in 36 RNGs being evaluated in ~10sec.
+Search-case targets a rate-based metric, so the key idea was to evaluate over multiple different RNGs in parallel and output results progressively. The 10 SmallCrush tests are arranged into 4 groups (~2.3sec/group) which are executed in parallel. This approach then allows to run 9 RNGs in parallel, utilising 36 cores. 
 
 ### Why was it expected to improve things?:
 
-(at most 50 words)
+Parallelising over RNGs allows to complete multiple RNGs in the same time interval. Then grouping and executing the SmallCrush tests in parallel reduces the time taken to finish each RNG test. There is a trade-off between the two. Executing many slow RNGs in parallel is like stalling a “pipeline”.
 
 ### How well did it work?:
 
-(at most 50 words)
+Best configuration was having 9 different RNGs in parallel and executing the 10 SmallCrush tests in 4 task_groups. This resulted in executing, on average, 3 RNGs/sec. Configuration results in 3sec gap between printing each mini-batch of RNGs. Having more RNGs in parallel increases this gap which stalls the process significantly.
 
 
 Identify two (pairs) or three (triples) further changes that should be made
@@ -77,7 +77,7 @@ different platform, ...
 Further Change : <some descriptive name>
 ----------------------------------------
 
-Initial idea : (Imperial login)
+Initial idea : zkl14
 
 ### What is the big idea?:
 
@@ -91,20 +91,21 @@ Initial idea : (Imperial login)
 
 (at most 50 words)
 
-Further Change : <some descriptive name>
+Further Change : Implement a "proper" pipeline parallelism, potentially implementing it on a GPU
 ----------------------------------------
 
-Initial idea : (Imperial login)
+Initial idea : aes414
 
 ### What is the big idea?:
 
-(at most 50 words)
+SmallCrush tests are arranged in groups and executed in parallel as pipeline stages. Multiple pipelines would also be used. Similar as the implemented idea, but now each SmallCrush test in the pipeline operates on a different RNG. Strictly apply lots of RNGs to a test stream.
+
 
 ### How difficult would it be, what would the impact be on users?
 
-(at most 50 words)
+Implementation requires restructuring SmallCrush, mainly modifying/restructuring the library itself rather than the driver program. This would be beneficial for external users, as it provides a universal solution since the driver is user defined. GPU implementation requires resolving many data types and various function calls. If attempted, CUDA would be preferred.
 
 ### How much of an improvment would you expect?
 
-(at most 50 words)
+Analysis for 9 pipelines with 4 stages each: After pipeline fills up (~10sec), 9 RNGs will be outputted every ~2.5sec. CPU implementation does not offer great improvement. Properly implementing a pipeline on a GPU is expected to perform significantly better since pipeline parallelism is well supported in hardware. 
 
