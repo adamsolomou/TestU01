@@ -23,27 +23,25 @@ struct bbattery_Result
   double pVal;
 };
 
+std::vector<bbattery_Result> bbattery_ParallelSmallCrush (unif01_Gen *gen);
+
+
 std::vector<bbattery_Result> bbattery_SmallCrush (unif01_Gen *gen);
 
 
 std::vector<bbattery_Result> bbattery_RepeatSmallCrush (unif01_Gen *gen, int rep[]);
 
 
-
 std::vector<bbattery_Result> bbattery_Crush (unif01_Gen *gen);
-
 
 
 std::vector<bbattery_Result> bbattery_RepeatCrush (unif01_Gen *gen, int rep[]);
 
 
-
 std::vector<bbattery_Result> bbattery_BigCrush (unif01_Gen *gen);
 
 
-
 std::vector<bbattery_Result> bbattery_RepeatBigCrush (unif01_Gen *gen, int rep[]);
-
 
 
 std::vector<bbattery_Result> bbattery_Rabbit (unif01_Gen *gen, double nb);
@@ -55,9 +53,7 @@ std::vector<bbattery_Result> bbattery_RabbitFile (char *filename, double nb);
 std::vector<bbattery_Result> bbattery_RepeatRabbit (unif01_Gen *gen, double nb, int rep[]);
 
 
-
 std::vector<bbattery_Result> bbattery_Alphabit (unif01_Gen *gen, double nb, int r, int s);
-
 
 
 std::vector<bbattery_Result> bbattery_AlphabitFile (char *filename, double nb);
@@ -66,23 +62,21 @@ std::vector<bbattery_Result> bbattery_AlphabitFile (char *filename, double nb);
 std::vector<bbattery_Result> bbattery_RepeatAlphabit (unif01_Gen *gen, double nb, int r, int s,
                               int rep[]);
 
-
-
 std::vector<bbattery_Result> bbattery_BlockAlphabit (unif01_Gen *gen, double nb, int r, int s);
-std::vector<bbattery_Result> bbattery_BlockAlphabitFile (char *filename, double nb);
 
+
+std::vector<bbattery_Result> bbattery_BlockAlphabitFile (char *filename, double nb);
 
 
 std::vector<bbattery_Result> bbattery_RepeatBlockAlphabit (unif01_Gen *gen, double nb, int r, int s,
                                    int rep[], int w);
 
-
-
 std::vector<bbattery_Result> bbattery_pseudoDIEHARD (unif01_Gen *gen);
 
 
-
 std::vector<bbattery_Result> bbattery_FIPS_140_2 (unif01_Gen *gen);
+
+
 std::vector<bbattery_Result> bbattery_FIPS_140_2File (char *filename);
 
  
