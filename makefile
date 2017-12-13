@@ -1,6 +1,8 @@
+
 CPPFLAGS += -I include -I testu01/include
 CPPFLAGS += -g -O3
 CPPFLAGS += -std=c++11 -pthread
+
 LDLIBS += -ltbb
 
 PROBDIST_SRC = $(wildcard testu01/probdist/*.cpp)
@@ -42,9 +44,6 @@ bin/search_% : drivers/driver_search.cpp workloads/workload_%.cpp $(TESTU01_LIBS
 	mkdir -p bin
 	g++ $(CPPFLAGS) -o $@ $(LDFLAGS) $< workloads/workload_$*.cpp $(TESTU01_LIBS) $(LDLIBS)
 
-bin/search_ref_% : drivers/driver_searchref.cpp workloads/workload_%.cpp $(TESTU01_LIBS)
-	mkdir -p bin
-	g++ $(CPPFLAGS) -o $@ $(LDFLAGS) $< workloads/workload_$*.cpp $(TESTU01_LIBS) $(LDLIBS)
 
 print_all_drivers:
 	echo $(DRIVERS)
@@ -56,4 +55,4 @@ print_all_driver_workloads :
 	echo $(ALL_DRIVER_WORLOADS)
 
 
-all : bin/stress_std bin/search_std bin/certify_std bin/search_ref_std
+all : bin/stress_std bin/search_std bin/certify_std

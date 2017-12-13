@@ -43,23 +43,5 @@ int main (int argc, char *argv[])
       });  
    }
 
-   /* Sequential execution */
-   //Loop forever - the user will kill the process
-   // while(1){
-   //    for(int i=0; i<PARALLEL_RNGs; i++){
-   //       unif01_Gen *gen=workload_Create();
-   //       std::string name=workload_Name(gen);
-
-   //       std::vector<bbattery_Result> results;
-   //       results=bbattery_ParallelSmallCrush(gen);
-
-   //       for(auto & r : results){
-   //         fprintf(stdout, "%s, %d, %s, %d, %.16g\n", name.c_str(), r.TestIndex, r.TestName.c_str(), r.SubIndex, r.pVal);
-   //       }
-   //       fflush(stdout);
-
-   //       workload_Next();
-   //    }
-   // }
    return 0;
 }

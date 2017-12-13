@@ -952,7 +952,6 @@ static void FourTaskParallelSmallCrush (unif01_Gen * gen, char *filename, int Re
     fileFlag = FALSE;
   }
 
-
   /* Perform first set of tests */
   auto Group1 = [&](unif01_Gen * groupGen1)
   {
@@ -1038,11 +1037,11 @@ static void FourTaskParallelSmallCrush (unif01_Gen * gen, char *filename, int Re
     if (fileFlag){
       ufile_InitReadText ();
     }
-    sres_Chi2 *res3;
-    res3 = sres_CreateChi2 ();
+    sres_Chi2 *res4;
+    res4 = sres_CreateChi2 ();
     for (int i = 0; i < Rep[testInd]; ++i) {
-      sknuth_SimpPoker (groupGen3, res3, 1, 2 * MILLION / 5, 24, 64, 64);
-      bbattery_pVal[testInd-1] = res3->pVal2[gofw_Mean];
+      sknuth_SimpPoker (groupGen3, res4, 1, 2 * MILLION / 5, 24, 64, 64);
+      bbattery_pVal[testInd-1] = res4->pVal2[gofw_Mean];
       TestNumber[testInd-1] = testInd;
       strcpy (bbattery_TestNames[testInd-1], "SimpPoker");
     }
@@ -1054,12 +1053,12 @@ static void FourTaskParallelSmallCrush (unif01_Gen * gen, char *filename, int Re
       ufile_InitReadText ();
     }
     for (int i = 0; i < Rep[testInd]; ++i) {
-      sknuth_CouponCollector (groupGen3, res3, 1, MILLION / 2, 26, 16);
-      bbattery_pVal[testInd-1] = res3->pVal2[gofw_Mean];
+      sknuth_CouponCollector (groupGen3, res4, 1, MILLION / 2, 26, 16);
+      bbattery_pVal[testInd-1] = res4->pVal2[gofw_Mean];
       TestNumber[testInd-1] = testInd;
       strcpy (bbattery_TestNames[testInd-1], "CouponCollector");
     }
-    sres_DeleteChi2 (res3);
+    sres_DeleteChi2 (res4);
 
     /* Run Test 6 */
     testInd = 6;
@@ -1091,15 +1090,15 @@ static void FourTaskParallelSmallCrush (unif01_Gen * gen, char *filename, int Re
     if (fileFlag){
       ufile_InitReadText ();
     }
-    sres_Chi2 *res7;
-    res7 = sres_CreateChi2 ();
+    sres_Chi2 *res8;
+    res8 = sres_CreateChi2 ();
     for (int i = 0; i < Rep[testInd]; ++i) {
-      smarsa_MatrixRank (groupGen4, res7, 1, 20 * THOUSAND, 20, 10, 60, 60);
-      bbattery_pVal[testInd] = res7->pVal2[gofw_Mean];
+      smarsa_MatrixRank (groupGen4, res8, 1, 20 * THOUSAND, 20, 10, 60, 60);
+      bbattery_pVal[testInd] = res8->pVal2[gofw_Mean];
       TestNumber[testInd] = testInd;
       strcpy (bbattery_TestNames[testInd], "MatrixRank");
     }
-    sres_DeleteChi2 (res7);
+    sres_DeleteChi2 (res8);
 
     /* Run Test 9 */
     testInd=9;
