@@ -1716,9 +1716,10 @@ std::vector<bbattery_Result> bbattery_ParallelSmallCrush (unif01_Gen * gen)
   TestGlobals globals;
    int i;
    int Rep[1 + NDIM] = {0};
-   for (i = 1; i <= SMALLCRUSH_NUM; ++i)
+   for (i = 1; i <= SMALLCRUSH_NUM; ++i){
       Rep[i] = 1;
-   TwoTaskParallelSmallCrush (gen, NULL, Rep, globals);
+   }
+   FourTaskParallelSmallCrush (gen, NULL, Rep, globals);
    return makeResults(globals);
 }
 

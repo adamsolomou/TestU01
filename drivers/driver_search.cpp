@@ -10,7 +10,7 @@
 
 #include "tbb/parallel_for.h"
 
-#define PARALLEL_RNGs 36
+#define PARALLEL_RNGs 9
 
 int main (int argc, char *argv[])
 {  
@@ -23,8 +23,7 @@ int main (int argc, char *argv[])
    std::string nameArray[PARALLEL_RNGs];
    
    //Loop forever - the user will kill the process
-   //while(1){
-   for(int q=1; q<=5; q++){
+   while(1){
       /* Store the RNG instances in a vector */ 
       for(int i=0; i<PARALLEL_RNGs; i++){
          genArray[i] = workload_Create();
@@ -42,8 +41,7 @@ int main (int argc, char *argv[])
          }
          fflush(stdout);
       });  
-   } 
-   //}
+   }
 
    /* Sequential execution */
    //Loop forever - the user will kill the process
