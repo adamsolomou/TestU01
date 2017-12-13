@@ -62,8 +62,11 @@
 
 #include "workload.hpp"
 #include "tbb/task_group.h"
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> c90f9cfd0ececb04e36f98895a5289d887d2967b
 
 #define LEN 120
 #define NAMELEN 30
@@ -4262,26 +4265,50 @@ static void DoMultinom (lebool fileFlag, /* */
   auto &bbattery_NTests = globals.bbattery_NTests;
   auto &TestNumber = globals.TestNumber;
   
-  
+  auto parTask = [&] (unif01_Gen * gen, smultin_Param * par, smultin_Res * res, long N, long n, int r, int s, int L, lebool Sparse){
+      smultin_MultinomialBitsOver (gen, par, res, N, n, 0, 32, L, TRUE);
+  };
+
    const long NLIM = 10000000;
    long n, N;
    int L, t;
    double x;
    int i;
    int j = *pj;
-   smultin_Res *res;
-   smultin_Param *par = NULL;
-   double ValDelta[] = { -1 };
 
-   util_Assert (nb > 0.0, "MultinomialBits:   nb <= 0");
-   par = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
-   res = smultin_CreateRes (par);
+   // smultin_Res *res, *res1;
+   // smultin_Param *par, *par1 = NULL;
+   int tasks = 36;
+
+   std::vector<smultin_Param *> parArray(tasks);
+   std::vector<smultin_Res *> resArray(tasks);
+   double ValDelta[] = { -1 };
+   
+   for(int i=0; i < tasks; i++){
+    smultin_Res *res;
+    smultin_Param *par = NULL;
+    util_Assert (nb > 0.0, "MultinomialBits:   nb <= 0");
+    par = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+    res = smultin_CreateRes (par);
+    parArray[i] = par;
+    resArray[i] = res;
+
+   }
+
+   // par = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   // res = smultin_CreateRes (par);
+   // par1 = smultin_CreateParam (1, ValDelta, smultin_GenerCellSerial, -3);
+   // res1 = smultin_CreateRes (par1);   
    if (fileFlag)
       ufile_InitReadBin ();
 
 #ifdef USE_LONGLONG
    /* Limit sample size n to NLIM because of memory limitations. */
    /* Determine number of replications N from this. */
+  
+   nb = nb/tasks;
+
+
    N = 1 + nb / NLIM;
    n = nb / N;
    /* Time limit on test: N = 30 */
@@ -4290,10 +4317,55 @@ static void DoMultinom (lebool fileFlag, /* */
    n -= n % 32;
    L = num_Log2 (n / 200.0 * n);
    L = util_Max (4, L);
+
+
+  printf("value of N %lu\n",N);
+  printf("value of n %lu\n",n);
+  printf("value of L %lu\n",L);
+
    for (i = 0; i < Rep[j2]; ++i) {
-      smultin_MultinomialBitsOver (gen, par, res, N, n, 0, 32, L, TRUE);
+       // smultin_MultinomialBitsOver (gen, par, res, N, n, 0, 32, L, TRUE);
+      tbb::task_group group;
+      group.run( [&](){ parTask(workload_Clone(gen),parArray[0], resArray[0], N, n, 0, 32, L, TRUE); } );     
+      group.run( [&](){ parTask(workload_Clone(gen),parArray[1], resArray[1], N, n, 0, 32, L, TRUE); } );     
+      group.run( [&](){ parTask(workload_Clone(gen),parArray[2], resArray[2], N, n, 0, 32, L, TRUE); } );     
+      group.run( [&](){ parTask(workload_Clone(gen),parArray[3], resArray[3], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[4], resArray[4], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[5], resArray[5], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[6], resArray[6], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[7], resArray[7], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[8], resArray[8], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[9], resArray[9], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[10], resArray[10], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[11], resArray[11], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[12], resArray[12], N, n, 0, 32, L, TRUE); } );     
+  group.run( [&](){ parTask(workload_Clone(gen),parArray[13], resArray[13], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[14], resArray[14], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[15], resArray[15], N, n, 0, 32, L, TRUE); } ); 
+group.run( [&](){ parTask(workload_Clone(gen),parArray[16], resArray[16], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[17], resArray[17], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[18], resArray[18], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[19], resArray[19], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[20], resArray[20], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[21], resArray[21], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[22], resArray[22], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[23], resArray[23], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[24], resArray[24], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[25], resArray[25], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[26], resArray[26], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[27], resArray[27], N, n, 0, 32, L, TRUE); } );    
+group.run( [&](){ parTask(workload_Clone(gen),parArray[28], resArray[28], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[29], resArray[29], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[30], resArray[30], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[31], resArray[31], N, n, 0, 32, L, TRUE); } );    
+group.run( [&](){ parTask(workload_Clone(gen),parArray[32], resArray[32], N, n, 0, 32, L, TRUE); } );     
+group.run( [&](){ parTask(workload_Clone(gen),parArray[33], resArray[33], N, n, 0, 32, L, TRUE); } );    
+group.run( [&](){ parTask(workload_Clone(gen),parArray[34], resArray[34], N, n, 0, 32, L, TRUE); } );    
+group.run( [&](){ parTask(workload_Clone(gen),parArray[35], resArray[35], N, n, 0, 32, L, TRUE); } );    
+
+ group.wait();     
       strcpy (bbattery_TestNames[++j], "MultinomialBitsOver");
-      bbattery_pVal[j] = res->pColl;
+      bbattery_pVal[j] = resArray[0]->pColl;
       TestNumber[j] = j2;
    }
 
@@ -4319,6 +4391,7 @@ static void DoMultinom (lebool fileFlag, /* */
    }
    while (n * L % 32 > 0)
       n--;
+
    if (n > 3) {
       for (i = 0; i < Rep[j2]; ++i) {
          smultin_MultinomialBits (gen, par, res, N, n, 0, 32, L, TRUE);
@@ -4329,8 +4402,12 @@ static void DoMultinom (lebool fileFlag, /* */
    }
 #endif
    *pj = j;
-   smultin_DeleteRes (res);
-   smultin_DeleteParam (par);
+   for(int i =0; i<tasks;i++){
+    smultin_DeleteRes (resArray[i]);
+   smultin_DeleteParam (parArray[i]);
+   }
+   // smultin_DeleteRes (res);
+   // smultin_DeleteParam (par);
 }
 
 
@@ -4541,20 +4618,31 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
 
    j = -1;
    ++j2;
-   DoMultinom (fileFlag, gen, nb, &j, j2, Rep, globals);
 
-   {
+  
+
+  DoMultinom (fileFlag, gen, nb, &j, j2, Rep, globals);
+
+
+
+   auto rabbitTest1 = [&](unif01_Gen * locRabGen){
+    {
+      int j = 0;
+      int j2 = 1;
+
       const long NLIM = 4000000;
       snpair_Res *res;
       res = snpair_CreateRes ();
-      N = 1 + nw / NLIM;
-      n = nw / N;
-      N = util_Min (N, 25);
+      long N1,n1;
+
+      N1 = 1 + nw / NLIM;
+      n1 = nw / N1;
+      N1 = util_Min (N1, 25);
       if (fileFlag)
          ufile_InitReadBin ();
       ++j2;
       for (i = 0; i < Rep[j2]; ++i) {
-         snpair_ClosePairsBitMatch (gen, res, N, n / 2, 0, 2);
+         snpair_ClosePairsBitMatch (locRabGen, res, N1, n1 / 2, 0, 2);
          bbattery_pVal[++j] = res->pVal[snpair_BM];
          TestNumber[j] = j2;
          strcpy (bbattery_TestNames[j], "ClosePairsBitMatch, t = 2");
@@ -4564,7 +4652,7 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          ufile_InitReadBin ();
       ++j2;
       for (i = 0; i < Rep[j2]; ++i) {
-         snpair_ClosePairsBitMatch (gen, res, N, n / 4, 0, 4);
+         snpair_ClosePairsBitMatch (locRabGen, res, N1, n1 / 4, 0, 4);
          bbattery_pVal[++j] = res->pVal[snpair_BM];
          TestNumber[j] = j2;
          strcpy (bbattery_TestNames[j], "ClosePairsBitMatch, t = 4");
@@ -4572,32 +4660,199 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       snpair_DeleteRes (res);
    }
 
-   ++j2;
-   DoAppear (fileFlag, gen, nb, &j, j2, Rep, globals);
+   };
 
-   {
-      const long NLIM1 = 300000;
-      const long NLIM2 = 10000;
-      scomp_Res *res;
-      res = scomp_CreateRes ();
-      n = NLIM2 + 2.0 * sqrt (nb);
-      n = util_Min (n, nb);
-      n = util_Min (n, NLIM1);
-      N = 1;
+   
+
+  auto rabbitTest2 = [&](unif01_Gen * locRabGen){
+    
+    
+      int j=21;
+      int j2=20;
+    
+      long n2;
+
+      sres_Chi2 *res;
+      res = sres_CreateChi2 ();
+      n2 = nb / (s * s);
+      n2 = util_Min (2, 50 * MILLION);
+      ++j2;
+      if (n2 >= 50) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            j++;
+            smarsa_MatrixRank (locRabGen, res, 1, n2, 0, s, s, s);
+            bbattery_pVal[j] = res->pVal2[gofw_Mean];
+            TestNumber[j] = j2;
+            strcpy (bbattery_TestNames[j], "MatrixRank, 32 x 32");
+         }
+      }
+
+
+      n2 = nb / (100.0 * s * s);
+      n2 = util_Min (n2, 300000);
+      ++j2;
+      if (n2 >= 50) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            j++;
+            smarsa_MatrixRank (locRabGen, res, 1, n2, 0, s, 10 * s, 10 * s);
+            bbattery_pVal[j] = res->pVal2[gofw_Mean];
+            TestNumber[j] = j2;
+            strcpy (bbattery_TestNames[j], "MatrixRank, 320 x 320");
+         }
+      }
+
+      n2 = nb / (1024.0 * s * s);
+      n2 = util_Min (n2, 20000);
+      ++j2;
+      if (n2 >= 50) {
+         if (fileFlag)
+            ufile_InitReadBin ();
+         for (i = 0; i < Rep[j2]; ++i) {
+            j++;
+            smarsa_MatrixRank (locRabGen, res, 1, n2, 0, s, 32 * s, 32 * s);
+            bbattery_pVal[j] = res->pVal2[gofw_Mean];
+            TestNumber[j] = j2;
+            strcpy (bbattery_TestNames[j], "MatrixRank, 1024 x 1024");
+         }
+      }
+      sres_DeleteChi2 (res);
+   // 
+
+
+  };
+  
+
+  auto rabbitTest3 = [&](unif01_Gen * locRabGen){
+    {
+        int j = 5;
+        int j2 = 5;
+        int k3 = num_Log2 (nb + 0.5);
+         if (k3 > 28)
+            k3 = 28;
+        long N3 = 1;
+        {
+            sres_Basic *res;
+            res = sres_CreateBasic ();
+            if (fileFlag)
+               ufile_InitReadBin ();
+            ++j2;
+            for (i = 0; i < Rep[j2]; ++i) {
+               scomp_LempelZiv (locRabGen, res, N3, k3, 0, s);
+               j++;
+               if (N == 1)
+                  bbattery_pVal[j] = res->pVal2[gofw_Mean];
+               else
+                  bbattery_pVal[j] = res->pVal2[gofw_Sum];
+               TestNumber[j] = j2;
+               strcpy (bbattery_TestNames[j], "LempelZiv");
+            }
+            sres_DeleteBasic (res);
+         }
+
+    }
+    {
+      int j=23;
+      int j2=23;
+      DoWalk (fileFlag, locRabGen, nb, &j, j2, Rep, globals);
+     }
+
+  };
+
+  auto rabbitTest4 = [&](unif01_Gen * locRabGen){
+
+
+      {
+      int j=6;
+      int j2=6;
+      int k4;
+      sspectral_Res *res;
+      k4 = num_Log2 (nb + 0.5);
+      k4 = util_Min (20, k4);
+      res = sspectral_CreateRes ();
       if (fileFlag)
          ufile_InitReadBin ();
       ++j2;
       for (i = 0; i < Rep[j2]; ++i) {
-         scomp_LinearComp (gen, res, N, n, 0, s);
+         sspectral_Fourier1 (locRabGen, res, 1, k4, 0, s);
          j++;
-         if (N == 1)
+         bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+         TestNumber[j] = j2;
+         strcpy (bbattery_TestNames[j], "Fourier1");
+      }
+      double x4;
+      long N4;
+      x4 = sqrt (2.0 * nb);
+      N4 = x4 / 2.0;
+      if (N4 < 32) {
+         k4 = 5;
+         N4 = nb / 32.0;
+      } else if (N4 >= 16384) {
+         k4 = 14;
+         N4 = nb / 16384.0;
+      } else {
+         k4 = num_Log2 (x4 / 2.0 + 0.5);
+         N4 = nb / (num_TwoExp[k4]);
+      }
+      N4 = util_Min (N4, 300000);
+      while ((num_TwoExp[k4] + 32) * N4 > nb)
+         N4--;
+      if (fileFlag)
+         ufile_InitReadBin ();
+      ++j2;
+      for (i = 0; i < Rep[j2]; ++i) {
+         sspectral_Fourier3 (locRabGen, res, N4, k4, 0, s);
+         j++;
+         bbattery_pVal[j] = res->Bas->pVal2[gofw_AD];
+         TestNumber[j] = j2;
+         strcpy (bbattery_TestNames[j], "Fourier3");
+      }
+      sspectral_DeleteRes (res);
+   }
+  };
+  
+
+
+  auto rabbitTest5 = [&](unif01_Gen * locRabGen){
+
+    {
+      int j = 2;
+      int j2 = 4;
+     DoAppear (fileFlag, locRabGen, nb, &j, j2, Rep, globals);
+    } 
+
+    // next test
+    {
+      int j=3;
+      int j2 = 4;
+
+      const long NLIM1 = 300000;
+      const long NLIM2 = 10000;
+      scomp_Res *res;
+      res = scomp_CreateRes ();
+      long n5,N5;
+      n5 = NLIM2 + 2.0 * sqrt (nb);
+      n5 = util_Min (n5, nb);
+      n5 = util_Min (n5, NLIM1);
+      N5 = 1;
+      if (fileFlag)
+         ufile_InitReadBin ();
+
+      ++test51j2;
+      for (i = 0; i < Rep[test51j2]; ++i) {
+         scomp_LinearComp (locRabGen, res, N5, n5, 0, s);
+         test51j++;
+         if (N5 == 1)
             bbattery_pVal[j] = res->JumpSize->pVal2[gofw_Mean];
          else
             bbattery_pVal[j] = res->JumpSize->pVal2[gofw_Sum];
          TestNumber[j] = j2;
          strcpy (bbattery_TestNames[j], "LinearComp");
          j++;
-         if (N == 1)
+         if (N5 == 1)
             bbattery_pVal[j] = res->JumpNum->pVal2[gofw_Mean];
          else
             bbattery_pVal[j] = res->JumpNum->pVal2[gofw_Sum];
@@ -4607,91 +4862,32 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       scomp_DeleteRes (res);
    }
 
-   k = num_Log2 (nb + 0.5);
-   if (k > 28)
-      k = 28;
-   N = 1;
-   {
-      sres_Basic *res;
-      res = sres_CreateBasic ();
-      if (fileFlag)
-         ufile_InitReadBin ();
-      ++j2;
-      for (i = 0; i < Rep[j2]; ++i) {
-         scomp_LempelZiv (gen, res, N, k, 0, s);
-         j++;
-         if (N == 1)
-            bbattery_pVal[j] = res->pVal2[gofw_Mean];
-         else
-            bbattery_pVal[j] = res->pVal2[gofw_Sum];
-         TestNumber[j] = j2;
-         strcpy (bbattery_TestNames[j], "LempelZiv");
-      }
-      sres_DeleteBasic (res);
-   }
-   {
-      sspectral_Res *res;
-      k = num_Log2 (nb + 0.5);
-      k = util_Min (20, k);
-      res = sspectral_CreateRes ();
-      if (fileFlag)
-         ufile_InitReadBin ();
-      ++j2;
-      for (i = 0; i < Rep[j2]; ++i) {
-         sspectral_Fourier1 (gen, res, 1, k, 0, s);
-         j++;
-         bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
-         TestNumber[j] = j2;
-         strcpy (bbattery_TestNames[j], "Fourier1");
-      }
+      int j=8;
+      int j2=8;
+      long n5,N5;
 
-      x = sqrt (2.0 * nb);
-      N = x / 2.0;
-      if (N < 32) {
-         k = 5;
-         N = nb / 32.0;
-      } else if (N >= 16384) {
-         k = 14;
-         N = nb / 16384.0;
-      } else {
-         k = num_Log2 (x / 2.0 + 0.5);
-         N = nb / (num_TwoExp[k]);
-      }
-      N = util_Min (N, 300000);
-      while ((num_TwoExp[k] + 32) * N > nb)
-         N--;
-      if (fileFlag)
-         ufile_InitReadBin ();
-      ++j2;
-      for (i = 0; i < Rep[j2]; ++i) {
-         sspectral_Fourier3 (gen, res, N, k, 0, s);
-         j++;
-         bbattery_pVal[j] = res->Bas->pVal2[gofw_AD];
-         TestNumber[j] = j2;
-         strcpy (bbattery_TestNames[j], "Fourier3");
-      }
-      sspectral_DeleteRes (res);
-   }
-   {
+      {
       sstring_Res2 *res;
       res = sstring_CreateRes2 ();
-      x = util_Min (BILLION * 100.0, nb);
-      n = 600;
-      L = x / n;
-      if (L <= 100000) {
-         n /= 10;
-         L *= 10;
+      double x5;
+      x5 = util_Min (BILLION * 100.0, nb);
+      n5 = 600;
+      long L5;
+      L5 = x5 / n5;
+      if (L5 <= 100000) {
+         n5 /= 10;
+         L5 *= 10;
       }
-      if (L <= 10000) {
-         n /= 2;
-         L *= 2;
+      if (L5 <= 10000) {
+         n5 /= 2;
+         L5 *= 2;
       }
       ++j2;
-      if ((L >= 1032) && (n >= 30)) {
+      if ((L5 >= 1032) && (n5 >= 30)) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
-            sstring_LongestHeadRun (gen, res, 1, n, 0, s, L);
+            sstring_LongestHeadRun (locRabGen, res, 1, n5, 0, s, L5);
             j++;
             bbattery_pVal[j] = res->Chi->pVal2[gofw_Mean];
             TestNumber[j] = j2;
@@ -4700,21 +4896,23 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       }
       sstring_DeleteRes2 (res);
    }
+      double nw5;
+
    {
       sres_Chi2 *res;
       res = sres_CreateChi2 ();
-      nw = nb / 32.0;
-      nw = util_Min (nw, 4.0 * BILLION);
-      N = 1 + nw / BILLION;
-      n = nw / N;
+      nw5 = nb / 32.0;
+      nw5 = util_Min (nw5, 4.0 * BILLION);
+      N5 = 1 + nw / BILLION;
+      n5 = nw5 / N5;
       ++j2;
-      if (n >= 30) {
+      if (n5 >= 30) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
-            sstring_PeriodsInStrings (gen, res, N, n, 0, 31);
+            sstring_PeriodsInStrings (locRabGen, res, N5, n5, 0, 31);
             ++j;
-            if (N == 1)
+            if (N5 == 1)
                bbattery_pVal[j] = res->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->pVal2[gofw_Sum];
@@ -4723,18 +4921,18 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          }
       }
 
-      nw = nb / s;
-      N = 1 + nw / BILLION;
-      n = nw / N;
-      N = util_Min (10, N);
+      nw5 = nb / s;
+      N5 = 1 + nw5 / BILLION;
+      n5 = nw5 / N5;
+      N5 = util_Min (10, N5);
       ++j2;
-      if (n > 29) {
+      if (n5 > 29) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
-            sstring_HammingWeight (gen, res, N, n, 0, s, s);
+            sstring_HammingWeight (locRabGen, res, N5, n5, 0, s, s);
             ++j;
-            if (N == 1)
+            if (N5 == 1)
                bbattery_pVal[j] = res->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->pVal2[gofw_Sum];
@@ -4747,18 +4945,18 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
    {
       sstring_Res *res;
       res = sstring_CreateRes ();
-      nw = nb / s;
-      N = 1 + nw / BILLION;
-      n = nw / N;
-      N = util_Min (10, N);
+      nw5 = nb / s;
+      N5 = 1 + nw5 / BILLION;
+      n5 = nw5 / N5;
+      N5 = util_Min (10, N5);
       ++j2;
-      if (n > 2) {
+      if (n5 > 2) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
             j++;
-            sstring_HammingCorr (gen, res, N, n, 0, s, 32);
-            if (N == 1)
+            sstring_HammingCorr (locRabGen, res, N5, n5, 0, s, 32);
+            if (N5 == 1)
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
@@ -4767,18 +4965,18 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          }
       }
 
-      nw = nb / 64;
-      N = 1 + nw / BILLION;
-      n = nw / N;
-      N = 1;
+      nw5 = nb / 64;
+      N5 = 1 + nw5 / BILLION;
+      n5 = nw5 / N5;
+      N5 = 1;
       ++j2;
-      if (n > 2) {
+      if (n5 > 2) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
             j++;
-            sstring_HammingCorr (gen, res, N, n, 0, s, 2 * s);
-            if (N == 1)
+            sstring_HammingCorr (locRabGen, res, N5, n5, 0, s, 2 * s);
+            if (N5 == 1)
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
@@ -4787,18 +4985,18 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          }
       }
 
-      nw = nb / (4 * s);
-      N = 1 + nw / BILLION * 4;
-      n = nw / N;
-      N = 1;
+      nw5 = nb / (4 * s);
+      N5 = 1 + nw5 / BILLION * 4;
+      n5 = nw5 / N5;
+      N5 = 1;
       ++j2;
-      if (n > 2) {
+      if (n5 > 2) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
-            sstring_HammingCorr (gen, res, N, n, 0, s, 4 * s);
+            sstring_HammingCorr (locRabGen, res, N5, n5, 0, s, 4 * s);
             j++;
-            if (N == 1)
+            if (N5 == 1)
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
@@ -4807,18 +5005,18 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          }
       }
 
-      nw = nb / s;
-      N = 1 + nw / BILLION;
-      n = nw / N;
-      N = util_Min (5, N);
+      nw5 = nb / s;
+      N5 = 1 + nw5 / BILLION;
+      n5 = nw5 / N5;
+      N5 = util_Min (5, N5);
       ++j2;
-      if (n > 29) {
+      if (n5 > 29) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
             j++;
-            sstring_HammingIndep (gen, res, N, n, 0, s, 16, 0);
-            if (N == 1)
+            sstring_HammingIndep (locRabGen, res, N5, n5, 0, s, 16, 0);
+            if (N5 == 1)
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
@@ -4827,18 +5025,18 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          }
       }
 
-      nw = nb / (2 * s);
-      N = 1 + nw / BILLION * 2;
-      n = nw / N;
-      N = 1;
+      nw5 = nb / (2 * s);
+      N5 = 1 + nw5 / BILLION * 2;
+      n5 = nw5 / N5;
+      N5 = 1;
       ++j2;
-      if (n > 29) {
+      if (n5 > 29) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
             j++;
-            sstring_HammingIndep (gen, res, N, n, 0, s, s, 0);
-            if (N == 1)
+            sstring_HammingIndep (locRabGen, res, N5, n5, 0, s, s, 0);
+            if (N5 == 1)
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
@@ -4847,18 +5045,18 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
          }
       }
 
-      nw = nb / (4 * s);
-      N = 1 + nw / BILLION * 10;
-      n = nw / N;
-      N = 1;
+      nw5 = nb / (4 * s);
+      N5 = 1 + nw5 / BILLION * 10;
+      n5 = nw5 / N5;
+      N5 = 1;
       ++j2;
-      if (n > 29) {
+      if (n5 > 29) {
          if (fileFlag)
             ufile_InitReadBin ();
          for (i = 0; i < Rep[j2]; ++i) {
             j++;
-            sstring_HammingIndep (gen, res, N, n, 0, s, 2 * s, 0);
-            if (N == 1)
+            sstring_HammingIndep (locRabGen, res, N5, n5, 0, s, 2 * s, 0);
+            if (N5 == 1)
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
             else
                bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
@@ -4874,17 +5072,17 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       res = sres_CreateBasic ();
 
       d = 1;
-      N = 1 + nb / BILLION;
-      n = nb / N - d;
-      n -= n % 32;
-      N = util_Min (100, N);
+      N5 = 1 + nb / BILLION;
+      n5 = nb / N - d;
+      n5 -= n5 % 32;
+      N5 = util_Min (100, N5);
       if (fileFlag)
          ufile_InitReadBin ();
       ++j2;
       for (i = 0; i < Rep[j2]; ++i) {
-         sstring_AutoCor (gen, res, N, n, 0, s, d);
+         sstring_AutoCor (locRabGen, res, N5, n5, 0, s, d);
          j++;
-         if (N == 1)
+         if (N5 == 1)
             bbattery_pVal[j] = res->pVal2[gofw_Mean];
          else
             bbattery_pVal[j] = res->pVal2[gofw_Sum];
@@ -4893,17 +5091,17 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
       }
 
       d = 2;
-      N = 1 + nb / BILLION;
-      n = nb / N - d;
-      n -= n % 32;
-      N = util_Min (100, N);
+      N5 = 1 + nb / BILLION;
+      n5 = nb / N5 - d;
+      n5 -= n5 % 32;
+      N5 = util_Min (100, N5);
       if (fileFlag)
          ufile_InitReadBin ();
       ++j2;
       for (i = 0; i < Rep[j2]; ++i) {
-         sstring_AutoCor (gen, res, N, n, 0, s, d);
+         sstring_AutoCor (locRabGen, res, N5, n5, 0, s, d);
          j++;
-         if (N == 1)
+         if (N5 == 1)
             bbattery_pVal[j] = res->pVal2[gofw_Mean];
          else
             bbattery_pVal[j] = res->pVal2[gofw_Sum];
@@ -4916,24 +5114,24 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
    {
       sstring_Res3 *res;
       res = sstring_CreateRes3 ();
-      nw = nb / 5;
-      N = 1 + nw / BILLION;
-      n = nw / N;
-      N = util_Min (20, N);
+      nw5 = nb / 5;
+      N5 = 1 + nw5 / BILLION;
+      n5 = nw5 / N5;
+      N5 = util_Min (20, N5);
       if (fileFlag)
          ufile_InitReadBin ();
       ++j2;
       for (i = 0; i < Rep[j2]; ++i) {
-         sstring_Run (gen, res, N, n, 0, s);
+         sstring_Run (locRabGen, res, N5, n5, 0, s);
          j++;
-         if (N == 1)
+         if (N5 == 1)
             bbattery_pVal[j] = res->NRuns->pVal2[gofw_Mean];
          else
             bbattery_pVal[j] = res->NRuns->pVal2[gofw_Sum];
          TestNumber[j] = j2;
          strcpy (bbattery_TestNames[j], "Run of bits");
          j++;
-         if (N == 1)
+         if (N5 == 1)
             bbattery_pVal[j] = res->NBits->pVal2[gofw_Mean];
          else
             bbattery_pVal[j] = res->NBits->pVal2[gofw_Sum];
@@ -4942,59 +5140,501 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
        }
       sstring_DeleteRes3 (res);
    }
+   printf("value of j %d\n",j);
+   printf("value of j2 %d\n",j2);
+  };
 
-   {
-      sres_Chi2 *res;
-      res = sres_CreateChi2 ();
-      n = nb / (s * s);
-      n = util_Min (n, 50 * MILLION);
-      ++j2;
-      if (n >= 50) {
-         if (fileFlag)
-            ufile_InitReadBin ();
-         for (i = 0; i < Rep[j2]; ++i) {
-            j++;
-            smarsa_MatrixRank (gen, res, 1, n, 0, s, s, s);
-            bbattery_pVal[j] = res->pVal2[gofw_Mean];
-            TestNumber[j] = j2;
-            strcpy (bbattery_TestNames[j], "MatrixRank, 32 x 32");
-         }
-      }
+  // rabbitTest1(workload_Clone(gen));
+  // rabbitTest2(workload_Clone(gen));
+  // rabbitTest3(workload_Clone(gen));
+  // rabbitTest4(workload_Clone(gen));
+  // rabbitTest5(workload_Clone(gen));
 
-      n = nb / (100.0 * s * s);
-      n = util_Min (n, 300000);
-      ++j2;
-      if (n >= 50) {
-         if (fileFlag)
-            ufile_InitReadBin ();
-         for (i = 0; i < Rep[j2]; ++i) {
-            j++;
-            smarsa_MatrixRank (gen, res, 1, n, 0, s, 10 * s, 10 * s);
-            bbattery_pVal[j] = res->pVal2[gofw_Mean];
-            TestNumber[j] = j2;
-            strcpy (bbattery_TestNames[j], "MatrixRank, 320 x 320");
-         }
-      }
 
-      n = nb / (1024.0 * s * s);
-      n = util_Min (n, 20000);
-      ++j2;
-      if (n >= 50) {
-         if (fileFlag)
-            ufile_InitReadBin ();
-         for (i = 0; i < Rep[j2]; ++i) {
-            j++;
-            smarsa_MatrixRank (gen, res, 1, n, 0, s, 32 * s, 32 * s);
-            bbattery_pVal[j] = res->pVal2[gofw_Mean];
-            TestNumber[j] = j2;
-            strcpy (bbattery_TestNames[j], "MatrixRank, 1024 x 1024");
-         }
-      }
-      sres_DeleteChi2 (res);
-   }
 
-   DoWalk (fileFlag, gen, nb, &j, j2, Rep, globals);
-   util_Assert (j2 <= RABBIT_NUM, "Rabbit:   j2 > RABBIT_NUM");
+
+  tbb::task_group othertests;
+  othertests.run([&](){  rabbitTest1(workload_Clone(gen)); });
+othertests.run([&](){  rabbitTest2(workload_Clone(gen)); });
+othertests.run([&](){  rabbitTest3(workload_Clone(gen)); });
+othertests.run([&](){  rabbitTest4(workload_Clone(gen)); });
+othertests.run([&](){  rabbitTest5(workload_Clone(gen)); });
+othertests.wait();
+  // rabbitTest1(workload_Clone(gen));
+  // rabbitTest2(workload_Clone(gen));
+  // rabbitTest3(workload_Clone(gen));
+  // rabbitTest4(workload_Clone(gen));
+  // rabbitTest5(workload_Clone(gen));
+
+
+  //  {
+  //     const long NLIM = 4000000;
+  //     snpair_Res *res;
+  //     res = snpair_CreateRes ();
+  //     N = 1 + nw / NLIM;
+  //     n = nw / N;
+  //     N = util_Min (N, 25);
+  //     if (fileFlag)
+  //        ufile_InitReadBin ();
+  //     ++j2;
+  //     for (i = 0; i < Rep[j2]; ++i) {
+  //        snpair_ClosePairsBitMatch (gen, res, N, n / 2, 0, 2);
+  //        bbattery_pVal[++j] = res->pVal[snpair_BM];
+  //        TestNumber[j] = j2;
+  //        strcpy (bbattery_TestNames[j], "ClosePairsBitMatch, t = 2");
+  //     }
+
+  //     if (fileFlag)
+  //        ufile_InitReadBin ();
+  //     ++j2;
+  //     for (i = 0; i < Rep[j2]; ++i) {
+  //        snpair_ClosePairsBitMatch (gen, res, N, n / 4, 0, 4);
+  //        bbattery_pVal[++j] = res->pVal[snpair_BM];
+  //        TestNumber[j] = j2;
+  //        strcpy (bbattery_TestNames[j], "ClosePairsBitMatch, t = 4");
+  //     }
+  //     snpair_DeleteRes (res);
+  //  }
+  //  ++j2;
+
+
+  //  DoAppear (fileFlag, gen, nb, &j, j2, Rep, globals);
+
+
+  //  {
+  //     const long NLIM1 = 300000;
+  //     const long NLIM2 = 10000;
+  //     scomp_Res *res;
+  //     res = scomp_CreateRes ();
+  //     n = NLIM2 + 2.0 * sqrt (nb);
+  //     n = util_Min (n, nb);
+  //     n = util_Min (n, NLIM1);
+  //     N = 1;
+  //     if (fileFlag)
+  //        ufile_InitReadBin ();
+  //     ++j2;
+  //     for (i = 0; i < Rep[j2]; ++i) {
+  //        scomp_LinearComp (gen, res, N, n, 0, s);
+  //        j++;
+  //        if (N == 1)
+  //           bbattery_pVal[j] = res->JumpSize->pVal2[gofw_Mean];
+  //        else
+  //           bbattery_pVal[j] = res->JumpSize->pVal2[gofw_Sum];
+  //        TestNumber[j] = j2;
+  //        strcpy (bbattery_TestNames[j], "LinearComp");
+  //        j++;
+  //        if (N == 1)
+  //           bbattery_pVal[j] = res->JumpNum->pVal2[gofw_Mean];
+  //        else
+  //           bbattery_pVal[j] = res->JumpNum->pVal2[gofw_Sum];
+  //        TestNumber[j] = j2;
+  //        strcpy (bbattery_TestNames[j], "LinearComp");
+  //     }
+  //     scomp_DeleteRes (res);
+  //  }
+
+  //  k = num_Log2 (nb + 0.5);
+  //  if (k > 28)
+  //     k = 28;
+  //  N = 1;
+  // {
+  //     sres_Basic *res;
+  //     res = sres_CreateBasic ();
+  //     if (fileFlag)
+  //        ufile_InitReadBin ();
+  //     ++j2;
+  //     for (i = 0; i < Rep[j2]; ++i) {
+  //        scomp_LempelZiv (gen, res, N, k, 0, s);
+  //        j++;
+  //        if (N == 1)
+  //           bbattery_pVal[j] = res->pVal2[gofw_Mean];
+  //        else
+  //           bbattery_pVal[j] = res->pVal2[gofw_Sum];
+  //        TestNumber[j] = j2;
+  //        strcpy (bbattery_TestNames[j], "LempelZiv");
+  //     }
+  //     sres_DeleteBasic (res);
+  //  }
+  //  {
+  //     sspectral_Res *res;
+  //     k = num_Log2 (nb + 0.5);
+  //     k = util_Min (20, k);
+  //     res = sspectral_CreateRes ();
+  //     if (fileFlag)
+  //        ufile_InitReadBin ();
+  //     ++j2;
+  //     for (i = 0; i < Rep[j2]; ++i) {
+  //        sspectral_Fourier1 (gen, res, 1, k, 0, s);
+  //        j++;
+  //        bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+  //        TestNumber[j] = j2;
+  //        strcpy (bbattery_TestNames[j], "Fourier1");
+  //     }
+
+  //     x = sqrt (2.0 * nb);
+  //     N = x / 2.0;
+  //     if (N < 32) {
+  //        k = 5;
+  //        N = nb / 32.0;
+  //     } else if (N >= 16384) {
+  //        k = 14;
+  //        N = nb / 16384.0;
+  //     } else {
+  //        k = num_Log2 (x / 2.0 + 0.5);
+  //        N = nb / (num_TwoExp[k]);
+  //     }
+  //     N = util_Min (N, 300000);
+  //     while ((num_TwoExp[k] + 32) * N > nb)
+  //        N--;
+  //     if (fileFlag)
+  //        ufile_InitReadBin ();
+  //     ++j2;
+  //     for (i = 0; i < Rep[j2]; ++i) {
+  //        sspectral_Fourier3 (gen, res, N, k, 0, s);
+  //        j++;
+  //        bbattery_pVal[j] = res->Bas->pVal2[gofw_AD];
+  //        TestNumber[j] = j2;
+  //        strcpy (bbattery_TestNames[j], "Fourier3");
+  //     }
+  //     sspectral_DeleteRes (res);
+  //  }
+
+
+  //   printf("value of j2 %u\n", j2);    //3
+  //   printf("value of j %u\n", j);      //2
+  // {
+  //     sstring_Res2 *res;
+  //     res = sstring_CreateRes2 ();
+  //     x = util_Min (BILLION * 100.0, nb);
+  //     n = 600;
+  //     L = x / n;
+  //     if (L <= 100000) {
+  //        n /= 10;
+  //        L *= 10;
+  //     }
+  //     if (L <= 10000) {
+  //        n /= 2;
+  //        L *= 2;
+  //     }
+  //     ++j2;
+  //     if ((L >= 1032) && (n >= 30)) {
+  //        if (fileFlag)
+  //           ufile_InitReadBin ();
+  //        for (i = 0; i < Rep[j2]; ++i) {
+  //           sstring_LongestHeadRun (gen, res, 1, n, 0, s, L);
+  //           j++;
+  //           bbattery_pVal[j] = res->Chi->pVal2[gofw_Mean];
+  //           TestNumber[j] = j2;
+  //           strcpy (bbattery_TestNames[j], "LongestHeadRun");
+  //        }
+  //     }
+  //     sstring_DeleteRes2 (res);
+  //  }
+  //  {
+  //     sres_Chi2 *res;
+  //     res = sres_CreateChi2 ();
+  //     nw = nb / 32.0;
+  //     nw = util_Min (nw, 4.0 * BILLION);
+  //     N = 1 + nw / BILLION;
+  //     n = nw / N;
+  //     ++j2;
+  //     if (n >= 30) {
+  //        if (fileFlag)
+  //           ufile_InitReadBin ();
+  //        for (i = 0; i < Rep[j2]; ++i) {
+  //           sstring_PeriodsInStrings (gen, res, N, n, 0, 31);
+  //           ++j;
+  //           if (N == 1)
+  //              bbattery_pVal[j] = res->pVal2[gofw_Mean];
+  //           else
+  //              bbattery_pVal[j] = res->pVal2[gofw_Sum];
+  //           TestNumber[j] = j2;
+  //           strcpy (bbattery_TestNames[j], "PeriodsInStrings");
+  //        }
+  //     }
+
+  //     nw = nb / s;
+  //     N = 1 + nw / BILLION;
+  //     n = nw / N;
+  //     N = util_Min (10, N);
+  //     ++j2;
+  //     if (n > 29) {
+  //        if (fileFlag)
+  //           ufile_InitReadBin ();
+  //        for (i = 0; i < Rep[j2]; ++i) {
+  //           sstring_HammingWeight (gen, res, N, n, 0, s, s);
+  //           ++j;
+  //           if (N == 1)
+  //              bbattery_pVal[j] = res->pVal2[gofw_Mean];
+  //           else
+  //              bbattery_pVal[j] = res->pVal2[gofw_Sum];
+  //           TestNumber[j] = j2;
+  //           strcpy (bbattery_TestNames[j], "HammingWeight");
+  //        }
+  //     }
+  //     sres_DeleteChi2 (res);
+  //  }
+  //  {
+  //     sstring_Res *res;
+  //     res = sstring_CreateRes ();
+  //     nw = nb / s;
+  //     N = 1 + nw / BILLION;
+  //     n = nw / N;
+  //     N = util_Min (10, N);
+  //     ++j2;
+  //     if (n > 2) {
+  //        if (fileFlag)
+  //           ufile_InitReadBin ();
+  //        for (i = 0; i < Rep[j2]; ++i) {
+  //           j++;
+  //           sstring_HammingCorr (gen, res, N, n, 0, s, 32);
+  //           if (N == 1)
+  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+  //           else
+  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
+  //           TestNumber[j] = j2;
+  //           strcpy (bbattery_TestNames[j], "HammingCorr, L = 32");
+  //        }
+  //     }
+
+  //     nw = nb / 64;
+  //     N = 1 + nw / BILLION;
+  //     n = nw / N;
+  //     N = 1;
+  //     ++j2;
+  //     if (n > 2) {
+  //        if (fileFlag)
+  //           ufile_InitReadBin ();
+  //        for (i = 0; i < Rep[j2]; ++i) {
+  //           j++;
+  //           sstring_HammingCorr (gen, res, N, n, 0, s, 2 * s);
+  //           if (N == 1)
+  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+  //           else
+  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
+  //           TestNumber[j] = j2;
+  //           strcpy (bbattery_TestNames[j], "HammingCorr, L = 64");
+  //        }
+  //     }
+
+  //     nw = nb / (4 * s);
+  //     N = 1 + nw / BILLION * 4;
+  //     n = nw / N;
+  //     N = 1;
+  //     ++j2;
+  //     if (n > 2) {
+  //        if (fileFlag)
+  //           ufile_InitReadBin ();
+  //        for (i = 0; i < Rep[j2]; ++i) {
+  //           sstring_HammingCorr (gen, res, N, n, 0, s, 4 * s);
+  //           j++;
+  //           if (N == 1)
+  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+  //           else
+  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
+  //           TestNumber[j] = j2;
+  //           strcpy (bbattery_TestNames[j], "HammingCorr, L = 128");
+  //        }
+  //     }
+
+  //     nw = nb / s;
+  //     N = 1 + nw / BILLION;
+  //     n = nw / N;
+  //     N = util_Min (5, N);
+  //     ++j2;
+  //     if (n > 29) {
+  //        if (fileFlag)
+  //           ufile_InitReadBin ();
+  //        for (i = 0; i < Rep[j2]; ++i) {
+  //           j++;
+  //           sstring_HammingIndep (gen, res, N, n, 0, s, 16, 0);
+  //           if (N == 1)
+  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+  //           else
+  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
+  //           TestNumber[j] = j2;
+  //           strcpy (bbattery_TestNames[j], "HammingIndep, L = 16");
+  //        }
+  //     }
+
+  //     nw = nb / (2 * s);
+  //     N = 1 + nw / BILLION * 2;
+  //     n = nw / N;
+  //     N = 1;
+  //     ++j2;
+  //     if (n > 29) {
+  //        if (fileFlag)
+  //           ufile_InitReadBin ();
+  //        for (i = 0; i < Rep[j2]; ++i) {
+  //           j++;
+  //           sstring_HammingIndep (gen, res, N, n, 0, s, s, 0);
+  //           if (N == 1)
+  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+  //           else
+  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
+  //           TestNumber[j] = j2;
+  //           strcpy (bbattery_TestNames[j], "HammingIndep, L = 32");
+  //        }
+  //     }
+
+  //     nw = nb / (4 * s);
+  //     N = 1 + nw / BILLION * 10;
+  //     n = nw / N;
+  //     N = 1;
+  //     ++j2;
+  //     if (n > 29) {
+  //        if (fileFlag)
+  //           ufile_InitReadBin ();
+  //        for (i = 0; i < Rep[j2]; ++i) {
+  //           j++;
+  //           sstring_HammingIndep (gen, res, N, n, 0, s, 2 * s, 0);
+  //           if (N == 1)
+  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Mean];
+  //           else
+  //              bbattery_pVal[j] = res->Bas->pVal2[gofw_Sum];
+  //           strcpy (bbattery_TestNames[j], "HammingIndep, L = 64");
+  //           TestNumber[j] = j2;
+  //        }
+  //     }
+  //     sstring_DeleteRes (res);
+  //  }
+  //  {
+  //     sres_Basic *res;
+  //     int d;
+  //     res = sres_CreateBasic ();
+
+  //     d = 1;
+  //     N = 1 + nb / BILLION;
+  //     n = nb / N - d;
+  //     n -= n % 32;
+  //     N = util_Min (100, N);
+  //     if (fileFlag)
+  //        ufile_InitReadBin ();
+  //     ++j2;
+  //     for (i = 0; i < Rep[j2]; ++i) {
+  //        sstring_AutoCor (gen, res, N, n, 0, s, d);
+  //        j++;
+  //        if (N == 1)
+  //           bbattery_pVal[j] = res->pVal2[gofw_Mean];
+  //        else
+  //           bbattery_pVal[j] = res->pVal2[gofw_Sum];
+  //        TestNumber[j] = j2;
+  //        strcpy (bbattery_TestNames[j], "AutoCor");
+  //     }
+
+  //     d = 2;
+  //     N = 1 + nb / BILLION;
+  //     n = nb / N - d;
+  //     n -= n % 32;
+  //     N = util_Min (100, N);
+  //     if (fileFlag)
+  //        ufile_InitReadBin ();
+  //     ++j2;
+  //     for (i = 0; i < Rep[j2]; ++i) {
+  //        sstring_AutoCor (gen, res, N, n, 0, s, d);
+  //        j++;
+  //        if (N == 1)
+  //           bbattery_pVal[j] = res->pVal2[gofw_Mean];
+  //        else
+  //           bbattery_pVal[j] = res->pVal2[gofw_Sum];
+  //        TestNumber[j] = j2;
+  //        strcpy (bbattery_TestNames[j], "AutoCor");
+  //     }
+
+  //     sres_DeleteBasic (res);
+  //  }
+  //  {
+  //     sstring_Res3 *res;
+  //     res = sstring_CreateRes3 ();
+  //     nw = nb / 5;
+  //     N = 1 + nw / BILLION;
+  //     n = nw / N;
+  //     N = util_Min (20, N);
+  //     if (fileFlag)
+  //        ufile_InitReadBin ();
+  //     ++j2;
+  //     for (i = 0; i < Rep[j2]; ++i) {
+  //        sstring_Run (gen, res, N, n, 0, s);
+  //        j++;
+  //        if (N == 1)
+  //           bbattery_pVal[j] = res->NRuns->pVal2[gofw_Mean];
+  //        else
+  //           bbattery_pVal[j] = res->NRuns->pVal2[gofw_Sum];
+  //        TestNumber[j] = j2;
+  //        strcpy (bbattery_TestNames[j], "Run of bits");
+  //        j++;
+  //        if (N == 1)
+  //           bbattery_pVal[j] = res->NBits->pVal2[gofw_Mean];
+  //        else
+  //           bbattery_pVal[j] = res->NBits->pVal2[gofw_Sum];
+  //        TestNumber[j] = j2;
+  //        strcpy (bbattery_TestNames[j], "Run of bits");
+  //      }
+  //     sstring_DeleteRes3 (res);
+  //  }
+
+  //   printf("value of j2 %u\n", j2);    //3
+  //   printf("value of j %u\n", j);      //2
+  //  {
+  //     sres_Chi2 *res;
+  //     res = sres_CreateChi2 ();
+  //     n = nb / (s * s);
+  //     n = util_Min (n, 50 * MILLION);
+  //     ++j2;
+  //     if (n >= 50) {
+  //        if (fileFlag)
+  //           ufile_InitReadBin ();
+  //        for (i = 0; i < Rep[j2]; ++i) {
+  //           j++;
+  //           smarsa_MatrixRank (gen, res, 1, n, 0, s, s, s);
+  //           bbattery_pVal[j] = res->pVal2[gofw_Mean];
+  //           TestNumber[j] = j2;
+  //           strcpy (bbattery_TestNames[j], "MatrixRank, 32 x 32");
+  //        }
+  //     }
+  //   printf("value of j2 %u\n", j2);    //3
+  //   printf("value of j %u\n", j);      //2
+  //     n = nb / (100.0 * s * s);
+  //     n = util_Min (n, 300000);
+  //     ++j2;
+  //     if (n >= 50) {
+  //        if (fileFlag)
+  //           ufile_InitReadBin ();
+  //        for (i = 0; i < Rep[j2]; ++i) {
+  //           j++;
+  //           smarsa_MatrixRank (gen, res, 1, n, 0, s, 10 * s, 10 * s);
+  //           bbattery_pVal[j] = res->pVal2[gofw_Mean];
+  //           TestNumber[j] = j2;
+  //           strcpy (bbattery_TestNames[j], "MatrixRank, 320 x 320");
+  //        }
+  //     }
+  //   printf("value of j2 %u\n", j2);    //3
+  //   printf("value of j %u\n", j);      //2
+  //     n = nb / (1024.0 * s * s);
+  //     n = util_Min (n, 20000);
+  //     ++j2;
+  //     if (n >= 50) {
+  //        if (fileFlag)
+  //           ufile_InitReadBin ();
+  //        for (i = 0; i < Rep[j2]; ++i) {
+  //           j++;
+  //           smarsa_MatrixRank (gen, res, 1, n, 0, s, 32 * s, 32 * s);
+  //           bbattery_pVal[j] = res->pVal2[gofw_Mean];
+  //           TestNumber[j] = j2;
+  //           strcpy (bbattery_TestNames[j], "MatrixRank, 1024 x 1024");
+  //        }
+  //     }
+  //     sres_DeleteChi2 (res);
+  //  }
+  //   printf("value of j2 %u\n", j2);    //3
+  //   printf("value of j %u\n", j);      //2
+
+  //  DoWalk (fileFlag, gen, nb, &j, j2, Rep, globals);
+
+
+
+
+  util_Assert (j2 <= RABBIT_NUM, "Rabbit:   j2 > RABBIT_NUM");
 
    bbattery_NTests = ++j;
    if (fileFlag) {

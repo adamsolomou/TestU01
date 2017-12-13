@@ -5,6 +5,8 @@ _(2017/12/04 : Clarifying (again) the stress penalty, to make the documentation 
 
 _(2017/11/28 : See the end of the readme for some additional notes)_
 
+This coursework is due on Fri 15th Dec at 22:00.
+
 The goal of this coursework is to take an existing library
 called [TestU01](http://simul.iro.umontreal.ca/testu01/tu01.html),
 and parallelise, optimise, or otherwise accelerate it.
@@ -42,7 +44,7 @@ in mind (or two for a pair):
   benchmark can be executed per second, which is measured as the number
   of complete test results printed to stdout, divided by the amount of
   time the program is allowed to run before the user terminates it (this
-  will be of the order of 10s of seconds).
+  will be [between 10 and 100 seconds](https://github.com/HPCE/hpce-2017-cw6/issues/35)).
 
 - [Stress testing](drivers/driver_stress.cpp) : Trying to test as large a sample
   as possible within a time budget, using the benchmark Rabbit. Given a
@@ -161,7 +163,7 @@ The target environment is either a `g3.4xlarge` (note that this is
 newer than in previous courseworks), or a `c4.8xlarge`. You
 should indicate in `group.md` which one you want to use.
 Two additional libraries will be available [see #17](https://github.com/HPCE/hpce-2017-cw6/issues/17):
-- boost
+- boost (including libboost-system1.55-dev and libboost-filesystem1.55-dev)
 - CUDA
 
 The marks for the coursework are split up into three parts:
@@ -173,8 +175,14 @@ The marks for the coursework are split up into three parts:
                         suggestions for improvement - see the attached `group.md`.
 
 - Individual analysis (20%) : Each individual should separately submit a 
-                       document `reflection.md` via blackboard (this is something that
-                       is looking back, so is not included yet).
+                       document `reflection.md` via blackboard.
+
+The blackboard submission of hashes this year has not got smoothly for some
+reason; I think a bunch of people forgot. The main purpose for this is to
+provide some safety and a paper trail for both students and staff, so I strongly
+encourage you to submit a group hash to blackboard. It's essentially providing
+proof that a particular submission existed at a point in time, and also makes
+it much more likely that the version committed is compileable.
 
 Getting started
 ---------------

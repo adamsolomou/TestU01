@@ -33,14 +33,19 @@ int main (int argc, char *argv[])
    
    // Turn off all printing to stdout from TestU01
    // You may want to try flipping this to 1 to see what it is actually doing.
-   swrite_Basic=0;
+   swrite_Basic=1;
     
    unif01_Gen *gen=workload_Create();
    std::string name=workload_Name(gen);
    
    // TODO : Choose the n that you think is achievable in timeBudget seconds
-   double n = t*100000; // This is just a throwaway example of how to choose
-   
+
+if(t>100){
+n = t*1000000*13;
+}
+else{
+    n = t*1000000*12; // This is just a throwaway example of how to choose
+}   
    // Make sure this happens _before_ starting the battery, so that the
    // client knows what you are trying.
    fprintf(stdout, "%s, -1, TimeBudget, 0, %g\n", name.c_str(), t);
