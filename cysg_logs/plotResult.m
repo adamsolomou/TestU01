@@ -18,6 +18,10 @@ pairs = readLogs('stress_time_pairs.log');
 rest = readLogs('stress_time_rest.log');
 
 multi24 = readLogs('stress_time_multi24.log');
+test = readLogs('test.log');
+test1 = readLogs('test1.log');
+test2 = readLogs('test2.log');
+
 % 
 % figure
 % plot(ref.t,ref.t,'k--o');
@@ -34,47 +38,67 @@ multi24 = readLogs('stress_time_multi24.log');
 % hold on
 % plot(multi.t,multi.g,'--o');
 % 
-% %plot real time (absolute times)
+
+%plot real time (absolute times)
+figure
+subplot(1,2,1)
+plot(ref.t,ref.t,'k');
+hold on
+plot(ref.t,ref.g,'b--o')
+plot(par36v2.t,par36v2.g,'b--x');
+% plot(parall.t,parall.g,'r--o');
+
+legend('Time budget','sequential','parallelize DoMultinom');
+ylabel('execution time');
+xlabel('Time budget');
+subplot(1,2,2)
+plot(ref.t,ref.score,'k-o');
+hold on
+plot(par36v2.t,par36v2.score,'b-x');
+% plot(parall.t,parall.score,'r--o');
+legend('Sequential','parallelize DoMultinom');
+
+% 
 % figure
 % subplot(1,2,1)
 % plot(ref.t,ref.t,'k--o');
 % hold on
-% plot(ref.t,ref.g,'b--o')
-% plot(par36v2.t,par36v2.g,'b--x');
-% plot(parall.t,parall.g,'r--o');
+% plot(parall.t,parall.g,'b--o');
+% plot(parallv1.t,parallv1.g,'k--x');
+% plot(parallv2.t,parallv2.g,'r--x');
+% % plot(parallv2.t,parallv3.g,'b--x');
+% plot(parallv2.t,parallv4.g,'r--x');
 % 
-% legend('Time budget','sequential','36 par tasks','par all tests');
+% legend('Time budget','nx6','nx13','nx14');
 % ylabel('execution time');
 % xlabel('Time budget');
 % subplot(1,2,2)
-% plot(ref.t,ref.score,'LineWidth',1);
+% % plot(ref.t,ref.score,'LineWidth',1);
 % hold on
-% plot(par36v2.t,par36v2.score,'LineWidth',1);
 % plot(parall.t,parall.score,'LineWidth',1);
+% plot(parallv1.t,parallv1.score,'LineWidth',1);
+% plot(parallv2.t,parallv2.score,'LineWidth',1);
+% % plot(parallv2.t,parallv3.score,'LineWidth',1);
+% plot(parallv2.t,parallv4.score,'LineWidth',1);
 % 
+% % plot(parallv2.t,log2(parallv3.n),'LineWidth',1);
+% 
+% legend('nx6','nx13','nx14');
+
 
 figure
 subplot(1,2,1)
 plot(ref.t,ref.t,'k--o');
 hold on
-plot(parall.t,parall.g,'b--o');
-plot(parallv1.t,parallv1.g,'k--x');
-plot(parallv2.t,parallv2.g,'r--x');
-% plot(parallv2.t,parallv3.g,'b--x');
-plot(parallv2.t,parallv4.g,'r--x');
+% plot(parallv2.t,parallv4.g,'r--x');
 
-legend('Time budget','nx6','nx13','nx14');
+plot(test2.t,test2.g,'r--o');
 ylabel('execution time');
 xlabel('Time budget');
 subplot(1,2,2)
-% plot(ref.t,ref.score,'LineWidth',1);
+plot(ref.t,ref.score,'LineWidth',1);
 hold on
-plot(parall.t,parall.score,'LineWidth',1);
-plot(parallv1.t,parallv1.score,'LineWidth',1);
-plot(parallv2.t,parallv2.score,'LineWidth',1);
-% plot(parallv2.t,parallv3.score,'LineWidth',1);
-plot(parallv2.t,parallv4.score,'LineWidth',1);
+plot(test.t,test2.score,'LineWidth',1);
+% plot(parallv2.t,parallv4.score,'LineWidth',1);
 
-% plot(parallv2.t,log2(parallv3.n),'LineWidth',1);
 
-legend('nx6','nx13','nx14');

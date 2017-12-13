@@ -42,17 +42,17 @@ int main (int argc, char *argv[])
 if(t>60){
 n = t*1000000*20.5;
 }
-else if(t<10){
-    n = t*1000000*11.7; // This is just a throwaway example of how to choose
+else if(t<23){
+    n = t*1000000*11.6; // This is just a throwaway example of how to choose
 }  
 else if(t>40){
-n = t*1000000*16.5;
+n = t*1000000*18.5;
 }
-else if(t>30){
+else if(t>31){
 n = t*1000000*14.5;
 }
 else{
-n = t*1000000*11.6;
+n = t*1000000*11.4;
 } 
    // Make sure this happens _before_ starting the battery, so that the
    // client knows what you are trying.
