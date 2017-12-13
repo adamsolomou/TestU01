@@ -3,6 +3,6 @@ size="180"
 
 for timebudget in $(seq 2  ${size}); do
 echo ${timebudget}
-bin/stress_std ${timebudget}	| grep 'TimeBudget\|ChosenN\|TimeUsed\|Score' >>  cysg_logs/test3.log 
+bin/stress_std ${timebudget}	| grep 'TimeBudget\|ChosenN\|TimeUsed\|Score' >>  cysg_logs/test4.log 
 
 done
