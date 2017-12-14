@@ -4315,9 +4315,6 @@ static void DoMultinom (lebool fileFlag, /* */
    L = util_Max (4, L);
 
 
-  printf("value of N %lu\n",N);
-  printf("value of n %lu\n",n);
-  printf("value of L %lu\n",L);
 
    for (i = 0; i < Rep[j2]; ++i) {
        // smultin_MultinomialBitsOver (gen, par, res, N, n, 0, 32, L, TRUE);
@@ -5133,8 +5130,6 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
        }
       sstring_DeleteRes3 (res);
    }
-   printf("value of j %d\n",j);
-   printf("value of j2 %d\n",j2);
   };
 
    // rabbitTest1(workload_Clone(gen));
@@ -5153,12 +5148,6 @@ static void Rabbit (unif01_Gen * gen, char *fname, double nb, int Rep[], TestGlo
  othertests.run([&](){  rabbitTest4(workload_Clone(gen)); });
  othertests.run([&](){  rabbitTest5(workload_Clone(gen)); });
  othertests.wait();
- 
- // rabbitTest1(workload_Clone(gen));
-  // rabbitTest2(workload_Clone(gen));
-  // rabbitTest3(workload_Clone(gen));
-  // rabbitTest4(workload_Clone(gen));
-  // rabbitTest5(workload_Clone(gen));
 
 /*
    {

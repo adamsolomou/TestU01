@@ -23,6 +23,10 @@ test1 = readLogs('test1.log');
 test2 = readLogs('test2.log');
 test3 = readLogs('test3.log');
 test4 = readLogs('test4.log');
+final = readLogs('final.log');
+
+final = readLogs('stress_time_final_v2.log');
+
 % 
 % %plot real time (absolute times)
 % figure
@@ -97,9 +101,9 @@ hold on
 % plot(parallv2.t,parallv4.g,'r--x');
 
 % plot(test2.t,test2.g,'r--o');
-plot(test3.t,test3.g,'b--o');
+plot(final.t,final.g,'b--o');
 
-plot(test4.t,test4.g,'r--o');
+% plot(test4.t,test4.g,'r--o');
 % 
 ylabel('execution time');
 xlabel('Time budget');
@@ -108,10 +112,10 @@ plot(ref.t,ref.score,'LineWidth',1);
 hold on
 % plot(test.t,test2.score,'LineWidth',1);
 % plot(parallv2.t,parallv4.score,'LineWidth',1);
-plot(test3.t,test3.score,'LineWidth',1);
+plot(final.t,final.score,'LineWidth',1);
 
 plot(test4.t,test4.score,'LineWidth',1);
-
+plot(final.t,log2(final.n))
 
 
 
