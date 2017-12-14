@@ -25,7 +25,7 @@ test3 = readLogs('test3.log');
 test4 = readLogs('test4.log');
 final = readLogs('final.log');
 
-final = readLogs('stress_time_final_last.log');
+final = readLogs('stress_time_final_adamos.log');
 
 % 
 % %plot real time (absolute times)
@@ -87,35 +87,34 @@ plot(ref.t,ref.score,'k-o');
 hold on
 plot(par36v2.t,par36v2.score,'b-x');
 plot(test1.t,test1.score,'r--o');
-plot(test3.t,test3.score,'LineWidth',1);
 ylabel('Score');
 xlabel('Time Budget');
 legend('Sequential Rabbit','Rabbit with parallelized DoMultinom','Rabbit with parallelized tests');
 
-
-
-figure
-subplot(1,2,1)
-plot(ref.t,ref.t,'k--o');
-hold on
-% plot(parallv2.t,parallv4.g,'r--x');
-
-% plot(test2.t,test2.g,'r--o');
-plot(final.t,final.g,'b--o');
-
-% plot(test4.t,test4.g,'r--o');
 % 
-ylabel('execution time');
-xlabel('Time budget');
-subplot(1,2,2)
-plot(ref.t,ref.score,'LineWidth',1);
-hold on
-% plot(test.t,test2.score,'LineWidth',1);
-% plot(parallv2.t,parallv4.score,'LineWidth',1);
-plot(final.t,final.score,'LineWidth',1);
-
-% plot(test4.t,test4.score,'LineWidth',1);
-% plot(final.t,log2(final.n))
-
+% 
+% figure
+% subplot(1,2,1)
+% plot(ref.t,ref.t,'k--o');
+% hold on
+% % plot(parallv2.t,parallv4.g,'r--x');
+% 
+% % plot(test2.t,test2.g,'r--o');
+% plot(final.t,final.g,'b--o');
+% 
+% % plot(test4.t,test4.g,'r--o');
+% % 
+% ylabel('execution time');
+% xlabel('Time budget');
+% subplot(1,2,2)
+% plot(ref.t,ref.score,'LineWidth',1);
+% hold on
+% % plot(test.t,test2.score,'LineWidth',1);
+% plot(par36v2.t,par36v2.score,'LineWidth',1);
+% plot(final.t,final.score,'LineWidth',1);
+% 
+% % plot(test4.t,test4.score,'LineWidth',1);
+% % plot(final.t,log2(final.n))
+% 
 
 
