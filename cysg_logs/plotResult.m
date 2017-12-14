@@ -25,7 +25,7 @@ test3 = readLogs('test3.log');
 test4 = readLogs('test4.log');
 final = readLogs('final.log');
 
-final = readLogs('stress_time_final_v2.log');
+final = readLogs('stress_time_final_last.log');
 
 % 
 % %plot real time (absolute times)
@@ -114,8 +114,8 @@ hold on
 % plot(parallv2.t,parallv4.score,'LineWidth',1);
 plot(final.t,final.score,'LineWidth',1);
 
-plot(test4.t,test4.score,'LineWidth',1);
-plot(final.t,log2(final.n))
+% plot(test4.t,test4.score,'LineWidth',1);
+% plot(final.t,log2(final.n))
 
 
 

@@ -33,14 +33,14 @@ int main (int argc, char *argv[])
    
    // Turn off all printing to stdout from TestU01
    // You may want to try flipping this to 1 to see what it is actually doing.
-   swrite_Basic=1;
+   swrite_Basic=0;
     
    unif01_Gen *gen=workload_Create();
    std::string name=workload_Name(gen);
   double n; 
    // TODO : Choose the n that you think is achievable in timeBudget seconds
 if(t>80){
-n = t*1000000*21;
+n = t*1000000*20;
 }
 else if(t<23){
     n = t*1000000*11.6; // This is just a throwaway example of how to choose
